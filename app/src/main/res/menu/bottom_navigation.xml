@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_profile"
+        android:icon="@drawable/ic_person_black_24dp"
+        android:title="Profile" />
+
+
+
+    <item
+        android:id="@+id/nav_nfc"
+        android:icon="@drawable/ic_nfc_black_24dp"
+        android:title="NFC" />
+
+    <item
+        android:id="@+id/nav_cart"
+        android:icon="@drawable/ic_add_shopping_cart_black_24dp"
+        android:title="Cart" />
+
+</menu>

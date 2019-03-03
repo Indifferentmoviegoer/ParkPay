@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">ParkPay</string>
+
+    <string name="firstParam">Email</string>
+    <string name="secondParam">Пароль</string>
+    <string name="remMe">Запомнить меня </string>
+    <string name="reg">Еще не зарегистрированы? Нажмите здесь…</string>
+    <string name="signIn">Войти</string>
+
+    <string name="name">Имя</string>
+    <string name="fam">Фамилия</string>
+    <string name="ot">Отчество</string>
+    <string name="number">Номер телефона</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="nC">Номер карты</string>
+    <string name="signUp">Зарегистрироваться</string>
+
+    <string name="title_activity_home">HomeActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="todo">TODO</string>
+
+
+    <string name="scan_process_label">Scanning…</string>
+    <string name="scan_label">Scan</string>
+    <string name="scan_result_label">Last scan result: </string>
+</resources>
