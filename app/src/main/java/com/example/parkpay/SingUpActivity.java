@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import static com.example.parkpay.QRActivity.ACTION_SCAN;
+//import static com.example.parkpay.QRActivity.ACTION_SCAN;
 
 public class SingUpActivity extends AppCompatActivity {
     Button signUp;
@@ -88,6 +88,23 @@ public class SingUpActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    // Запускаемм сканер штрих кода:
+    public void scanBar(View v) {
+        try {
+
+            // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
+            Intent intent = new Intent(ACTION_SCAN);
+            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+            startActivityForResult(intent, 0);
+        } catch (ActivityNotFoundException anfe) {
+
+            // Предлагаем загрузить с Play Market:
+            showDialog(SingUpActivity.this, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
+        }
+    }
+
     // Запуск сканера qr-кода:
     public void scanQR(View v) {
         try {
