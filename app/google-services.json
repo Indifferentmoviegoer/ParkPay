@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "1061747613431",
+    "firebase_url": "https://parkpay-b6819.firebaseio.com",
+    "project_id": "parkpay-b6819",
+    "storage_bucket": "parkpay-b6819.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1061747613431:android:9be6226371a31003",
+        "android_client_info": {
+          "package_name": "com.example.parkpay"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1061747613431-qcfh0f4h80h8850kl7a2uhiciarj9qjv.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu5xgj3U8iBnwReZOz4P-stO5wKZ4M6so"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

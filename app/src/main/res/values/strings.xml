@@ -13,6 +13,7 @@
     <string name="number">Номер телефона</string>
     <string name="email">Email</string>
     <string name="password">Пароль</string>
+    <string name="confirm">Подтвердите пароль</string>
     <string name="nC">Номер карты</string>
     <string name="signUp">Зарегистрироваться</string>
 
@@ -29,4 +30,12 @@
 
     <string name="servicedesc">Services desc: </string>
     <string name="aiddescription">Aid description: </string>
+
+    <string name="nameProfile">FirstName LastName</string>
+    <string name="editProfile">Редактировать профиль</string>
+    <string name="turnNotification">Отключить уведомления</string>
+
+    <string name="editInfo">Сохранить изменения</string>
+
+
 </resources>

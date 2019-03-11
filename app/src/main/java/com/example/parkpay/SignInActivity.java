@@ -12,16 +12,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-//import org.json.JSONException;
-//import org.json.JSONObject;
-//
-//import java.io.IOException;
-//
-//import okhttp3.Call;
-//import okhttp3.Callback;
-//import okhttp3.OkHttpClient;
-//import okhttp3.Request;
-//import okhttp3.Response;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 public class SignInActivity extends AppCompatActivity {
     Button signIn;
@@ -76,44 +76,43 @@ public class SignInActivity extends AppCompatActivity {
         super.onPause();
         //SharedPreferences.Editor editor=
     }
-    //    private void doGetRequest(String url) {
-//
-//        OkHttpClient client = new OkHttpClient();
-//        final Request request = new Request.Builder()
-//                .url(url)
-//                .build();
-//        Call call = client.newCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(Call call, IOException e) {
-//                Log.v("TAG", call.request().body().toString());
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-////                        sovet.setText("Ошибка скоро будет исправлена,потерпи блять!");
-//                    }
-//                });
-//            }
-//            @Override
-//            public void onResponse(Call call, final Response response) throws IOException {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//
-//                            String jsonData = response.body().string();
-//                            JSONObject Jobject = new JSONObject(jsonData);
-////                            tok = Jobject.getString("text");
-////                            sovet.startAnimation(alpha_in);
-////                            sovet.setText(tok);
-//
-//                        } catch (IOException | JSONException e) {
-////                            tok = "";
-////                            sovet.setText(tok);
-//                        }
-//                    }
-//                });
-//            }
-//        });
-//    }
+
+
+    private void doGetRequest(String url) {
+
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url(url)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.v("TAG", call.request().body().toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        sovet.setText("Ошибка скоро будет исправлена,потерпи блять!");
+                    }
+                });
+            }
+            @Override
+            public void onResponse(Call call, final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = response.body().string();
+                        JSONObject Jobject = new JSONObject(jsonData);
+//                            tok = Jobject.getString("text");
+//                            sovet.startAnimation(alpha_in);
+//                            sovet.setText(tok);
+
+                    } catch (IOException | JSONException e) {
+//                            tok = "";
+//                            sovet.setText(tok);
+                    }
+                });
+            }
+        });
+    }
 }
