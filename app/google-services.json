@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "1061747613431-ubphpu2ffd3e4bu656lrkrakckp9p52d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.parkpay",
+            "certificate_hash": "9e6cdac596701d1aca36c21433cfd8c2113bf5f7"
+          }
+        },
+        {
           "client_id": "1061747613431-qcfh0f4h80h8850kl7a2uhiciarj9qjv.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -29,8 +37,13 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1061747613431-qcfh0f4h80h8850kl7a2uhiciarj9qjv.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

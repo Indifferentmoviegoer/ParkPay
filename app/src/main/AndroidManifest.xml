@@ -4,8 +4,11 @@
     package="com.example.parkpay">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.NFC" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -14,25 +17,32 @@
         android:required="true" />
 
     <application
+        android:name=".ParkPay"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MaterialComponents"
+        android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+
+        <!--<meta-data android:name="ymp_firebase_app_id" android:value="1:1061747613431:android:9be6226371a31003"/>-->
+        <!--<meta-data android:name="ymp_gcm_sender_id" android:value="number:1061747613431"/>-->
+
+        <activity android:name=".DetailCardActivity" />
+        <activity android:name=".PayActivity" />
+        <activity android:name=".ScanBankCardActivity">
+            <intent-filter>
+                <action android:name="ru.yandex.money.android.sdk.action.SCAN_BANK_CARD" />
+            </intent-filter>
+        </activity>
         <activity android:name=".Main2Activity">
-
-
-
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
-
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
-
         </activity>
         <activity android:name=".SignInActivity">
             <intent-filter>
@@ -42,16 +52,43 @@
             </intent-filter>
         </activity>
         <activity android:name=".SingUpActivity" />
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity" />
 
-        <service android:name=".MyHostApduService" android:exported="true" android:permission="android.permission.BIND_NFC_SERVICE">
+
+        <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-            <meta-data android:name="android.nfc.cardemulation.host_apdu_service" android:resource="@xml/apduservice"/>
         </service>
+        <service android:name=".MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <service
+            android:name=".MyHostApduService"
+            android:exported="true"
+            android:permission="android.permission.BIND_NFC_SERVICE">
+            <intent-filter>
+                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
+            </intent-filter>
 
+            <meta-data
+                android:name="android.nfc.cardemulation.host_apdu_service"
+                android:resource="@xml/apduservice" />
+        </service>
+        <service
+            android:name="com.yandex.metrica.push.firebase.MetricaMessagingService"
+            tools:node="remove" />
+        <receiver android:name=".SilentPushReceiver">
+            <intent-filter>
+                <action android:name="com.example.parkpay.action.ymp.SILENT_PUSH_RECEIVE"/>
+                <!--<action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/>-->
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

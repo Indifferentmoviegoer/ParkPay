@@ -1,47 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".FragmentProfile">
 
-    <ImageView
-        android:id="@+id/imageProfile"
-        android:layout_width="80dp"
-        android:layout_height="59dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        app:srcCompat="@drawable/ic_account_circle_black_24dp" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/nameProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_toEndOf="@+id/imageProfile"
-        android:text="@string/nameProfile"
-        android:textSize="20sp"/>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/editProfile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nameProfile"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="2dp"
-        android:layout_toEndOf="@+id/imageProfile"
-        android:text="@string/editProfile" />
+            <ImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="80dp"
+                android:layout_height="59dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/ic_account_circle_black_24dp" />
 
-    <Switch
-        android:id="@+id/turnNotification"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/imageProfile"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="19dp"
-        android:text="@string/turnNotification" />
+            <TextView
+                android:id="@+id/nameProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="10dp"
+                app:layout_constraintStart_toEndOf="@id/imageProfile"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="@string/nameProfile"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/editProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/nameProfile"
+                app:layout_constraintStart_toEndOf="@id/imageProfile"
+                app:layout_constraintTop_toBottomOf="@id/nameProfile"
+                android:text="@string/editProfile" />
+
+            <Switch
+                android:id="@+id/turnNotification"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imageProfile"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageProfile"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="15dp"
+                android:text="@string/turnNotification" />
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+
 </RelativeLayout>

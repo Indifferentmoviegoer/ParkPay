@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ParkPay</string>
 
-    <string name="firstParam">Email</string>
+    <string name="firstParam">Логин</string>
     <string name="secondParam">Пароль</string>
     <string name="remMe">Запомнить меня </string>
     <string name="reg">Еще не зарегистрированы? Нажмите здесь…</string>
@@ -17,12 +17,6 @@
     <string name="nC">Номер карты</string>
     <string name="signUp">Зарегистрироваться</string>
 
-    <string name="title_activity_home">HomeActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="todo">TODO</string>
-
 
     <string name="scan_process_label">Scanning…</string>
     <string name="scan_label">Scan</string>
@@ -36,6 +30,11 @@
     <string name="turnNotification">Отключить уведомления</string>
 
     <string name="editInfo">Сохранить изменения</string>
+
+    <string name="more">Подробнеее</string>
+    <string name="pay">Пополнить карту</string>
+    <string name="add">Добавить</string>
+    <string name="deleteCard">Удалить карту</string>
 
 
 </resources>

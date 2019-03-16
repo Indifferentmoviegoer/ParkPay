@@ -2,7 +2,6 @@ package com.example.parkpay;
 
 import android.nfc.cardemulation.HostApduService;
 import android.os.Bundle;
-import android.util.Log;
 
 import java.util.Arrays;
 
