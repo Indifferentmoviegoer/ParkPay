@@ -44,7 +44,7 @@ public class FragmentCamera extends Fragment {
         c=getContext();
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        scanQR(view);
+        scanQR(view,getActivity());
 
         return view;
     }
@@ -70,17 +70,18 @@ public class FragmentCamera extends Fragment {
     }
 
     // Запуск сканера qr-кода:
-    public void scanQR(View v) {
+    public static void scanQR(View v,Activity activity) {
         try {
 
             // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-            startActivityForResult(intent, 0);
+            activity.startActivityForResult(intent, 0);
+
         } catch (ActivityNotFoundException anfe) {
 
             // Предлагаем загрузить с Play Market:
-            showDialog(getActivity(), "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
+            showDialog(activity, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
         }
     }
 

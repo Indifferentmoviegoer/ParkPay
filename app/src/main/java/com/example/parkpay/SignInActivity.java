@@ -34,12 +34,12 @@ public class SignInActivity extends AppCompatActivity {
     CheckBox remember;
     String loginUser;
     String passwordUser;
+    SharedPreferences settings;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
     public static final String APP_PREFERENCES_EMAIL ="Email";
     public static final String APP_PREFERENCES_PASSWORD ="Password";
     public static final String APP_PREFERENCES_TOKEN ="Token";
-    SharedPreferences settings;
     private static final String TAG = "myLogs";
 
     @Override
@@ -54,7 +54,6 @@ public class SignInActivity extends AppCompatActivity {
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         signIn.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 loginUser=login.getText().toString();
@@ -64,7 +63,15 @@ public class SignInActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
                             Toast.LENGTH_SHORT).show();
                 } else {
-                    //doGetRequest("http://www.mobile.ru/login");
+//                    JSONObject json = new JSONObject();
+//                    try {
+//                        json.put("login",loginUser);
+//                        json.put("password",passwordUser);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    MainActivity getToken=new MainActivity();
+//                    getToken.doGetRequest("http://www.mobile.ru/login",json);
                     //if(settings.contains(APP_PREFERENCES_TOKEN)){
                         Intent intent = new Intent(SignInActivity.this,
                                 MainActivity.class);
@@ -111,58 +118,5 @@ public class SignInActivity extends AppCompatActivity {
         editor.putString(APP_PREFERENCES_EMAIL,login.getText().toString());
         editor.putString(APP_PREFERENCES_PASSWORD,pass.getText().toString());
         editor.apply();
-    }
-
-
-    private void doGetRequest(String url){
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-        JSONObject json = new JSONObject();
-        try {
-            json.put("login",loginUser);
-            json.put("password",passwordUser);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        String jsonString = json.toString();
-        RequestBody body = RequestBody.create(JSON, jsonString);
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-                .post(body)
-                .url(url)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.v("TAG", call.request().body().toString());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        sovet.setText("Ошибка скоро будет исправлена,потерпи блять!");
-                    }
-                });
-            }
-            @Override
-            public void onResponse(Call call, final Response response) throws IOException {
-                runOnUiThread(() -> {
-                    try {
-
-                        String jsonData = response.body().string();
-                        JSONObject Jobject = new JSONObject(jsonData);
-                        SharedPreferences.Editor editor = settings.edit();
-                        Log.d(TAG, Jobject.getString("token"));
-                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
-                        editor.apply();
-//                            tok = Jobject.getString("text");
-//                            sovet.startAnimation(alpha_in);
-//                            sovet.setText(tok);
-
-                    } catch (IOException | JSONException e) {
-//                            tok = "";
-//                            sovet.setText(tok);
-                    }
-                });
-            }
-        });
     }
 }

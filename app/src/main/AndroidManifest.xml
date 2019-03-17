@@ -25,10 +25,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <!--<meta-data android:name="ymp_firebase_app_id" android:value="1:1061747613431:android:9be6226371a31003"/>-->
-        <!--<meta-data android:name="ymp_gcm_sender_id" android:value="number:1061747613431"/>-->
-
+        <activity android:name=".AddCardActivity"></activity>
+        <!-- <meta-data android:name="ymp_firebase_app_id" android:value="1:1061747613431:android:9be6226371a31003"/> -->
+        <!-- <meta-data android:name="ymp_gcm_sender_id" android:value="number:1061747613431"/> -->
         <activity android:name=".DetailCardActivity" />
         <activity android:name=".PayActivity" />
         <activity android:name=".ScanBankCardActivity">
@@ -40,6 +39,7 @@
             <intent-filter>
                 <action android:name="android.nfc.action.TECH_DISCOVERED" />
             </intent-filter>
+
             <meta-data
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
@@ -54,7 +54,6 @@
         <activity android:name=".SingUpActivity" />
         <activity android:name=".MainActivity" />
 
-
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -65,9 +64,11 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
+
         <service
             android:name=".MyHostApduService"
             android:exported="true"
@@ -83,10 +84,11 @@
         <service
             android:name="com.yandex.metrica.push.firebase.MetricaMessagingService"
             tools:node="remove" />
+
         <receiver android:name=".SilentPushReceiver">
             <intent-filter>
-                <action android:name="com.example.parkpay.action.ymp.SILENT_PUSH_RECEIVE"/>
-                <!--<action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/>-->
+                <action android:name="com.example.parkpay.action.ymp.SILENT_PUSH_RECEIVE" />
+                <!-- <action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/> -->
             </intent-filter>
         </receiver>
     </application>

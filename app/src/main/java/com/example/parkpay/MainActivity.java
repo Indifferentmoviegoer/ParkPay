@@ -1,14 +1,42 @@
 package com.example.parkpay;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Objects;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String APP_PREFERENCES = "mysettings";
+    public static final String APP_PREFERENCES_TOKEN ="Token";
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //FirebaseApp.initializeApp(this);
 
+        settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
@@ -72,5 +101,62 @@ public class MainActivity extends AppCompatActivity {
                     .commit();
         }
 
+    }
+
+    public static void saveArrayList(ArrayList<String> list, String key, SharedPreferences settings){
+        SharedPreferences.Editor editor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(list);
+        editor.putString(key, json);
+        editor.apply();
+    }
+
+    public static ArrayList<String> getArrayList(String key, SharedPreferences settings){
+        Gson gson = new Gson();
+        String json = settings.getString(key, null);
+        Type type = new TypeToken<ArrayList<String>>() {}.getType();
+        return gson.fromJson(json, type);
+    }
+
+    public void doGetRequest(String url, JSONObject json){
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .post(body)
+                .url(url)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+                        JSONObject Jobject = new JSONObject(jsonData);
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
+                        editor.apply();
+                    } catch (IOException | JSONException e) {
+                        Toast.makeText(getApplicationContext(),"Ошибка",Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 }

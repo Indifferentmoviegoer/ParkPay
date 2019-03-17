@@ -30,6 +30,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
+    public static final String APP_PREFERENCES_DETAIL_CARD ="detailCard";
     SharedPreferences settings;
 
     private ArrayList<ArrayList<String>> mGroups;
@@ -125,90 +126,129 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
         textChild.setText(mGroups.get(groupPosition).get(childPosition));
 
         Button button = (Button)convertView.findViewById(R.id.buttonChild);
-        ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
+//        ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
         if(isLastChild) {
-            delete.setVisibility(View.GONE);
+//            delete.setVisibility(View.GONE);
         }
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(isLastChild) {
+
                     if(groupPosition==0) {
-                        ArrayList<String> children1 = new ArrayList<String>();
-                        if (settings.contains(APP_PREFERENCES_CARDS)) {
-                            children1 = getArrayList(APP_PREFERENCES_CARDS);
-                        }
-                        children1.add("1212121");
-                        saveArrayList(children1, APP_PREFERENCES_CARDS);
-                        notifyDataSetChanged();
+
+                        Intent i = new Intent(mContext, AddCardActivity.class);
+                        i.putExtra("POSITION_GROUP", 0);
+                        mContext.startActivity(i);
                     }
+
                     if(groupPosition==1) {
-                        ArrayList<String> children2 = new ArrayList<String>();
                         if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
-                            children2 = getArrayList(APP_PREFERENCES_VIRTUAL_CARDS);
+                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                         }
-                        children2.add("1212121");
-                        notifyDataSetChanged();
-                        saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS);
+                        Intent i = new Intent(mContext, AddCardActivity.class);
+                        i.putExtra("POSITION_GROUP", 1);
+                        mContext.startActivity(i);
                     }
+
+//                    if(groupPosition==0) {
+//                        ArrayList<String> children1 = new ArrayList<String>();
+//                        if (settings.contains(APP_PREFERENCES_CARDS)) {
+//                            children1 = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+//                        }
+//                        children1.add("1212121");
+//                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
+//                        notifyDataSetChanged();
+//                    }
+//                    if(groupPosition==1) {
+//                        ArrayList<String> children2 = new ArrayList<String>();
+//                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
+//                            children2 = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                        }
+//                        children2.add("1212121");
+//                        notifyDataSetChanged();
+//                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                    }
+
                 }
                 if(!isLastChild) {
-                    Intent intent = new Intent(mContext,
-                            PayActivity.class);
-                    mContext.startActivity(intent);
+
+                    if(groupPosition==0) {
+                        if (settings.contains(APP_PREFERENCES_CARDS)) {
+                            child = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                        }
+                        Intent i = new Intent(mContext, DetailCardActivity.class);
+                        i.putExtra("POSITION_CARD", child.get(childPosition));
+                        i.putExtra("POSITION_GROUP", 0);
+                        mContext.startActivity(i);
+                    }
+
+                    if(groupPosition==1) {
+                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
+                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+                        }
+                        Intent i = new Intent(mContext, DetailCardActivity.class);
+                        i.putExtra("POSITION_CARD", child.get(childPosition));
+                        i.putExtra("POSITION_GROUP", 1);
+                        mContext.startActivity(i);
+                        //SharedPreferences.Editor editor = settings.edit();
+                        //editor.putString(APP_PREFERENCES_DETAIL_CARD,child.get(childPosition));
+                        //editor.apply();
+                    }
+//                    Intent intent = new Intent(mContext,
+//                            PayActivity.class);
+//                    mContext.startActivity(intent);
                 }
             }
         });
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!isLastChild) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-                    builder.setMessage("Вы действительно хотите удалить данную карту?");
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("Да",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    //ArrayList<String> child =new ArrayList<String>();
-                                            //mGroups.get(groupPosition);
-
-                                    if(groupPosition==0) {
-                                        if (settings.contains(APP_PREFERENCES_CARDS)) {
-                                            child = getArrayList(APP_PREFERENCES_CARDS);
-
-                                        }
-                                        child.remove(childPosition);
-                                        notifyDataSetChanged();
-                                        saveArrayList(child, APP_PREFERENCES_CARDS);
-                                    }
-
-                                    if(groupPosition==1) {
-                                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
-                                            child = getArrayList(APP_PREFERENCES_VIRTUAL_CARDS);
-                                        }
-                                        child.remove(childPosition);
-                                        notifyDataSetChanged();
-                                        saveArrayList(child, APP_PREFERENCES_VIRTUAL_CARDS);
-                                    }
-                                    //ArrayList<String> child =mGroups.get(groupPosition);
-                                    //child.remove(childPosition);
-                                    //notifyDataSetChanged();
-                                }
-                            });
-                    builder.setNegativeButton("Нет",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                }
-            }
-        });
-
+//        delete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if(!isLastChild) {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+//                    builder.setMessage("Вы действительно хотите удалить данную карту?");
+//                    builder.setCancelable(false);
+//                    builder.setPositiveButton("Да",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//
+//                                    //ArrayList<String> child =new ArrayList<String>();
+//                                            //mGroups.get(groupPosition);
+//
+//                                    if(groupPosition==0) {
+//                                        if (settings.contains(APP_PREFERENCES_CARDS)) {
+//                                            child = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+//                                        }
+//                                        child.remove(childPosition);
+//                                        notifyDataSetChanged();
+//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+//                                    }
+//
+//                                    if(groupPosition==1) {
+//                                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
+//                                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                                        }
+//                                        child.remove(childPosition);
+//                                        notifyDataSetChanged();
+//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                                    }
+//                                    //ArrayList<String> child =mGroups.get(groupPosition);
+//                                    //child.remove(childPosition);
+//                                    //notifyDataSetChanged();
+//                                }
+//                            });
+//                    builder.setNegativeButton("Нет",
+//                            new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    dialog.cancel();
+//                                }
+//                            });
+//                    AlertDialog alertDialog = builder.create();
+//                    alertDialog.show();
+//                }
+//            }
+//        });
         return convertView;
     }
 
@@ -216,20 +256,4 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
     }
-
-    public void saveArrayList(ArrayList<String> list, String key){
-        SharedPreferences.Editor editor = settings.edit();
-        Gson gson = new Gson();
-        String json = gson.toJson(list);
-        editor.putString(key, json);
-        editor.apply();
-    }
-
-    public ArrayList<String> getArrayList(String key){
-        Gson gson = new Gson();
-        String json = settings.getString(key, null);
-        Type type = new TypeToken<ArrayList<String>>() {}.getType();
-        return gson.fromJson(json, type);
-    }
-
 }

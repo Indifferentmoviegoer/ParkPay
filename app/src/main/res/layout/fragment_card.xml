@@ -9,20 +9,20 @@
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.constraint.ConstraintLayout
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <ExpandableListView
                 android:id="@+id/exListView"
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:indicatorLeft="250dp"
-                android:indicatorRight="300dp"
+                android:indicatorRight="500dp"
                 />
-        </android.support.constraint.ConstraintLayout>
+        </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>
