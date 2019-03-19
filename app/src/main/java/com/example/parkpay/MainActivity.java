@@ -1,13 +1,17 @@
 package com.example.parkpay;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -37,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     SharedPreferences settings;
+    BottomNavigationView bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,13 +50,13 @@ public class MainActivity extends AppCompatActivity {
         //FirebaseApp.initializeApp(this);
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav = findViewById(R.id.bottom_navigation);
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new FragmentCard()).commit();
+                    new CardFragment()).commit();
         }
     }
 
@@ -63,18 +68,17 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (item.getItemId()) {
                         case R.id.nav_cart:
-                            selectedFragment = new FragmentCard();
+                            selectedFragment = new CardFragment();
                             break;
                         case R.id.nav_news:
-                            selectedFragment = new FragmentNews();
+                            selectedFragment = new NewsFragment();
                             break;
                         case R.id.nav_camera:
-                            selectedFragment = new FragmentCamera();
+                            selectedFragment = new CameraFragment();
                             break;
                         case R.id.nav_profile:
-                            selectedFragment = new FragmentProfile();
+                            selectedFragment = new ProfileFragment();
                             break;
-
                     }
                     if(selectedFragment!=null) {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -118,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         return gson.fromJson(json, type);
     }
 
-    public void doGetRequest(String url, JSONObject json){
+    public static void doGetRequest(String url, JSONObject json, Context c, SharedPreferences settings, Activity activity){
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
         String jsonString = json.toString();
@@ -133,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                runOnUiThread(new Runnable() {
+                activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                     }
@@ -141,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                runOnUiThread(() -> {
+                activity.runOnUiThread(() -> {
                     try {
 
                         String jsonData = null;
@@ -153,10 +157,40 @@ public class MainActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
                         editor.apply();
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(getApplicationContext(),"Ошибка",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(c,"Ошибка",Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
+
+    public final static boolean isValidEmail(CharSequence target) {
+        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        bottomNav.setSelectedItemId(R.id.nav_cart);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new CardFragment()).commit();
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        OnBackPressedListener backPressedListener = null;
+//        for (Fragment fragment: fm.getFragments()) {
+//            if (fragment instanceof  OnBackPressedListener) {
+//                backPressedListener = (OnBackPressedListener) fragment;
+//                break;
+//            }
+//        }
+//
+//        if (backPressedListener != null) {
+//            backPressedListener.onBackPressed();
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 }

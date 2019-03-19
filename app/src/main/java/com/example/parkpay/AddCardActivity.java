@@ -1,9 +1,14 @@
 package com.example.parkpay;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -11,9 +16,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 import java.util.Objects;
+
 
 public class AddCardActivity extends AppCompatActivity {
 
@@ -21,9 +26,10 @@ public class AddCardActivity extends AppCompatActivity {
     EditText numberAddCard;
     Context c;
     SharedPreferences settings;
-    int groupPosition;
+    String numberCard;
+    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_СARD ="Card";
+    public static final String APP_PREFERENCES_CARD ="Card";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
 
@@ -36,22 +42,12 @@ public class AddCardActivity extends AppCompatActivity {
         c=this;
         buttonAddCard=(Button)findViewById(R.id.buttonAddCard);
         numberAddCard=(EditText)findViewById(R.id.numberAddCard);
+
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        if(settings.contains(APP_PREFERENCES_СARD)){
-            numberAddCard.setText(settings.getString(APP_PREFERENCES_СARD, ""));
-        }
-
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                groupPosition= 10;
-            } else {
-                groupPosition= extras.getInt("POSITION_GROUP");
-            }
-        } else {
-            groupPosition= (int) savedInstanceState.getSerializable("POSITION_GROUP");
+        if(settings.contains(APP_PREFERENCES_CARD)){
+            numberAddCard.setText(settings.getString(APP_PREFERENCES_CARD, ""));
         }
 
         buttonAddCard.setOnClickListener(new View.OnClickListener() {
@@ -59,37 +55,29 @@ public class AddCardActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 Intent i = new Intent(c, MainActivity.class);
-                ArrayList<String> children1 = new ArrayList<String>();
-                ArrayList<String> children2 = new ArrayList<String>();
-
-                if(groupPosition==0){
+                ArrayList<String> child = new ArrayList<String>();
+                numberCard=numberAddCard.getText().toString();
                     if(settings.contains(APP_PREFERENCES_CARDS)){
-                        children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                        child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                     }
-                    if(numberAddCard.getText().toString().equals("") || numberAddCard.getText().toString().length() == 0){
+                    if(numberCard.equals("") || numberCard.length() == 0){
                         Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
                                 Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        children1.add(numberAddCard.getText().toString());
-                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
-                        startActivity(i);
+                        if(numberCard.length() == 16&&!numberCard.contains(" ")&&
+                                numberCard.matches("^[a-zA-Z0-9]+$"))
+                        {
+                            child.add(numberCard);
+                            MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                            startActivity(i);
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(),
+                                    "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
-                if(groupPosition==1){
-                    if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
-                        children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                    }
-                    if(numberAddCard.getText().toString().equals("") || numberAddCard.getText().toString().length() == 0){
-                        Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                    else {
-                        children2.add(numberAddCard.getText().toString());
-                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                        startActivity(i);
-                    }
-                }
             }
         });
 
@@ -103,7 +91,9 @@ public class AddCardActivity extends AppCompatActivity {
 
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (numberAddCard.getRight() - numberAddCard.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-                        FragmentCamera.scanQR(v,AddCardActivity.this);
+
+                        scanQR(v);
+
                         return true;
                     }
                 }
@@ -111,12 +101,84 @@ public class AddCardActivity extends AppCompatActivity {
             }
         });
     }
-
     @Override
     protected void onResume() {
         super.onResume();
-        if(settings.contains(APP_PREFERENCES_СARD)){
-            numberAddCard.setText(settings.getString(APP_PREFERENCES_СARD, ""));
+        if(settings.contains(APP_PREFERENCES_CARD)){
+            numberAddCard.setText(settings.getString(APP_PREFERENCES_CARD, ""));
+        }
+    }
+
+    // Запускаемм сканер штрих кода:
+    public void scanBar(View v) {
+        try {
+            // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
+            Intent intent = new Intent(ACTION_SCAN);
+            intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
+            startActivityForResult(intent, 0);
+        } catch (ActivityNotFoundException anfe) {
+
+            // Предлагаем загрузить с Play Market:
+            showDialog(AddCardActivity.this, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
+        }
+    }
+
+    // Запуск сканера qr-кода:
+    public void scanQR(View v) {
+        try {
+            // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
+            Intent intent = new Intent(ACTION_SCAN);
+            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+            startActivityForResult(intent, 0);
+        } catch (ActivityNotFoundException anfe) {
+            // Предлагаем загрузить с Play Market:
+            showDialog(AddCardActivity.this, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
+        }
+    }
+
+    // alert dialog для перехода к загрузке приложения сканера:
+    private static AlertDialog showDialog(final Activity act, CharSequence title,
+                                          CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
+        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
+        downloadDialog.setTitle(title);
+        downloadDialog.setMessage(message);
+        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                // Ссылка поискового запроса для загрузки приложения:
+                Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                try {
+                    act.startActivity(intent);
+                } catch (ActivityNotFoundException anfe) {
+
+                }
+            }
+        });
+        downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        return downloadDialog.show();
+    }
+
+    // Обрабатываем результат, полученный от приложения сканера:
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == 0) {
+            if (resultCode == RESULT_OK) {
+                // Получаем данные после работы сканера и выводим их в Toast сообщении:
+                String contents = intent.getStringExtra("SCAN_RESULT");
+                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(APP_PREFERENCES_CARD,contents);
+                editor.apply();
+                // numberCard.setText(contents);
+//                Toast toast = Toast.makeText(c, "Содержание: " + contents + " Формат: " + format, Toast.LENGTH_LONG);
+//                toast.show();
+                Intent i = new Intent(c,
+                        AddCardActivity.class);
+                startActivity(i);
+            }
         }
     }
 }

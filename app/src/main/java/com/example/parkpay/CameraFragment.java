@@ -15,16 +15,22 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Objects;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-public class FragmentCamera extends Fragment {
+//public class CameraFragment extends Fragment implements OnBackPressedListener {
+public class CameraFragment extends Fragment {
+
     TextView serial;
     NfcAdapter mNfcAdapter;
     PendingIntent mPendingIntent;
@@ -34,7 +40,7 @@ public class FragmentCamera extends Fragment {
     private static final String TAG = "myLogs";
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_СARD ="Card";
+    public static final String APP_PREFERENCES_CARD ="Card";
     SharedPreferences settings;
     @Nullable
     @Override
@@ -44,20 +50,13 @@ public class FragmentCamera extends Fragment {
         c=getContext();
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        scanQR(view,getActivity());
-
+        scanQR(view);
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
     }
 
     // Запускаемм сканер штрих кода:
     public void scanBar(View v) {
         try {
-
             // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
@@ -70,18 +69,15 @@ public class FragmentCamera extends Fragment {
     }
 
     // Запуск сканера qr-кода:
-    public static void scanQR(View v,Activity activity) {
+    public void scanQR(View v) {
         try {
-
             // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
             Intent intent = new Intent(ACTION_SCAN);
             intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-            activity.startActivityForResult(intent, 0);
-
+            startActivityForResult(intent, 0);
         } catch (ActivityNotFoundException anfe) {
-
             // Предлагаем загрузить с Play Market:
-            showDialog(activity, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
+            showDialog(getActivity(), "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
         }
     }
 
@@ -115,19 +111,31 @@ public class FragmentCamera extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == 0) {
             if (resultCode == RESULT_OK) {
-
                 // Получаем данные после работы сканера и выводим их в Toast сообщении:
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_СARD,contents);
+                editor.putString(APP_PREFERENCES_CARD,contents);
                 editor.apply();
                // numberCard.setText(contents);
-//                Toast toast = Toast.makeText(this, "Содержание: " + contents + " Формат: " + format, Toast.LENGTH_LONG);
+//                Toast toast = Toast.makeText(c, "Содержание: " + contents + " Формат: " + format, Toast.LENGTH_LONG);
 //                toast.show();
-
+                Intent i = new Intent(c,
+                        AddCardActivity.class);
+                startActivity(i);
+//                Objects.requireNonNull(getActivity()).onBackPressed();
             }
+//            if (resultCode == RESULT_CANCELED) {
+//                Intent i = new Intent(c,
+//                        MainActivity.class);
+//                startActivity(i);
+//            }
         }
     }
+
+//    @Override
+//    public void onBackPressed() {
+//
+//    }
 
 }

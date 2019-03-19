@@ -38,7 +38,6 @@ public class Main2Activity extends AppCompatActivity {
     protected void onNewIntent(Intent pIntent) {
         super.onNewIntent(pIntent);
         setIntent(pIntent);
-
     }
 
     @Override

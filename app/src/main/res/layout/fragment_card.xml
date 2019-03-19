@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentCard">
+    tools:context=".CardFragment">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -15,14 +15,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
             <ExpandableListView
                 android:id="@+id/exListView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:indicatorLeft="250dp"
-                android:indicatorRight="500dp"
-                />
+                android:baselineAligned="false"
+                android:indicatorLeft="180dp"
+                android:indicatorRight="500dp" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

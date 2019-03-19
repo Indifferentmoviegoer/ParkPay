@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SingUpActivity">
+    tools:context=".SignUpActivity">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -14,15 +14,16 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <EditText
-                android:id="@+id/name"
+                android:id="@+id/login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="16dp"
                 android:ems="10"
-                android:hint="@string/name"
+                android:hint="@string/firstParam"
                 android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.368"
@@ -30,64 +31,45 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
-                android:id="@+id/fam"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:hint="@string/fam"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="@+id/name"
+                android:hint="@string/name"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="@+id/login"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/login" />
 
-            <EditText
-                android:id="@+id/otc"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/mailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/ot"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="@+id/name"
+                app:layout_constraintEnd_toEndOf="@+id/login"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/fam" />
-
-            <EditText
-                android:id="@+id/number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/number"
-                android:inputType="phone"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/otc" />
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/name">
 
             <EditText
                 android:id="@+id/mail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
                 android:ems="10"
                 android:hint="@string/email"
                 android:inputType="textEmailAddress"
-                app:layout_constraintEnd_toEndOf="@+id/name"
+                app:layout_constraintEnd_toEndOf="@+id/login"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/number" />
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <EditText
                 android:id="@+id/passw"
@@ -99,9 +81,9 @@
                 android:ems="10"
                 android:hint="@string/password"
                 android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/mail" />
+                app:layout_constraintEnd_toEndOf="@+id/login"
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/mailLayout" />
 
             <EditText
                 android:id="@+id/confirmPassword"
@@ -113,25 +95,42 @@
                 android:ems="10"
                 android:hint="@string/confirm"
                 android:inputType="textPassword"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintEnd_toEndOf="@+id/login"
+                app:layout_constraintStart_toStartOf="@+id/login"
                 app:layout_constraintTop_toBottomOf="@+id/passw" />
 
-            <!--<EditText-->
-                <!--android:id="@+id/numberCard"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginStart="10dp"-->
-                <!--android:layout_marginEnd="10dp"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:ems="10"-->
-                <!--android:hint="@string/nC"-->
-                <!--android:inputType="number"-->
-                <!--app:layout_constraintEnd_toEndOf="@+id/name"-->
-                <!--app:layout_constraintStart_toStartOf="@+id/name"-->
-                <!--app:layout_constraintTop_toBottomOf="@+id/confirmPassword"-->
-                <!--android:drawableEnd="@drawable/ic_camera"-->
-                <!--android:drawablePadding="12dp"/>-->
+            <EditText
+                android:id="@+id/number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/number"
+                android:inputType="phone"
+                app:layout_constraintEnd_toEndOf="@+id/login"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/confirmPassword" />
+
+            <EditText
+                android:id="@+id/dateBirthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:editable="false"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="8dp"
+                android:ems="10"
+                android:hint="@string/dateBirthday"
+                app:layout_constraintEnd_toEndOf="@+id/login"
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/number"
+                android:drawableEnd="@drawable/ic_date"
+                android:drawablePadding="12dp"
+                />
+
             <Button
                 android:id="@+id/signUp"
                 android:layout_width="match_parent"
@@ -140,9 +139,11 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/signUp"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/confirmPassword" />
+                app:layout_constraintEnd_toEndOf="@+id/login"
+                app:layout_constraintStart_toStartOf="@+id/login"
+                app:layout_constraintTop_toBottomOf="@+id/dateBirthday" />
+
+
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

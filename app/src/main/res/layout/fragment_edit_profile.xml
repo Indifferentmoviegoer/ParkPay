@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentEditProfile">
+    tools:context=".EditProfileFragment">
 
     <ScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,35 +32,30 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <EditText
-                android:id="@+id/fam"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/mailLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/fam"
-                android:inputType="textPersonName"
                 app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+                app:layout_constraintTop_toBottomOf="@+id/name">
 
-            <EditText
-                android:id="@+id/otc"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/ot"
-                android:inputType="textPersonName"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/fam" />
+                <EditText
+                    android:id="@+id/mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/email"
+                    android:inputType="textEmailAddress"
+                    app:layout_constraintEnd_toEndOf="@+id/login"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="@+id/login"
+                    app:layout_constraintTop_toBottomOf="@+id/name" />
+
+            </android.support.design.widget.TextInputLayout>
 
             <EditText
                 android:id="@+id/number"
@@ -73,36 +70,24 @@
                 app:layout_constraintEnd_toEndOf="@+id/name"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/otc" />
+                app:layout_constraintTop_toBottomOf="@+id/mailLayout" />
 
             <EditText
-                android:id="@+id/mail"
+                android:id="@+id/dateBirthday"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                app:layout_constraintEnd_toEndOf="@+id/name"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/number" />
-
-            <EditText
-                android:id="@+id/passw"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="8dp"
-                android:ems="10"
-                android:hint="@string/password"
-                android:inputType="textPassword"
+                android:hint="@string/dateBirthday"
+                android:editable="false"
                 app:layout_constraintEnd_toEndOf="@+id/name"
                 app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/mail" />
+                app:layout_constraintTop_toBottomOf="@+id/number"
+                android:drawableEnd="@drawable/ic_date"
+                android:drawablePadding="12dp"
+                />
 
             <Button
                 android:id="@+id/save"
@@ -113,7 +98,7 @@
                 android:text="@string/editInfo"
                 app:layout_constraintEnd_toEndOf="@+id/name"
                 app:layout_constraintStart_toStartOf="@+id/name"
-                app:layout_constraintTop_toBottomOf="@+id/passw"/>
+                app:layout_constraintTop_toBottomOf="@+id/dateBirthday"/>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

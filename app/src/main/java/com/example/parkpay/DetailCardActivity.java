@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -63,7 +64,8 @@ public class DetailCardActivity extends AppCompatActivity {
                 if(number!=null){
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(c);
-                    builder.setMessage("Вы действительно хотите удалить данную карту?");
+                    builder.setMessage(Html
+                            .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
                     builder.setCancelable(false);
                     builder.setPositiveButton("Да",
                             new DialogInterface.OnClickListener() {

@@ -1,29 +1,19 @@
 package com.example.parkpay;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Currency;
-import java.util.Objects;
 
-import ru.yandex.money.android.sdk.Amount;
-import ru.yandex.money.android.sdk.Checkout;
-import ru.yandex.money.android.sdk.PaymentParameters;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class ExpListAdapter extends BaseExpandableListAdapter{
 
@@ -111,24 +101,30 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild,
                              View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            if(isLastChild){
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.add_child_view, null);
-            }
-            if(!isLastChild){
-                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.child_view, null);
-            }
+//        if (convertView == null) {
+//            if(isLastChild){
+//                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                convertView = inflater.inflate(R.layout.add_child_view, null);
+//            }
+//            if(!isLastChild){
+//                LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                convertView = inflater.inflate(R.layout.child_view, null);
+//            }
+//        }
 
-        }
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.child_view, null);
+
         TextView textChild = (TextView) convertView.findViewById(R.id.textChild);
         textChild.setText(mGroups.get(groupPosition).get(childPosition));
 
         Button button = (Button)convertView.findViewById(R.id.buttonChild);
-//        ImageView delete = (ImageView) convertView.findViewById(R.id.delete);
-        if(isLastChild) {
-//            delete.setVisibility(View.GONE);
+        if(isLastChild){
+            button.setText("Добавить");
+            button.getBackground().setColorFilter(Color.parseColor("#71CC32"), PorterDuff.Mode.MULTIPLY);
+        }
+        if(!isLastChild){
+            button.setText("Подробнее");
         }
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -137,40 +133,17 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                 if(isLastChild) {
 
                     if(groupPosition==0) {
-
                         Intent i = new Intent(mContext, AddCardActivity.class);
-                        i.putExtra("POSITION_GROUP", 0);
                         mContext.startActivity(i);
                     }
 
                     if(groupPosition==1) {
-                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
-                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                        }
-                        Intent i = new Intent(mContext, AddCardActivity.class);
-                        i.putExtra("POSITION_GROUP", 1);
-                        mContext.startActivity(i);
+                        ((MainActivity) Objects.requireNonNull(mContext))
+                                .replaceFragments(AddVirtualCardFragment.class);
+//                        Intent i = new Intent(mContext, AddCardActivity.class);
+//                        i.putExtra("POSITION_GROUP", 1);
+//                        mContext.startActivity(i);
                     }
-
-//                    if(groupPosition==0) {
-//                        ArrayList<String> children1 = new ArrayList<String>();
-//                        if (settings.contains(APP_PREFERENCES_CARDS)) {
-//                            children1 = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-//                        }
-//                        children1.add("1212121");
-//                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
-//                        notifyDataSetChanged();
-//                    }
-//                    if(groupPosition==1) {
-//                        ArrayList<String> children2 = new ArrayList<String>();
-//                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
-//                            children2 = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-//                        }
-//                        children2.add("1212121");
-//                        notifyDataSetChanged();
-//                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
-//                    }
-
                 }
                 if(!isLastChild) {
 
@@ -192,66 +165,12 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                         i.putExtra("POSITION_CARD", child.get(childPosition));
                         i.putExtra("POSITION_GROUP", 1);
                         mContext.startActivity(i);
-                        //SharedPreferences.Editor editor = settings.edit();
-                        //editor.putString(APP_PREFERENCES_DETAIL_CARD,child.get(childPosition));
-                        //editor.apply();
                     }
-//                    Intent intent = new Intent(mContext,
-//                            PayActivity.class);
-//                    mContext.startActivity(intent);
                 }
             }
         });
-//        delete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if(!isLastChild) {
-//                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-//                    builder.setMessage("Вы действительно хотите удалить данную карту?");
-//                    builder.setCancelable(false);
-//                    builder.setPositiveButton("Да",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//
-//                                    //ArrayList<String> child =new ArrayList<String>();
-//                                            //mGroups.get(groupPosition);
-//
-//                                    if(groupPosition==0) {
-//                                        if (settings.contains(APP_PREFERENCES_CARDS)) {
-//                                            child = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-//                                        }
-//                                        child.remove(childPosition);
-//                                        notifyDataSetChanged();
-//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-//                                    }
-//
-//                                    if(groupPosition==1) {
-//                                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
-//                                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-//                                        }
-//                                        child.remove(childPosition);
-//                                        notifyDataSetChanged();
-//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_VIRTUAL_CARDS,settings);
-//                                    }
-//                                    //ArrayList<String> child =mGroups.get(groupPosition);
-//                                    //child.remove(childPosition);
-//                                    //notifyDataSetChanged();
-//                                }
-//                            });
-//                    builder.setNegativeButton("Нет",
-//                            new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int id) {
-//                                    dialog.cancel();
-//                                }
-//                            });
-//                    AlertDialog alertDialog = builder.create();
-//                    alertDialog.show();
-//                }
-//            }
-//        });
         return convertView;
     }
-
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;

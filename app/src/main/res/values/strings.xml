@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">ParkPay</string>
 
+    <string name="cards">Карты</string>
+    <string name="news">Новости</string>
+    <string name="camera">Камера</string>
+    <string name="profile">Профиль</string>
+
     <string name="firstParam">Логин</string>
     <string name="secondParam">Пароль</string>
     <string name="remMe">Запомнить меня </string>
@@ -8,12 +13,12 @@
     <string name="signIn">Войти</string>
 
     <string name="name">Имя</string>
-    <string name="fam">Фамилия</string>
-    <string name="ot">Отчество</string>
-    <string name="number">Номер телефона</string>
+    <string name="number">Номер телефона </string>
     <string name="email">Email</string>
+    <string name="mailLayout">Неверный адрес почты</string>
     <string name="password">Пароль</string>
     <string name="confirm">Подтвердите пароль</string>
+    <string name="dateBirthday">Дата рождения</string>
     <string name="nC">Номер карты</string>
     <string name="signUp">Зарегистрироваться</string>
 
@@ -25,9 +30,10 @@
     <string name="servicedesc">Services desc: </string>
     <string name="aiddescription">Aid description: </string>
 
-    <string name="nameProfile">FirstName LastName</string>
+    <string name="nameProfile">Имя Фамилия</string>
     <string name="editProfile">Редактировать профиль</string>
     <string name="turnNotification">Отключить уведомления</string>
+    <string name="signOut">Выйти</string>
 
     <string name="editInfo">Сохранить изменения</string>
 

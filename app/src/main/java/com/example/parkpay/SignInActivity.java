@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,16 +15,6 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
 public class SignInActivity extends AppCompatActivity {
     Button signIn;
     EditText login;
@@ -34,6 +23,7 @@ public class SignInActivity extends AppCompatActivity {
     CheckBox remember;
     String loginUser;
     String passwordUser;
+    Context c;
     SharedPreferences settings;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
@@ -52,6 +42,7 @@ public class SignInActivity extends AppCompatActivity {
         help = (TextView) findViewById(R.id.helper);
         remember = (CheckBox) findViewById(R.id.remember);
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        c=this;
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,18 +61,14 @@ public class SignInActivity extends AppCompatActivity {
 //                    } catch (JSONException e) {
 //                        e.printStackTrace();
 //                    }
-//                    MainActivity getToken=new MainActivity();
-//                    getToken.doGetRequest("http://www.mobile.ru/login",json);
-                    //if(settings.contains(APP_PREFERENCES_TOKEN)){
-                        Intent intent = new Intent(SignInActivity.this,
-                                MainActivity.class);
-                        startActivity(intent);
-                    //}
-                    //if(!settings.contains(APP_PREFERENCES_TOKEN)) {
-                    //    Toast.makeText(getApplicationContext(), "Неверный логин или пароль!",
-                    //            Toast.LENGTH_SHORT).show();
-                    //}
-
+//                    MainActivity.doGetRequest("http://www.mobile.ru/login",
+//                            json,c,settings,SignInActivity.this);
+//                    if(settings.contains(APP_PREFERENCES_TOKEN)) {
+                    Intent intent = new Intent(SignInActivity.this,
+                            MainActivity.class);
+                    startActivity(intent);
+//                    finish();
+//                    }
                 }
             }
         });
@@ -95,7 +82,7 @@ public class SignInActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, SingUpActivity.class);
+                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
                 startActivity(intent);
             }
         });

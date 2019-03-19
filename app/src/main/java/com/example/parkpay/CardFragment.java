@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class FragmentCard extends Fragment {
+public class CardFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
@@ -48,13 +48,13 @@ public class FragmentCard extends Fragment {
         if(settings.contains(APP_PREFERENCES_CARDS)){
             children1=getArrayList(APP_PREFERENCES_CARDS);
         }
-        children1.add("Добавить карту");
+        children1.add("Новая карта");
         groups.add(children1);
 
         if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
             children2=getArrayList(APP_PREFERENCES_VIRTUAL_CARDS);
         }
-        children2.add("Добавить карту");
+        children2.add("Новая карта");
         groups.add(children2);
         //Создаем адаптер и передаем context и список с данными
         ExpListAdapter adapter = new ExpListAdapter(this.getActivity(), groups);
