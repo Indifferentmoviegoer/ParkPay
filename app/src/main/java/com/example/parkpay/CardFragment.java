@@ -41,10 +41,12 @@ public class CardFragment extends Fragment {
         ExpandableListView listView = (ExpandableListView)view.findViewById(R.id.exListView);
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
         //Создаем набор данных для адаптера
         ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
         ArrayList<String> children1 = new ArrayList<String>();
         ArrayList<String> children2 = new ArrayList<String>();
+
         if(settings.contains(APP_PREFERENCES_CARDS)){
             children1=getArrayList(APP_PREFERENCES_CARDS);
         }

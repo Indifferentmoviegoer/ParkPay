@@ -107,6 +107,24 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void replaceFragmentCamera(Class fragmentClass) {
+        Fragment fragment=null;
+        try {
+            fragment = (Fragment) fragmentClass.newInstance();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        if(fragment!=null)
+        {
+            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+
+    }
+
     public static void saveArrayList(ArrayList<String> list, String key, SharedPreferences settings){
         SharedPreferences.Editor editor = settings.edit();
         Gson gson = new Gson();
@@ -122,47 +140,47 @@ public class MainActivity extends AppCompatActivity {
         return gson.fromJson(json, type);
     }
 
-    public static void doGetRequest(String url, JSONObject json, Context c, SharedPreferences settings, Activity activity){
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-        String jsonString = json.toString();
-        RequestBody body = RequestBody.create(JSON, jsonString);
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-                .post(body)
-                .url(url)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                activity.runOnUiThread(() -> {
-                    try {
-
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
-                        }
-                        JSONObject Jobject = new JSONObject(jsonData);
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
-                        editor.apply();
-                    } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка",Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-    }
+//    public static void doGetRequest(String url, JSONObject json, Context c, SharedPreferences settings, Activity activity){
+//        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//
+//        String jsonString = json.toString();
+//        RequestBody body = RequestBody.create(JSON, jsonString);
+//        OkHttpClient client = new OkHttpClient();
+//        final Request request = new Request.Builder()
+//                .post(body)
+//                .url(url)
+//                .build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+//                activity.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                });
+//            }
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+//                activity.runOnUiThread(() -> {
+//                    try {
+//
+//                        String jsonData = null;
+//                        if (response.body() != null) {
+//                            jsonData = response.body().string();
+//                        }
+//                        JSONObject Jobject = new JSONObject(jsonData);
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
+//                        editor.apply();
+//                    } catch (IOException | JSONException e) {
+//                        Toast.makeText(c,"Ошибка",Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     public final static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
@@ -172,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         bottomNav.setSelectedItemId(R.id.nav_cart);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new CardFragment()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+//                new CardFragment()).commit();
     }
 
 //    @Override

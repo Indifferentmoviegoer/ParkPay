@@ -1,57 +1,122 @@
 package com.example.parkpay;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.nfc.NfcAdapter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
-import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 
-//public class CameraFragment extends Fragment implements OnBackPressedListener {
-public class CameraFragment extends Fragment {
+public class AddCardFragment extends Fragment {
 
-    TextView serial;
-    NfcAdapter mNfcAdapter;
-    PendingIntent mPendingIntent;
-    IntentFilter mFilters[];
+    Button buttonAddCard;
+    EditText numberAddCard;
     Context c;
-    String[][] mTechLists;
-    private static final String TAG = "myLogs";
+    SharedPreferences settings;
+    String numberCard;
+
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
+
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARD ="Card";
-    SharedPreferences settings;
+    public static final String APP_PREFERENCES_CARDS ="Cards";
+    public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
+
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.fragment_add_card,container,false);
 
-        View view = inflater.inflate(R.layout.fragment_camera,container,false);
         c=getContext();
-        settings= Objects.requireNonNull(this.getActivity())
+        buttonAddCard=(Button)view.findViewById(R.id.buttonAddCard);
+        numberAddCard=(EditText)view.findViewById(R.id.numberAddCard);
+
+        settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        scanQR(view);
+
+        if(settings.contains(APP_PREFERENCES_CARD)){
+            numberAddCard.setText(settings.getString(APP_PREFERENCES_CARD, ""));
+        }
+
+        buttonAddCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent i = new Intent(c, MainActivity.class);
+                ArrayList<String> child = new ArrayList<String>();
+                numberCard=numberAddCard.getText().toString();
+                if(settings.contains(APP_PREFERENCES_CARDS)){
+                    child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                }
+                if(numberCard.equals("") || numberCard.length() == 0){
+                    Toast.makeText(c, "Заполните все поля ввода!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    if(numberCard.length() == 16&&!numberCard.contains(" ")&&
+                            numberCard.matches("^[a-zA-Z0-9]+$"))
+                    {
+                        child.add(numberCard);
+                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                        startActivity(i);
+                    }
+                    else {
+                        Toast.makeText(c,
+                                "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
+
+        numberAddCard.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                final int DRAWABLE_LEFT = 0;
+                final int DRAWABLE_TOP = 1;
+                final int DRAWABLE_RIGHT = 2;
+                final int DRAWABLE_BOTTOM = 3;
+
+                if(event.getAction() == MotionEvent.ACTION_UP) {
+                    if(event.getRawX() >= (numberAddCard.getRight() - numberAddCard.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+
+                        scanQR(v);
+
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(settings.contains(APP_PREFERENCES_CARD)){
+            numberAddCard.setText(settings.getString(APP_PREFERENCES_CARD, ""));
+        }
     }
 
     // Запускаемм сканер штрих кода:
@@ -117,27 +182,14 @@ public class CameraFragment extends Fragment {
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putString(APP_PREFERENCES_CARD,contents);
                 editor.apply();
-               // numberCard.setText(contents);
+                // numberCard.setText(contents);
 //                Toast toast = Toast.makeText(c, "Содержание: " + contents + " Формат: " + format, Toast.LENGTH_LONG);
 //                toast.show();
                 Intent i = new Intent(c,
-                        AddCardActivity.class);
+                        AddCardFragment.class);
                 startActivity(i);
-//                ((MainActivity) Objects.requireNonNull(getActivity()))
-//                        .replaceFragmentCamera(AddCardFragment.class);
-//                Objects.requireNonNull(getActivity()).onBackPressed();
             }
-//            if (resultCode == RESULT_CANCELED) {
-//                Intent i = new Intent(c,
-//                        MainActivity.class);
-//                startActivity(i);
-//            }
         }
     }
-
-//    @Override
-//    public void onBackPressed() {
-//
-//    }
 
 }

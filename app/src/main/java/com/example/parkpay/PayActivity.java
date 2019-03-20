@@ -3,6 +3,7 @@ package com.example.parkpay;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ public class PayActivity extends AppCompatActivity {
     EditText amountPay;
     Button buttonPay;
     BigDecimal sum;
+    private static final String TAG = "myLogs";
     private static final int REQUEST_CODE_TOKENIZE = 33;
 
     @Override
@@ -40,7 +42,7 @@ public class PayActivity extends AppCompatActivity {
                 }
                 else {
                     sum=new BigDecimal(amountPay.getText().toString());
-                    timeToStartCheckoutTest();
+                    timeToStartCheckout();
 //                    Intent intent = new Intent(getApplicationContext(),
 //                            MainActivity.class);
 //                    startActivity(intent);
@@ -58,9 +60,13 @@ public class PayActivity extends AppCompatActivity {
                 case RESULT_OK:
                     // successful tokenization
                     TokenizationResult result = Checkout.createTokenizationResult(data);
+                    Toast.makeText(getApplicationContext(),"Успех "+result,Toast.LENGTH_LONG).show();
+                    Log.d(TAG, "Результат "+result);
+
 
                     break;
                 case RESULT_CANCELED:
+                    Toast.makeText(getApplicationContext(),"Провал",Toast.LENGTH_SHORT).show();
                     // user canceled tokenization
                     break;
             }
@@ -72,8 +78,8 @@ public class PayActivity extends AppCompatActivity {
                 new Amount(sum, Currency.getInstance("RUB")),
                 "Название товара",
                 "Описание товара",
-                "live_AAAAAAAAAAAAAAAAAAAA",
-                "12345"
+                "test_NTg4ODU2lc-4GywPaPNTcTbZG4ELvXgjk27aSrhbJ4U",
+                "588856"
         );
         Intent intent = Checkout.createTokenizeIntent(this, paymentParameters);
         startActivityForResult(intent, REQUEST_CODE_TOKENIZE);
@@ -83,8 +89,8 @@ public class PayActivity extends AppCompatActivity {
                 new Amount(sum, Currency.getInstance("RUB")),
                 "Название товара",
                 "Описание товара",
-                "live_AAAAAAAAAAAAAAAAAAAA",
-                "12345"
+                "test_NTg4ODU2lc-4GywPaPNTcTbZG4ELvXgjk27aSrhbJ4U",
+                "588856"
         );
         TestParameters testParameters = new TestParameters(true, true, new MockConfiguration(false, true, 5));
         Intent intent = Checkout.createTokenizeIntent(this, paymentParameters, testParameters);

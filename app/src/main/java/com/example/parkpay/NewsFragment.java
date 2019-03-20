@@ -65,7 +65,7 @@ public class NewsFragment extends Fragment {
 
     private void setInitialData(){
 
-        states.add(new State ("", "Бразилиа", R.drawable.card));
+        states.add(new State ("Бразилия", "Бразилиа", R.drawable.card));
         states.add(new State ("Аргентина", "Буэнос-Айрес", R.drawable.card));
         states.add(new State ("Колумбия", "Богота", R.drawable.card));
         states.add(new State ("Уругвай", "Монтевидео", R.drawable.card));

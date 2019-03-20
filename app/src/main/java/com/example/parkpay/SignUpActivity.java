@@ -28,6 +28,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
+import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,6 +55,7 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 //import static com.example.parkpay.QRActivity.ACTION_SCAN;
 
 public class SignUpActivity extends AppCompatActivity {
+
     Button signUp;
     EditText login;
     EditText name;
@@ -61,9 +64,18 @@ public class SignUpActivity extends AppCompatActivity {
     EditText confirmPassword;
     EditText phone;
     EditText dateBirthday;
+    String loginUser;
+    String nameUser;
+    String emailUser;
+    String passUser;
+    String confirmPasswordUser;
+    String phoneUser;
+    String dateBirthdayUser;
     TextInputLayout mailLayout;
     Context c;
+
     final Calendar myCalendar = Calendar.getInstance();
+
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_LOGIN ="Login";
     public static final String APP_PREFERENCES_NAME ="Name";
@@ -71,8 +83,8 @@ public class SignUpActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_PASS ="Password";
     public static final String APP_PREFERENCES_NUMBER ="Number";
     public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-
+    public static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String TAG = "myLogs";
     SharedPreferences settings;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -138,7 +150,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
+
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -173,29 +185,40 @@ public class SignUpActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                if (name.getText().toString().equals("")||name.getText().length() == 0||
-                    email.getText().toString().equals("")||email.getText().length() == 0||
-                    pass.getText().toString().equals("")||pass.getText().length() == 0||
-                    confirmPassword.getText().toString().equals("")||confirmPassword.getText().length()==0)
+
+                loginUser=login.getText().toString();
+                nameUser=name.getText().toString();
+                emailUser=email.getText().toString();
+                passUser=pass.getText().toString();
+                confirmPasswordUser=confirmPassword.getText().toString();
+                phoneUser=phone.getText().toString();
+                dateBirthdayUser=dateBirthday.getText().toString();
+
+                if (loginUser.equals("")||loginUser.length() == 0||
+                        nameUser.equals("")||nameUser.length() == 0||
+                        emailUser.equals("")||emailUser.length() == 0||
+                        passUser.equals("")||passUser.length() == 0||
+                        confirmPasswordUser.equals("")||confirmPasswordUser.length()==0)
                 {
                     Toast.makeText(getApplicationContext(),"Заполните все поля ввода!",
                             Toast.LENGTH_SHORT).show();
                 }
                 else
                 {
-                    if (pass.getText().toString().equals(confirmPassword.getText().toString())){
-//                        JSONObject json = new JSONObject();
-//                        try {
-//                            json.put("login","");
-//                            json.put("password","");
-//                        } catch (JSONException e) {
-//                            e.printStackTrace();
-//                        }
-//                        MainActivity.doGetRequest("http://www.mobile.ru/register",
-//                                json,c,settings,SignUpActivity.this);
-                        Intent intent = new Intent(c,
-                                MainActivity.class);
-                        startActivity(intent);
+                    if (passUser.equals(confirmPasswordUser)){
+
+                        doPostRequest("http://192.168.252.199/register");
+                        if(settings.contains(APP_PREFERENCES_STATUS)){
+                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+                                Intent intent = new Intent(c,
+                                        MainActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),"ОШИБКАААА",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
                     }
                     else {
                         Toast.makeText(getApplicationContext(),"Пароли не совпадают",
@@ -210,11 +233,12 @@ public class SignUpActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         SharedPreferences.Editor editor = settings.edit();
-        editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
-        editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
-        editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
-        editor.putString(APP_PREFERENCES_PASS,pass.getText().toString());
-        editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+        editor.putString(APP_PREFERENCES_LOGIN,loginUser);
+        editor.putString(APP_PREFERENCES_NAME,nameUser);
+        editor.putString(APP_PREFERENCES_NUMBER,phoneUser);
+        editor.putString(APP_PREFERENCES_MAIL,emailUser);
+        editor.putString(APP_PREFERENCES_PASS,passUser);
+        editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthdayUser);
         editor.apply();
     }
 
@@ -223,6 +247,69 @@ public class SignUpActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    public void doPostRequest(String url){
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+
+            json.put("login",loginUser);
+            json.put("name",nameUser);
+            json.put("email",emailUser);
+            json.put("password",passUser);
+            json.put("password_confirmation",confirmPasswordUser);
+            json.put("phone",phoneUser);
+            json.put("birthday",dateBirthdayUser);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .post(body)
+                .url(url)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+                        JSONObject Jobject = new JSONObject(jsonData);
+
+                        Log.d(TAG,Jobject.getString("status"));
+                        Log.d(TAG,Jobject.getString("msg"));
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
+                        editor.apply();
+
+                    } catch (IOException | JSONException e) {
+                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
 }
