@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -34,18 +35,29 @@ import okhttp3.Response;
 public class DetailCardActivity extends AppCompatActivity {
 
     TextView numberCard;
+    TextView nameCard;
+    TextView moneyCard;
+    TextView bonusCard;
+    String cardNumber;
     String number;
     Button deleteCard;
     Button payCard;
-    String[] childAttribute;
+    Button editCard;
     Context c;
     SharedPreferences settings;
+    ArrayList<String> child = new ArrayList<String>();
+    ArrayList<String> children2 = new ArrayList<String>();
     int groupPosition;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_STATUS ="Status";
+    public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
+    public static final String APP_PREFERENCES_CARD_NAME ="cardName";
+    public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
+    public static final String APP_PREFERENCES_MONEY ="money";
+    public static final String APP_PREFERENCES_BONUS ="bonus";
     private static final String TAG = "myLogs";
 
     @Override
@@ -54,8 +66,13 @@ public class DetailCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_card);
 
         c=this;
-        numberCard=(TextView)findViewById(R.id.numberCard) ;
+        nameCard=(TextView)findViewById(R.id.nameCard);
+        numberCard=(TextView)findViewById(R.id.numberCard);
+        moneyCard=(TextView)findViewById(R.id.moneyCard);
+        bonusCard=(TextView)findViewById(R.id.bonusCard);
         deleteCard=(Button)findViewById(R.id.deleteCard);
+        editCard=(Button)findViewById(R.id.editCard);
+
         payCard=(Button)findViewById(R.id.payCard);
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -75,6 +92,23 @@ public class DetailCardActivity extends AppCompatActivity {
         }
         if(number!=null){
             numberCard.setText(number);
+            cardNumber=numberCard.getText().toString();
+        }
+
+        doGetRequest();
+        doGetRequest();
+        if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
+                settings.contains(APP_PREFERENCES_CARD_NAME)
+                &&settings.contains(APP_PREFERENCES_CARD_CODE)){
+
+            doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+            doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+
+            nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+            numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
+            moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
+            bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
+
         }
 
         deleteCard.setOnClickListener(new View.OnClickListener() {
@@ -93,29 +127,24 @@ public class DetailCardActivity extends AppCompatActivity {
 
                                     Intent i = new Intent(c, MainActivity.class);
 
-                                    ArrayList<String> children1 = new ArrayList<String>();
-                                    ArrayList<String> children2 = new ArrayList<String>();
-
                                     if(groupPosition==0){
                                         if(settings.contains(APP_PREFERENCES_CARDS)){
-                                            children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                                            child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                                         }
-                                        childAttribute=new String[] {"1",number,"2"};
 
                                         doPostRequest("http://192.168.252.199/card/delete");
 
-                                        children1.remove(childAttribute);
+                                        child.remove(cardNumber);
 
-                                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
+                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                                         startActivity(i);
                                     }
                                     if(groupPosition==1){
                                         if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
                                             children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                                         }
-                                        childAttribute=new String[] {"1",number,"2"};
 
-                                        children2.remove(childAttribute);
+                                        children2.remove(cardNumber);
 
                                         MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
                                         startActivity(i);
@@ -134,12 +163,86 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         });
 
+        editCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(c,
+                        EditCardActivity.class);
+                startActivity(intent);
+            }
+        });
+
         payCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(c,
                         PayActivity.class);
                 startActivity(intent);
+            }
+        });
+    }
+
+    public void doPostRequestCardInfo(String url){
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
+            json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String jsonString = json.toString();
+
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .post(body)
+                .url(url)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+
+                        JSONArray jsonArray = new JSONArray(jsonData);
+
+
+                        JSONObject Jobject = jsonArray.getJSONObject(0);
+
+                        Log.d(TAG,Jobject.getString("code"));
+                        Log.d(TAG,Jobject.getString("balance_money"));
+                        Log.d(TAG,Jobject.getString("balance_bonus"));
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_MONEY,Jobject.getString("balance_money"));
+                        editor.putString(APP_PREFERENCES_BONUS,Jobject.getString("balance_bonus"));
+                        editor.apply();
+                    } catch (IOException | JSONException e) {
+                        Log.d(TAG,"Ошибка "+e);
+                    }
+                });
             }
         });
     }
@@ -151,7 +254,7 @@ public class DetailCardActivity extends AppCompatActivity {
         JSONObject json = new JSONObject();
         try {
             json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
-            json.put("card_id","261");
+            json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -202,65 +305,76 @@ public class DetailCardActivity extends AppCompatActivity {
         });
     }
 
-//    public void doGetRequest(String url){
-//
-//        OkHttpClient client = new OkHttpClient();
-//
-//        HttpUrl mySearchUrl = new HttpUrl.Builder()
-//                .scheme("http")
-//                .host("192.168.252.199")
-//                .addPathSegment("user")
-//                .addPathSegment("get_info")
-//                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
-//                .build();
-//
-//        Log.d(TAG,mySearchUrl.toString());
-//
-//        final Request request = new Request.Builder()
-//                .url(mySearchUrl)
-//                .addHeader("Content-Type", "application/json; charset=utf-8")
-//                .method("GET", null)
-//                .build();
-//        Call call = client.newCall(request);
-//        call.enqueue(new Callback() {
-//            @Override
-//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-//                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                    }
-//                });
-//            }
-//            @Override
-//            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-//                runOnUiThread(() -> {
-//                    try {
-//
-//                        String jsonData = null;
-//                        if (response.body() != null) {
-//                            jsonData = response.body().string();
-//                        }
-//
-//                        JSONObject parentObject = new JSONObject(jsonData);
-//                        JSONObject Jobject = parentObject.getJSONObject("user");
-//
-//                        Log.d(TAG,Jobject.getString("card_id"));
-//                        Log.d(TAG,Jobject.getString("name"));
-//                        Log.d(TAG,Jobject.getString("code"));
-//
-//                        SharedPreferences.Editor editor = settings.edit();
-//                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("card_id"));
-//                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("name"));
-//                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("code"));
-//                        editor.apply();
-//
-//                    } catch (IOException | JSONException e) {
-//                        Log.d(TAG,"Ошибка "+e);
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void doGetRequest(){
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl mySearchUrl = new HttpUrl.Builder()
+                .scheme("http")
+                .host("192.168.252.199")
+                .addPathSegment("card")
+                .addPathSegment("list")
+                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
+                .build();
+
+        Log.d(TAG,mySearchUrl.toString());
+
+        final Request request = new Request.Builder()
+                .url(mySearchUrl)
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .method("GET", null)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+
+                        JSONArray jsonArray = new JSONArray(jsonData);
+
+                        child = new ArrayList<String>();
+
+                        for(int i=0;i<jsonArray.length();i++){
+
+                            JSONObject Jobject = jsonArray.getJSONObject(i);
+
+                            Log.d(TAG,Jobject.getString("card_id"));
+                            Log.d(TAG,Jobject.getString("name"));
+                            Log.d(TAG,Jobject.getString("code"));
+
+                            if(Jobject.getString("code").contains(cardNumber)){
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString(APP_PREFERENCES_CARD_DELETE,Jobject.getString("card_id"));
+                                editor.putString(APP_PREFERENCES_CARD_NAME,Jobject.getString("name"));
+                                editor.putString(APP_PREFERENCES_CARD_CODE,Jobject.getString("code"));
+                                editor.apply();
+                            }
+                        }
+
+                    } catch (IOException | JSONException e) {
+                        Log.d(TAG,"Ошибка "+e);
+                    }
+                });
+            }
+        });
+    }
+
 
 }

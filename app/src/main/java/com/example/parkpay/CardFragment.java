@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -42,6 +43,7 @@ public class CardFragment extends Fragment {
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String TAG = "myLogs";
+    ArrayList<String> child = new ArrayList<String>();
     SharedPreferences settings;
     Context c;
 
@@ -54,20 +56,23 @@ public class CardFragment extends Fragment {
         }
         // Находим наш list
         ExpandableListView listView = (ExpandableListView)view.findViewById(R.id.exListView);
+
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        doGetRequest();
+
         //Создаем набор данных для адаптера
         ArrayList<ArrayList<String>> groups = new ArrayList<ArrayList<String>>();
-        ArrayList<String> children1 = new ArrayList<String>();
+
         ArrayList<String> children2 = new ArrayList<String>();
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
-            children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+            child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
         }
 
-        children1.add("Новая карта");
-        groups.add(children1);
+        child.add("Новая карта");
+        groups.add(child);
 
         if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
             children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
@@ -81,15 +86,15 @@ public class CardFragment extends Fragment {
         return view;
     }
 
-    public void doGetRequest(String url){
+    public void doGetRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
                 .scheme("http")
                 .host("192.168.252.199")
-                .addPathSegment("user")
-                .addPathSegment("get_info")
+                .addPathSegment("card")
+                .addPathSegment("list")
                 .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
                 .build();
 
@@ -104,7 +109,9 @@ public class CardFragment extends Fragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v(TAG, Objects.requireNonNull(call.request().body()).toString());
+
+                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+
                 Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -121,27 +128,28 @@ public class CardFragment extends Fragment {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject parentObject = new JSONObject(jsonData);
-                        JSONObject Jobject = parentObject.getJSONObject("user");
+                        JSONArray jsonArray = new JSONArray(jsonData);
 
-                        Log.d(TAG,Jobject.getString("card_id"));
-                        Log.d(TAG,Jobject.getString("name"));
-                        Log.d(TAG,Jobject.getString("code"));
+                        child = new ArrayList<String>();
 
-                        ArrayList<String> children1 = new ArrayList<String>();
+                        for(int i=0;i<jsonArray.length();i++){
 
-                        SharedPreferences.Editor editor = settings.edit();
+                            JSONObject Jobject = jsonArray.getJSONObject(i);
 
-//                        child.add(numberCard);
+                            Log.d(TAG,Jobject.getString("card_id"));
+                            Log.d(TAG,Jobject.getString("name"));
+                            Log.d(TAG,Jobject.getString("code"));
 
-                        children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                            child.add(Jobject.getString("code"));
 
-                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
+                        }
+                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
 
+//                        SharedPreferences.Editor editor = settings.edit();
 //                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("card_id"));
 //                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("name"));
 //                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("code"));
-                        editor.apply();
+//                        editor.apply();
 
                     } catch (IOException | JSONException e) {
                         Log.d(TAG,"Ошибка "+e);

@@ -19,7 +19,6 @@
     <string name="password">Пароль</string>
     <string name="confirm">Подтвердите пароль</string>
     <string name="dateBirthday">Дата рождения</string>
-    <string name="nC">Номер карты</string>
     <string name="signUp">Зарегистрироваться</string>
 
 
@@ -39,8 +38,11 @@
 
     <string name="more">Подробнее</string>
     <string name="pay">Пополнить карту</string>
+    <string name="edit">Редактировать карту</string>
     <string name="add">Добавить</string>
     <string name="deleteCard">Удалить карту</string>
 
+    <string name="nC">Номер карты</string>
+    <string name="nameEditCard">Название карты</string>
 
 </resources>

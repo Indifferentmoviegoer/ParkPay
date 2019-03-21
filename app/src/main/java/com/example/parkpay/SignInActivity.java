@@ -71,10 +71,17 @@ public class SignInActivity extends AppCompatActivity {
                 else {
 
                     doPostRequest("http://192.168.252.199/login");
+
                     if(settings.contains(APP_PREFERENCES_TOKEN)) {
-                    Intent intent = new Intent(SignInActivity.this,
-                            MainActivity.class);
-                    startActivity(intent);
+
+                        Intent intent = new Intent(SignInActivity.this,
+                                MainActivity.class);
+                        startActivity(intent);
+                    }
+                    else {
+
+                        Toast.makeText(getApplicationContext(), "Неверный логин или пароль!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -96,6 +103,7 @@ public class SignInActivity extends AppCompatActivity {
         if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_EMAIL)
                 &&settings.contains(APP_PREFERENCES_PASSWORD)) {
             remember.setChecked(settings.getBoolean(APP_PREFERENCES_CHECK, false));
+
             if(settings.getBoolean(APP_PREFERENCES_CHECK, false)){
                 login.setText(settings.getString(APP_PREFERENCES_EMAIL, ""));
                 pass.setText(settings.getString(APP_PREFERENCES_PASSWORD, ""));

@@ -5,24 +5,40 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailCardActivity">
+
     <TextView
         android:id="@+id/nameCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Card1"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
+
     <TextView
         android:id="@+id/numberCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="123123123334414"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="@id/nameCard"
         app:layout_constraintTop_toBottomOf="@id/nameCard" />
+
+    <TextView
+        android:id="@+id/moneyCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="@id/nameCard"
+        app:layout_constraintTop_toBottomOf="@id/numberCard" />
+
+    <TextView
+        android:id="@+id/bonusCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="@id/nameCard"
+        app:layout_constraintTop_toBottomOf="@id/moneyCard" />
+
     <Button
         android:id="@+id/payCard"
         android:layout_width="match_parent"
@@ -31,7 +47,19 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/editCard" />
+
+    <Button
+        android:id="@+id/editCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/edit"
+        android:backgroundTint="@color/green"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@id/deleteCard" />
+
     <Button
         android:id="@+id/deleteCard"
         android:layout_width="match_parent"

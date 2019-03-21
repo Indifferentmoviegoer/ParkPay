@@ -49,6 +49,7 @@ public class AddCardActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_STATUS ="Status";
+    public static final String APP_PREFERENCES_MSG ="Message";
     private static final String TAG = "myLogs";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -92,9 +93,17 @@ public class AddCardActivity extends AppCompatActivity {
 
                             doPostRequest("http://192.168.252.199/card/add");
 
-                            child.add(numberCard);
-                            MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-                            startActivity(i);
+                            if(settings.contains(APP_PREFERENCES_STATUS)){
+                                if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+                                    child.add(numberCard);
+                                    MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                                    startActivity(i);
+                                }
+                                else {
+                                    Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, ""),
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
                         }
                         else {
                             Toast.makeText(getApplicationContext(),
@@ -255,6 +264,7 @@ public class AddCardActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
+                        editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
                         editor.apply();
                     } catch (IOException | JSONException e) {
                         Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();

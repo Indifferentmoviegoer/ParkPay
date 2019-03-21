@@ -25,9 +25,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".AddCardActivity"/>
-         <meta-data android:name="ymp_firebase_app_id" android:value="1:1061747613431:android:9be6226371a31003"/>
-         <meta-data android:name="ymp_gcm_sender_id" android:value="number:1061747613431"/>
+        <activity android:name=".EditCardActivity"></activity>
+        <activity android:name=".AddCardActivity" />
+
+        <meta-data
+            android:name="ymp_firebase_app_id"
+            android:value="1:1061747613431:android:9be6226371a31003" />
+        <meta-data
+            android:name="ymp_gcm_sender_id"
+            android:value="number:1061747613431" />
+
         <activity android:name=".DetailCardActivity" />
         <activity android:name=".PayActivity" />
         <activity android:name=".ScanBankCardActivity">
@@ -52,8 +59,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan" />
 
         <service android:name=".MyFirebaseMessagingService">
             <intent-filter>
