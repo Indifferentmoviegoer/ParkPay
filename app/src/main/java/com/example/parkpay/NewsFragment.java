@@ -21,7 +21,7 @@ import java.util.Objects;
 
 public class NewsFragment extends Fragment {
 
-    private List<State> states = new ArrayList();
+    private ArrayList states = new ArrayList();
     ListView countriesList;
     Context c;
 

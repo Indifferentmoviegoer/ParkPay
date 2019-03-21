@@ -75,6 +75,7 @@ public class AddCardActivity extends AppCompatActivity {
                 Intent i = new Intent(c, MainActivity.class);
                 ArrayList<String> child = new ArrayList<String>();
 
+
                 numberCard=numberAddCard.getText().toString();
 
                     if(settings.contains(APP_PREFERENCES_CARDS)){
@@ -88,6 +89,7 @@ public class AddCardActivity extends AppCompatActivity {
                         if(numberCard.length() == 16&&!numberCard.contains(" ")&&
                                 numberCard.matches("^[a-zA-Z0-9]+$"))
                         {
+
                             doPostRequest("http://192.168.252.199/card/add");
 
                             child.add(numberCard);

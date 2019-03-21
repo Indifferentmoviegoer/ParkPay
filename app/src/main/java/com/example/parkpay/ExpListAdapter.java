@@ -24,13 +24,15 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
     SharedPreferences settings;
 
     private ArrayList<ArrayList<String>> mGroups;
-    ArrayList<String> child;
+    private ArrayList<String> child;
     private Context mContext;
 
     public ExpListAdapter (Context context,ArrayList<ArrayList<String>> groups){
         mContext = context;
         mGroups = groups;
+
         child =new ArrayList<String>();
+
         settings= Objects.requireNonNull(mContext)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
     }
@@ -115,8 +117,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
         LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         convertView = inflater.inflate(R.layout.child_view, null);
 
-        TextView textChild = (TextView) convertView.findViewById(R.id.textChild);
-        textChild.setText(mGroups.get(groupPosition).get(childPosition));
+        TextView cardChild = (TextView) convertView.findViewById(R.id.cardChild);
+        cardChild.setText(mGroups.get(groupPosition).get(childPosition));
 
         Button button = (Button)convertView.findViewById(R.id.buttonChild);
         if(isLastChild){
@@ -149,7 +151,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
 
                     if(groupPosition==0) {
                         if (settings.contains(APP_PREFERENCES_CARDS)) {
-                            child = MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                            child= MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                         }
                         Intent i = new Intent(mContext, DetailCardActivity.class);
                         i.putExtra("POSITION_CARD", child.get(childPosition));

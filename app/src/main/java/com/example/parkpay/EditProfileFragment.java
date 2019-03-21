@@ -284,7 +284,7 @@ public class EditProfileFragment extends Fragment {
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("msg"));
                         editor.apply();
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,"Ошибка "+e);
                     }
                 });
             }
@@ -347,7 +347,6 @@ public class EditProfileFragment extends Fragment {
                         editor.apply();
 
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
                         Log.d(TAG,"Ошибка "+e);
                     }
                 });

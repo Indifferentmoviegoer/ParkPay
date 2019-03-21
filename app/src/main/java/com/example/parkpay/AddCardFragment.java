@@ -33,6 +33,7 @@ public class AddCardFragment extends Fragment {
     Context c;
     SharedPreferences settings;
     String numberCard;
+    String[] childAttribute;
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
 
@@ -64,7 +65,9 @@ public class AddCardFragment extends Fragment {
 
                 Intent i = new Intent(c, MainActivity.class);
                 ArrayList<String> child = new ArrayList<String>();
+
                 numberCard=numberAddCard.getText().toString();
+
                 if(settings.contains(APP_PREFERENCES_CARDS)){
                     child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                 }
@@ -76,7 +79,9 @@ public class AddCardFragment extends Fragment {
                     if(numberCard.length() == 16&&!numberCard.contains(" ")&&
                             numberCard.matches("^[a-zA-Z0-9]+$"))
                     {
+
                         child.add(numberCard);
+
                         MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                         startActivity(i);
                     }
