@@ -45,4 +45,9 @@
     <string name="nC">Номер карты</string>
     <string name="nameEditCard">Название карты</string>
 
+    <string name="titleNameCard">Название карты:</string>
+    <string name="titleNumberCard">Номер карты:</string>
+    <string name="titleMoneyCard">Денежный баланс:</string>
+    <string name="titleBonusCard">Количество бонусов:</string>
+
 </resources>

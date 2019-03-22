@@ -71,18 +71,7 @@ public class SignInActivity extends AppCompatActivity {
                 else {
 
                     doPostRequest("http://192.168.252.199/login");
-
-                    if(settings.contains(APP_PREFERENCES_TOKEN)) {
-
-                        Intent intent = new Intent(SignInActivity.this,
-                                MainActivity.class);
-                        startActivity(intent);
-                    }
-                    else {
-
-                        Toast.makeText(getApplicationContext(), "Неверный логин или пароль!",
-                                Toast.LENGTH_SHORT).show();
-                    }
+//                    doPostRequest("http://fucking-great-advice.ru/api/random");
                 }
             }
         });
@@ -139,13 +128,17 @@ public class SignInActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+//                .get()
                 .url(url)
                 .build();
+
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+
+                Log.d("TAG", Objects.requireNonNull(call.request().body()).toString());
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -164,9 +157,23 @@ public class SignInActivity extends AppCompatActivity {
                         JSONObject Jobject = new JSONObject(jsonData);
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
+//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("text"));
                         editor.apply();
+
+                        if(settings.contains(APP_PREFERENCES_TOKEN)) {
+
+                            Toast.makeText(getApplicationContext(), "Вход",
+                                    Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(SignInActivity.this,
+                                    MainActivity.class);
+                            startActivity(intent);
+                        }
+
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка",Toast.LENGTH_SHORT).show();
+
+                        Toast.makeText(getApplicationContext(), "Неверный логин или пароль!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }

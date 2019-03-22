@@ -132,6 +132,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(isLastChild) {
 
                     if(groupPosition==0) {
@@ -147,9 +148,11 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
 //                        mContext.startActivity(i);
                     }
                 }
+
                 if(!isLastChild) {
 
                     if(groupPosition==0) {
+
                         if (settings.contains(APP_PREFERENCES_CARDS)) {
                             child= MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                         }
@@ -160,6 +163,7 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                     }
 
                     if(groupPosition==1) {
+
                         if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
                             child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                         }

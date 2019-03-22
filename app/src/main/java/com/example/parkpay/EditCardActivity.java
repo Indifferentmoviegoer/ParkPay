@@ -61,24 +61,6 @@ public class EditCardActivity extends AppCompatActivity {
                 nameCard=editNameCard.getText().toString();
 
                 doPostRequest("http://192.168.252.199/card/edit");
-
-                if(settings.contains(APP_PREFERENCES_STATUS)){
-
-                    if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
-
-                        Intent intent = new Intent(EditCardActivity.this,
-                                MainActivity.class);
-                        startActivity(intent);
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),settings.getString(APP_PREFERENCES_MSG, ""),
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Нажми еще раз!",
-                            Toast.LENGTH_SHORT).show();
-                }
             }
         });
     }
@@ -136,8 +118,25 @@ public class EditCardActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
                         editor.apply();
+
+                        if(settings.contains(APP_PREFERENCES_STATUS)){
+
+                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+
+                                Toast.makeText(c,"Сохранение",Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(EditCardActivity.this,
+                                        MainActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(),settings.getString(APP_PREFERENCES_MSG, ""),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+                        Log.d(TAG,"Ошибка "+e);
                     }
                 });
             }

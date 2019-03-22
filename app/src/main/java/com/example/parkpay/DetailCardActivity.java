@@ -96,20 +96,19 @@ public class DetailCardActivity extends AppCompatActivity {
         }
 
         doGetRequest();
-        doGetRequest();
-        if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
-                settings.contains(APP_PREFERENCES_CARD_NAME)
-                &&settings.contains(APP_PREFERENCES_CARD_CODE)){
 
-            doPostRequestCardInfo("http://192.168.252.199/card/get_info");
-            doPostRequestCardInfo("http://192.168.252.199/card/get_info");
-
-            nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
-            numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
-            moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
-            bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
-
-        }
+//        if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
+//                settings.contains(APP_PREFERENCES_CARD_NAME)
+//                &&settings.contains(APP_PREFERENCES_CARD_CODE)){
+//
+//            doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+//
+//            nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+//            numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
+//            moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
+//            bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
+//
+//        }
 
         deleteCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,19 +127,23 @@ public class DetailCardActivity extends AppCompatActivity {
                                     Intent i = new Intent(c, MainActivity.class);
 
                                     if(groupPosition==0){
+
                                         if(settings.contains(APP_PREFERENCES_CARDS)){
                                             child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                                         }
 
                                         doPostRequest("http://192.168.252.199/card/delete");
+//                                        doPostRequest("http://fucking-great-advice.ru/api/random");
 
-                                        child.remove(cardNumber);
-
-                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-                                        startActivity(i);
+//                                        child.remove(cardNumber);
+//
+//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+//                                        startActivity(i);
                                     }
                                     if(groupPosition==1){
+
                                         if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
+
                                             children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                                         }
 
@@ -239,6 +242,10 @@ public class DetailCardActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_MONEY,Jobject.getString("balance_money"));
                         editor.putString(APP_PREFERENCES_BONUS,Jobject.getString("balance_bonus"));
                         editor.apply();
+
+                        moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
+                        bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
+
                     } catch (IOException | JSONException e) {
                         Log.d(TAG,"Ошибка "+e);
                     }
@@ -246,6 +253,71 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         });
     }
+
+//    public void doPostRequestCardInfo(String url){
+//
+//        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//
+//        JSONObject json = new JSONObject();
+//        try {
+//            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
+//            json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        String jsonString = json.toString();
+//
+//        RequestBody body = RequestBody.create(JSON, jsonString);
+//        OkHttpClient client = new OkHttpClient();
+//        final Request request = new Request.Builder()
+//                .get()
+//                .url(url)
+//                .build();
+//
+//        Call call = client.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                });
+//            }
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+//                runOnUiThread(() -> {
+//                    try {
+//
+//                        String jsonData = null;
+//                        if (response.body() != null) {
+//                            jsonData = response.body().string();
+//                        }
+//
+//                        JSONObject Jobject = new JSONObject(jsonData);
+//
+//                        Log.d(TAG,Jobject.getString("text"));
+//                        Log.d(TAG,Jobject.getString("text"));
+//                        Log.d(TAG,Jobject.getString("text"));
+//
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        editor.putString(APP_PREFERENCES_MONEY,Jobject.getString("text"));
+//                        editor.putString(APP_PREFERENCES_BONUS,Jobject.getString("text"));
+//                        editor.apply();
+//
+//                        moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
+//                        bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
+//
+//                    } catch (IOException | JSONException e) {
+//                        Log.d(TAG,"Ошибка "+e);
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     public void doPostRequest(String url){
 
@@ -289,7 +361,10 @@ public class DetailCardActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             jsonData = response.body().string();
                         }
+
                         JSONObject Jobject = new JSONObject(jsonData);
+
+                        Intent i = new Intent(c, MainActivity.class);
 
                         Log.d(TAG,Jobject.getString("status"));
                         Log.d(TAG,Jobject.getString("msg"));
@@ -297,6 +372,11 @@ public class DetailCardActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.apply();
+
+                        child.remove(cardNumber);
+                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                        startActivity(i);
+
                     } catch (IOException | JSONException e) {
                         Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
                     }
@@ -304,6 +384,70 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         });
     }
+
+//    public void doPostRequest(String url){
+//
+//        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+//
+//        JSONObject json = new JSONObject();
+//        try {
+//            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
+//            json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
+//
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        String jsonString = json.toString();
+//
+//        RequestBody body = RequestBody.create(JSON, jsonString);
+//        OkHttpClient client = new OkHttpClient();
+//        final Request request = new Request.Builder()
+////                .post(body)
+//                .get()
+//                .url(url)
+//                .build();
+//
+//        Call call = client.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                });
+//            }
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+//                runOnUiThread(() -> {
+//                    try {
+//
+//                        String jsonData = null;
+//                        if (response.body() != null) {
+//                            jsonData = response.body().string();
+//                        }
+//
+//                        JSONObject Jobject = new JSONObject(jsonData);
+//
+//                        Intent i = new Intent(c, MainActivity.class);
+//
+//                        SharedPreferences.Editor editor = settings.edit();
+//                        editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("text"));
+//                        editor.apply();
+//
+//                        child.remove(cardNumber);
+//                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+//                        startActivity(i);
+//
+//                    } catch (IOException | JSONException e) {
+//                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//            }
+//        });
+//    }
 
     public void doGetRequest(){
 
@@ -365,6 +509,17 @@ public class DetailCardActivity extends AppCompatActivity {
                                 editor.putString(APP_PREFERENCES_CARD_NAME,Jobject.getString("name"));
                                 editor.putString(APP_PREFERENCES_CARD_CODE,Jobject.getString("code"));
                                 editor.apply();
+
+                                if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
+                                        settings.contains(APP_PREFERENCES_CARD_NAME)
+                                        &&settings.contains(APP_PREFERENCES_CARD_CODE)){
+
+                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+
+//                                    nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+//                                    numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
+                                }
+
                             }
                         }
 
@@ -375,6 +530,74 @@ public class DetailCardActivity extends AppCompatActivity {
             }
         });
     }
+
+//    public void doGetRequest(){
+//
+//        OkHttpClient client = new OkHttpClient();
+//
+//        HttpUrl mySearchUrl = new HttpUrl.Builder()
+//                .scheme("http")
+//                .host("fucking-great-advice.ru")
+//                .addPathSegment("api")
+//                .addPathSegment("random")
+//                .build();
+//
+//        Log.d(TAG,mySearchUrl.toString());
+//
+//        final Request request = new Request.Builder()
+//                .url(mySearchUrl)
+//                .addHeader("Content-Type", "application/json; charset=utf-8")
+//                .method("GET", null)
+//                .build();
+//        Call call = client.newCall(request);
+//        call.enqueue(new Callback() {
+//            @Override
+//            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+//
+//                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+//
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                    }
+//                });
+//            }
+//            @Override
+//            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+//                runOnUiThread(() -> {
+//                    try {
+//
+//                        String jsonData = null;
+//                        if (response.body() != null) {
+//                            jsonData = response.body().string();
+//                        }
+//
+//                        JSONObject Jobject = new JSONObject(jsonData);
+//
+//                                SharedPreferences.Editor editor = settings.edit();
+//                                editor.putString(APP_PREFERENCES_CARD_DELETE,Jobject.getString("text"));
+//                                editor.putString(APP_PREFERENCES_CARD_NAME,Jobject.getString("text"));
+//                                editor.putString(APP_PREFERENCES_CARD_CODE,Jobject.getString("text"));
+//                                editor.apply();
+//
+//                                if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
+//                                        settings.contains(APP_PREFERENCES_CARD_NAME)
+//                                        &&settings.contains(APP_PREFERENCES_CARD_CODE)){
+//
+//                                    doPostRequestCardInfo("http://fucking-great-advice.ru/api/random");
+//
+//                                    nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+//                                    numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
+//                                }
+//
+//
+//                    } catch (IOException | JSONException e) {
+//                        Log.d(TAG,"Ошибка "+e);
+//                    }
+//                });
+//            }
+//        });
+//    }
 
 
 }

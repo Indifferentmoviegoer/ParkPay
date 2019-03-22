@@ -98,8 +98,6 @@ public class EditProfileFragment extends Fragment {
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        doGetRequest("user/get_info");
-
         Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___________");
         MaskImpl mask = MaskImpl.createTerminated(slots);
         mask.setForbidInputWhenFilled(true);
@@ -162,7 +160,9 @@ public class EditProfileFragment extends Fragment {
                             Toast.LENGTH_SHORT).show();
                 }
                 else {
+
                     doPostRequest("http://192.168.252.199/user/edit");
+
                     if(settings.contains(APP_PREFERENCES_STATUS)){
                         if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "Успешно!")){
 

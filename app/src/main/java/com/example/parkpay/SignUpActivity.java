@@ -84,6 +84,7 @@ public class SignUpActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_NUMBER ="Number";
     public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
+    public static final String APP_PREFERENCES_MSG ="Message";
     private static final String TAG = "myLogs";
     SharedPreferences settings;
 
@@ -208,17 +209,6 @@ public class SignUpActivity extends AppCompatActivity {
                     if (passUser.equals(confirmPasswordUser)){
 
                         doPostRequest("http://192.168.252.199/register");
-                        if(settings.contains(APP_PREFERENCES_STATUS)){
-                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
-                                Intent intent = new Intent(c,
-                                        MainActivity.class);
-                                startActivity(intent);
-                            }
-                            else {
-                                Toast.makeText(getApplicationContext(),"ОШИБКАААА",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                        }
                     }
                     else {
                         Toast.makeText(getApplicationContext(),"Пароли не совпадают",
@@ -302,10 +292,28 @@ public class SignUpActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
+                        editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
                         editor.apply();
 
+                        if(settings.contains(APP_PREFERENCES_STATUS)){
+
+                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+
+                                Toast.makeText(c,"Вход",Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(c,
+                                        MainActivity.class);
+                                startActivity(intent);
+                            }
+                            else {
+                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, ""),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+
+                        Log.d(TAG,"Ошибка: "+e);
                     }
                 });
             }

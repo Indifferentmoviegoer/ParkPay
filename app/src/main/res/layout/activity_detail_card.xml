@@ -7,36 +7,83 @@
     tools:context=".DetailCardActivity">
 
     <TextView
+        android:id="@+id/nameTitleCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/titleNameCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
         android:id="@+id/nameCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="1233"
+        app:layout_constraintStart_toEndOf="@id/nameTitleCard"
         app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/numberTitleCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/titleNumberCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/nameTitleCard"/>
 
     <TextView
         android:id="@+id/numberCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="@id/nameCard"
+        android:text="1233"
+        app:layout_constraintStart_toEndOf="@id/numberTitleCard"
         app:layout_constraintTop_toBottomOf="@id/nameCard" />
+
+    <TextView
+        android:id="@+id/moneyTitleCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/titleMoneyCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/numberTitleCard"/>
 
     <TextView
         android:id="@+id/moneyCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="@id/nameCard"
+        android:text="1233"
+        app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
         app:layout_constraintTop_toBottomOf="@id/numberCard" />
+
+    <TextView
+        android:id="@+id/bonusTitleCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="@string/titleBonusCard"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/moneyTitleCard"/>
 
     <TextView
         android:id="@+id/bonusCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        app:layout_constraintStart_toStartOf="@id/nameCard"
+        android:text="1233"
+        app:layout_constraintStart_toEndOf="@id/bonusTitleCard"
         app:layout_constraintTop_toBottomOf="@id/moneyCard" />
 
     <Button

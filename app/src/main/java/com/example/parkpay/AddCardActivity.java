@@ -42,6 +42,7 @@ public class AddCardActivity extends AppCompatActivity {
     SharedPreferences settings;
     String numberCard;
     String nameCard="";
+    ArrayList<String> child;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARD ="Card";
@@ -73,38 +74,29 @@ public class AddCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent i = new Intent(c, MainActivity.class);
-                ArrayList<String> child = new ArrayList<String>();
-
+                child = new ArrayList<String>();
 
                 numberCard=numberAddCard.getText().toString();
 
                     if(settings.contains(APP_PREFERENCES_CARDS)){
+
                         child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                     }
+
                     if(numberCard.equals("") || numberCard.length() == 0){
+
                         Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
                                 Toast.LENGTH_SHORT).show();
                     }
+
                     else {
+
                         if(numberCard.length() == 16&&!numberCard.contains(" ")&&
                                 numberCard.matches("^[a-zA-Z0-9]+$"))
                         {
-
                             doPostRequest("http://192.168.252.199/card/add");
-
-                            if(settings.contains(APP_PREFERENCES_STATUS)){
-                                if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
-                                    child.add(numberCard);
-                                    MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-                                    startActivity(i);
-                                }
-                                else {
-                                    Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, ""),
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
                         }
+
                         else {
                             Toast.makeText(getApplicationContext(),
                                     "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
@@ -257,7 +249,10 @@ public class AddCardActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             jsonData = response.body().string();
                         }
+
                         JSONObject Jobject = new JSONObject(jsonData);
+
+                        Intent i = new Intent(c, MainActivity.class);
 
                         Log.d(TAG,Jobject.getString("status"));
                         Log.d(TAG,Jobject.getString("msg"));
@@ -266,8 +261,24 @@ public class AddCardActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
                         editor.apply();
+
+                        if(settings.contains(APP_PREFERENCES_STATUS)){
+
+                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+
+                                child.add(numberCard);
+                                MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                                startActivity(i);
+                            }
+                            else {
+                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, ""),
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
                     } catch (IOException | JSONException e) {
-                        Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
+
+                        Log.d(TAG,"Ошибка: "+e);
                     }
                 });
             }
