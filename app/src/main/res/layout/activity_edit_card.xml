@@ -8,9 +8,10 @@
 
     <EditText
         android:id="@+id/editCodeCard"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:inputType="textPersonName"
@@ -20,9 +21,10 @@
 
     <EditText
         android:id="@+id/editNameCard"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:hint="@string/nameEditCard"
         android:ems="10"
@@ -32,9 +34,10 @@
 
     <Button
         android:id="@+id/editCardButton"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="@string/editInfo"
         app:layout_constraintStart_toStartOf="parent"

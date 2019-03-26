@@ -80,10 +80,19 @@ public class CardFragment extends Fragment {
         child = new ArrayList<String>();
         children2 = new ArrayList<String>();
 
+        boolean checkConnection=MainActivity.isOnline(c);
+
+//        if(checkConnection) {
+
         doGetRequest();
+
         doGetProfileRequest();
-//        doPostRequest("http://fucking-great-advice.ru/api/random");
-//        doPostRequest1("http://fucking-great-advice.ru/api/random");
+
+//        }
+//        else {
+//            Toast.makeText(c, "Отсутствует интернет соединение!",
+//                    Toast.LENGTH_SHORT).show();
+//        }
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
             child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
@@ -103,130 +112,6 @@ public class CardFragment extends Fragment {
         listView.setAdapter(adapter);
 
         return view;
-    }
-
-    public void doPostRequest(String url){
-
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("login",loginUser);
-//            json.put("password",passwordUser);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-//        String jsonString = json.toString();
-//        RequestBody body = RequestBody.create(JSON, jsonString);
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-//                .post(body)
-                .get()
-                .url(url)
-                .build();
-
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
-
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                });
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
-
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
-                        }
-                        JSONObject Jobject = new JSONObject(jsonData);
-                        SharedPreferences.Editor editor = settings.edit();
-//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
-//                        editor.putString(APP_PREFERENCES_CARDS,Jobject.getString("text"));
-                        editor.apply();
-
-                        children1.add(Jobject.getString("text"));
-                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
-
-                        if(settings.contains(APP_PREFERENCES_CARDS)){
-                            child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                        }
-
-                    } catch (IOException | JSONException e) {
-
-                        Log.d(TAG,"Ошибка: "+e);
-                    }
-                });
-            }
-        });
-    }
-
-    public void doPostRequest1(String url){
-
-        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
-//        JSONObject json = new JSONObject();
-//        try {
-//            json.put("login",loginUser);
-//            json.put("password",passwordUser);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-
-//        String jsonString = json.toString();
-//        RequestBody body = RequestBody.create(JSON, jsonString);
-        OkHttpClient client = new OkHttpClient();
-        final Request request = new Request.Builder()
-//                .post(body)
-                .get()
-                .url(url)
-                .build();
-
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
-
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                });
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
-
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
-                        }
-
-                        JSONObject Jobject = new JSONObject(jsonData);
-
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("text"));
-                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("text"));
-                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("text"));
-                        editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,Jobject.getString("text"));
-                        editor.apply();
-
-
-                    } catch (IOException | JSONException e) {
-
-                        Log.d(TAG,"Ошибка: "+e);
-                    }
-                });
-            }
-        });
     }
 
     public void doGetRequest(){
@@ -253,54 +138,56 @@ public class CardFragment extends Fragment {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-                Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
 
-                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                }
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
 
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+
+                            String jsonData = null;
+                            if (response.body() != null) {
+                                jsonData = response.body().string();
+                            }
+
+                            JSONArray jsonArray = new JSONArray(jsonData);
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                JSONObject Jobject = jsonArray.getJSONObject(i);
+
+                                Log.d(TAG, Jobject.getString("card_id"));
+                                Log.d(TAG, Jobject.getString("name"));
+                                Log.d(TAG, Jobject.getString("code"));
+
+                                children1.add(Jobject.getString("code"));
+
+                            }
+
+                            MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS, settings);
+
+                            if (settings.contains(APP_PREFERENCES_CARDS)) {
+                                child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
+                            }
+
+                        } catch (IOException | JSONException e) {
+                            Log.d(TAG, "Ошибка " + e);
                         }
-
-                        JSONArray jsonArray = new JSONArray(jsonData);
-
-                        for(int i=0;i<jsonArray.length();i++){
-
-                            JSONObject Jobject = jsonArray.getJSONObject(i);
-
-                            Log.d(TAG,Jobject.getString("card_id"));
-                            Log.d(TAG,Jobject.getString("name"));
-                            Log.d(TAG,Jobject.getString("code"));
-
-                            children1.add(Jobject.getString("code"));
-
-                        }
-
-                        MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS,settings);
-
-                        if(settings.contains(APP_PREFERENCES_CARDS)){
-                            child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                        }
-
-//                        SharedPreferences.Editor editor = settings.edit();
-//                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("card_id"));
-//                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("name"));
-//                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("code"));
-//                        editor.apply();
-
-                    } catch (IOException | JSONException e) {
-                        Log.d(TAG,"Ошибка "+e);
-                    }
-                });
+                    });
+                }
             }
         });
     }
@@ -325,45 +212,57 @@ public class CardFragment extends Fragment {
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);
+
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+
+                if (getActivity() != null) {
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                }
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
 
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+
+                            String jsonData = null;
+                            if (response.body() != null) {
+                                jsonData = response.body().string();
+                            }
+
+                            JSONObject parentObject = new JSONObject(jsonData);
+                            JSONObject Jobject = parentObject.getJSONObject("user");
+
+                            Log.d(TAG, Jobject.getString("name"));
+                            Log.d(TAG, Jobject.getString("email"));
+                            Log.d(TAG, Jobject.getString("phone"));
+                            Log.d(TAG, Jobject.getString("birthday"));
+
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(APP_PREFERENCES_NAME, Jobject.getString("name"));
+                            editor.putString(APP_PREFERENCES_MAIL, Jobject.getString("email"));
+                            editor.putString(APP_PREFERENCES_NUMBER, Jobject.getString("phone"));
+                            editor.putString(APP_PREFERENCES_DATE_BIRTHDAY, Jobject.getString("birthday"));
+                            editor.apply();
+
+                        } catch (IOException | JSONException e) {
+                            Log.d(TAG, "Ошибка " + e);
                         }
-
-                        JSONObject parentObject = new JSONObject(jsonData);
-                        JSONObject Jobject = parentObject.getJSONObject("user");
-
-                        Log.d(TAG,Jobject.getString("name"));
-                        Log.d(TAG,Jobject.getString("email"));
-                        Log.d(TAG,Jobject.getString("phone"));
-                        Log.d(TAG,Jobject.getString("birthday"));
-
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("name"));
-                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("email"));
-                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("phone"));
-                        editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,Jobject.getString("birthday"));
-                        editor.apply();
-
-                    } catch (IOException | JSONException e) {
-                        Log.d(TAG,"Ошибка "+e);
-                    }
-                });
+                    });
+                }
             }
         });
     }

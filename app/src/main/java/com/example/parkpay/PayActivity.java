@@ -60,13 +60,13 @@ public class PayActivity extends AppCompatActivity {
                 case RESULT_OK:
                     // successful tokenization
                     TokenizationResult result = Checkout.createTokenizationResult(data);
-                    Toast.makeText(getApplicationContext(),"Успех "+result,Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Результат "+result);
 
 
                     break;
                 case RESULT_CANCELED:
-                    Toast.makeText(getApplicationContext(),"Провал",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
                     // user canceled tokenization
                     break;
             }

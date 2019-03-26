@@ -208,7 +208,16 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     if (passUser.equals(confirmPasswordUser)){
 
-                        doPostRequest("http://192.168.252.199/register");
+                        boolean checkConnection=MainActivity.isOnline(c);
+
+//                        if(checkConnection) {
+
+                            doPostRequest("http://192.168.252.199/register");
+//                        }
+//                        else {
+//                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
                     }
                     else {
                         Toast.makeText(getApplicationContext(),"Пароли не совпадают",
@@ -269,7 +278,11 @@ public class SignUpActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

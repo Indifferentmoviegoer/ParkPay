@@ -60,7 +60,17 @@ public class EditCardActivity extends AppCompatActivity {
                 codeCard=editCodeCard.getText().toString();
                 nameCard=editNameCard.getText().toString();
 
+                boolean checkConnection=MainActivity.isOnline(c);
+
+//                if(checkConnection) {
+
                 doPostRequest("http://192.168.252.199/card/edit");
+
+//                }
+//                else {
+//                    Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+//                            Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }
@@ -93,7 +103,12 @@ public class EditCardActivity extends AppCompatActivity {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

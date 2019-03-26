@@ -38,10 +38,11 @@ public class AddCardActivity extends AppCompatActivity {
 
     Button buttonAddCard;
     EditText numberAddCard;
+    EditText nameAddCard;
     Context c;
     SharedPreferences settings;
     String numberCard;
-    String nameCard="";
+    String nameCard;
     ArrayList<String> child;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     public static final String APP_PREFERENCES = "mysettings";
@@ -62,6 +63,7 @@ public class AddCardActivity extends AppCompatActivity {
         c=this;
         buttonAddCard=(Button)findViewById(R.id.buttonAddCard);
         numberAddCard=(EditText)findViewById(R.id.numberAddCard);
+        nameAddCard=(EditText)findViewById(R.id.nameAddCard);
 
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -77,6 +79,7 @@ public class AddCardActivity extends AppCompatActivity {
                 child = new ArrayList<String>();
 
                 numberCard=numberAddCard.getText().toString();
+                nameCard=nameAddCard.getText().toString();
 
                     if(settings.contains(APP_PREFERENCES_CARDS)){
 
@@ -94,7 +97,16 @@ public class AddCardActivity extends AppCompatActivity {
                         if(numberCard.length() == 16&&!numberCard.contains(" ")&&
                                 numberCard.matches("^[a-zA-Z0-9]+$"))
                         {
-                            doPostRequest("http://192.168.252.199/card/add");
+                            boolean checkConnection=MainActivity.isOnline(c);
+
+//                            if(checkConnection) {
+
+                                doPostRequest("http://192.168.252.199/card/add");
+//                            }
+//                            else {
+//                                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+//                                        Toast.LENGTH_SHORT).show();
+//                            }
                         }
 
                         else {
@@ -206,6 +218,7 @@ public class AddCardActivity extends AppCompatActivity {
             }
         }
     }
+
     public void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");

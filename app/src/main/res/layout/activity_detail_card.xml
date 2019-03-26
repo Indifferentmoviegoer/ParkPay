@@ -13,6 +13,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/titleNameCard"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -22,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="1233"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/nameTitleCard"
         app:layout_constraintTop_toTopOf="parent"/>
 
@@ -33,6 +34,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/titleNumberCard"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/nameTitleCard"/>
 
@@ -42,7 +44,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="1233"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/numberTitleCard"
         app:layout_constraintTop_toBottomOf="@id/nameCard" />
 
@@ -53,6 +55,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/titleMoneyCard"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/numberTitleCard"/>
 
@@ -62,7 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="1233"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
         app:layout_constraintTop_toBottomOf="@id/numberCard" />
 
@@ -73,6 +76,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:text="@string/titleBonusCard"
+        android:textColor="@color/black"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/moneyTitleCard"/>
 
@@ -82,7 +86,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:text="1233"
+        android:textColor="@color/black"
         app:layout_constraintStart_toEndOf="@id/bonusTitleCard"
         app:layout_constraintTop_toBottomOf="@id/moneyCard" />
 

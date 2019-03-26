@@ -38,6 +38,7 @@
 
     <string name="more">Подробнее</string>
     <string name="pay">Пополнить карту</string>
+    <string name="paySum">Сумма пополнения</string>
     <string name="edit">Редактировать карту</string>
     <string name="add">Добавить</string>
     <string name="deleteCard">Удалить карту</string>

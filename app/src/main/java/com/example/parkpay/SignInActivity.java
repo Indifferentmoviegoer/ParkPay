@@ -44,6 +44,7 @@ public class SignInActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_EMAIL ="Email";
     public static final String APP_PREFERENCES_PASSWORD ="Password";
     public static final String APP_PREFERENCES_TOKEN ="Token";
+    public static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
 
     @Override
@@ -70,13 +71,24 @@ public class SignInActivity extends AppCompatActivity {
                 }
                 else {
 
-                    doPostRequest("http://192.168.252.199/login");
-//                    doPostRequest("http://fucking-great-advice.ru/api/random");
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+//                    if(checkConnection){
+
+                        doPostRequest("http://192.168.252.199/login");
+//                    }
+//                    else {
+//                        Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
                 }
             }
         });
 
         if(settings.contains(APP_PREFERENCES_TOKEN)){
+
+            doPostRequestRefresh("http://192.168.252.199/login");
+
             Intent intent = new Intent(SignInActivity.this,
                     MainActivity.class);
             startActivity(intent);
@@ -89,12 +101,12 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_EMAIL)
+        if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_LOGIN)
                 &&settings.contains(APP_PREFERENCES_PASSWORD)) {
             remember.setChecked(settings.getBoolean(APP_PREFERENCES_CHECK, false));
 
             if(settings.getBoolean(APP_PREFERENCES_CHECK, false)){
-                login.setText(settings.getString(APP_PREFERENCES_EMAIL, ""));
+                login.setText(settings.getString(APP_PREFERENCES_LOGIN, ""));
                 pass.setText(settings.getString(APP_PREFERENCES_PASSWORD, ""));
             }
 
@@ -106,7 +118,7 @@ public class SignInActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(APP_PREFERENCES_CHECK,remember.isChecked() );
-        editor.putString(APP_PREFERENCES_EMAIL,login.getText().toString());
+        editor.putString(APP_PREFERENCES_LOGIN,login.getText().toString());
         editor.putString(APP_PREFERENCES_PASSWORD,pass.getText().toString());
         editor.apply();
     }
@@ -128,7 +140,6 @@ public class SignInActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
-//                .get()
                 .url(url)
                 .build();
 
@@ -137,7 +148,10 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
-                Log.d("TAG", Objects.requireNonNull(call.request().body()).toString());
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
 
                 runOnUiThread(new Runnable() {
                     @Override
@@ -154,7 +168,9 @@ public class SignInActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             jsonData = response.body().string();
                         }
+
                         JSONObject Jobject = new JSONObject(jsonData);
+
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
 //                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("text"));
@@ -174,6 +190,75 @@ public class SignInActivity extends AppCompatActivity {
 
                         Toast.makeText(getApplicationContext(), "Неверный логин или пароль!",
                                 Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    public void doPostRequestRefresh(String url){
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("login",settings.getString(APP_PREFERENCES_LOGIN,""));
+            json.put("password",settings.getString(APP_PREFERENCES_PASSWORD,""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .post(body)
+                .url(url)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+
+                        JSONObject Jobject = new JSONObject(jsonData);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
+//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("text"));
+                        editor.apply();
+
+                        if(settings.contains(APP_PREFERENCES_TOKEN)) {
+
+                            Intent intent = new Intent(SignInActivity.this,
+                                    MainActivity.class);
+                            startActivity(intent);
+                        }
+
+                    } catch (IOException | JSONException e) {
+
+                        Log.d(TAG,"Ошибка: "+e);
                     }
                 });
             }

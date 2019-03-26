@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +23,16 @@ import java.util.Objects;
 
 public class NewsFragment extends Fragment {
 
-    private ArrayList states = new ArrayList();
-    ListView countriesList;
     Context c;
+
+    private List<Person> persons;
+
+    private void initializeData() {
+        persons = new ArrayList<>();
+        persons.add(new Person("Emma Wilson", "23 years old", R.drawable.par));
+        persons.add(new Person("Lavery Maiss", "25 years old", R.drawable.par));
+        persons.add(new Person("Lillie Watts", "35 years old", R.drawable.par));
+    }
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARD ="Card";
@@ -39,37 +48,15 @@ public class NewsFragment extends Fragment {
 
         c=getContext();
 
-        // начальная инициализация списка
-        setInitialData();
-        // получаем элемент ListView
-        countriesList = (ListView) view.findViewById(R.id.countriesList);
-        // создаем адаптер
-        StateAdapter stateAdapter = new StateAdapter(c, R.layout.list_item, states);
-        // устанавливаем адаптер
-        countriesList.setAdapter(stateAdapter);
-        // слушатель выбора в списке
-        AdapterView.OnItemClickListener itemListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        RecyclerView rv = (RecyclerView)view.findViewById(R.id.rv);
+        LinearLayoutManager llm = new LinearLayoutManager(c);
+        rv.setLayoutManager(llm);
 
-                // получаем выбранный пункт
-                State selectedState = (State)parent.getItemAtPosition(position);
-                Toast.makeText(c, "Был выбран пункт " + selectedState.getName(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        };
-        countriesList.setOnItemClickListener(itemListener);
+        initializeData();
+        RVAdapter adapter = new RVAdapter(persons);
+        rv.setAdapter(adapter);
 
         return view;
-    }
-
-    private void setInitialData(){
-
-        states.add(new State ("Бразилия", "Бразилиа", R.drawable.card));
-        states.add(new State ("Аргентина", "Буэнос-Айрес", R.drawable.card));
-        states.add(new State ("Колумбия", "Богота", R.drawable.card));
-        states.add(new State ("Уругвай", "Монтевидео", R.drawable.card));
-        states.add(new State ("Чили", "Сантьяго", R.drawable.card));
     }
 
 }

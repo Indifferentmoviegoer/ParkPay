@@ -161,19 +161,18 @@ public class EditProfileFragment extends Fragment {
                 }
                 else {
 
-                    doPostRequest("http://192.168.252.199/user/edit");
+                    boolean checkConnection=MainActivity.isOnline(c);
 
-                    if(settings.contains(APP_PREFERENCES_STATUS)){
-                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "Успешно!")){
+//                    if(checkConnection) {
 
-                            ((MainActivity) Objects.requireNonNull(getActivity()))
-                                    .replaceFragments(ProfileFragment.class);
-                        }
-                    }
-                    else {
-                        Toast.makeText(c,"Ошибка",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                        doPostRequest("http://192.168.252.199/user/edit");
+//                    }
+//                    else {
+//                        Toast.makeText(c, "Отсутствует интернет соединение!",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+
+
                 }
             }
         });
@@ -261,95 +260,54 @@ public class EditProfileFragment extends Fragment {
         call.enqueue(new Callback() {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+
+                if (getActivity() != null) {
+                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                }
             }
             @Override
             public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
 
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+
+                            String jsonData = null;
+                            if (response.body() != null) {
+                                jsonData = response.body().string();
+                            }
+
+                            JSONObject Jobject = new JSONObject(jsonData);
+
+                            Log.d(TAG, Jobject.getString("status"));
+                            Log.d(TAG, Jobject.getString("msg"));
+
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));
+                            editor.apply();
+
+                            if(settings.contains(APP_PREFERENCES_STATUS)){
+                                if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+
+                                    ((MainActivity) Objects.requireNonNull(getActivity()))
+                                            .replaceFragments(ProfileFragment.class);
+                                }
+                            }
+
+                        } catch (IOException | JSONException e) {
+                            Log.d(TAG, "Ошибка " + e);
                         }
-                        JSONObject Jobject = new JSONObject(jsonData);
-                        Log.d(TAG,Jobject.getString("status"));
-                        Log.d(TAG,Jobject.getString("msg"));
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("msg"));
-                        editor.apply();
-                    } catch (IOException | JSONException e) {
-                        Log.d(TAG,"Ошибка "+e);
-                    }
-                });
-            }
-        });
-    }
-
-    public void doGetRequest(String url){
-
-        OkHttpClient client = new OkHttpClient();
-
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
-                .addPathSegment("user")
-                .addPathSegment("get_info")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-
-        final Request request = new Request.Builder()
-                .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .method("GET", null)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
-                });
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-                Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                    try {
-
-                        String jsonData = null;
-                        if (response.body() != null) {
-                            jsonData = response.body().string();
-                        }
-
-                        JSONObject parentObject = new JSONObject(jsonData);
-                        JSONObject Jobject = parentObject.getJSONObject("user");
-
-                        Log.d(TAG,Jobject.getString("name"));
-                        Log.d(TAG,Jobject.getString("email"));
-                        Log.d(TAG,Jobject.getString("phone"));
-                        Log.d(TAG,Jobject.getString("birthday"));
-
-                        SharedPreferences.Editor editor = settings.edit();
-                        editor.putString(APP_PREFERENCES_NAME,Jobject.getString("name"));
-                        editor.putString(APP_PREFERENCES_MAIL,Jobject.getString("email"));
-                        editor.putString(APP_PREFERENCES_NUMBER,Jobject.getString("phone"));
-                        editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,Jobject.getString("birthday"));
-                        editor.apply();
-
-                    } catch (IOException | JSONException e) {
-                        Log.d(TAG,"Ошибка "+e);
-                    }
-                });
+                    });
+                }
             }
         });
     }

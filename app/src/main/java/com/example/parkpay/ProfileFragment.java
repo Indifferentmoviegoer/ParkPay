@@ -31,6 +31,7 @@ public class ProfileFragment extends Fragment {
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_NOTIFICATION ="TURN_NOTIFICATION";
     public static final String APP_PREFERENCES_NAME ="Name";
+    public static final String APP_PREFERENCES_TOKEN ="Token";
     SharedPreferences settings;
     Switch notification;
     @Nullable
@@ -47,8 +48,6 @@ public class ProfileFragment extends Fragment {
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        //settings= PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         editProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +67,10 @@ public class ProfileFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
+                                SharedPreferences.Editor editor = settings.edit();
+                                editor.putString(APP_PREFERENCES_TOKEN,null);
+                                editor.apply();
+
                                 Intent intent = new Intent(c,
                                         SignInActivity.class);
                                 startActivity(intent);
@@ -85,9 +88,12 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        if(settings.contains(APP_PREFERENCES_NOTIFICATION)&&settings.contains(APP_PREFERENCES_NAME)) {
+        if(settings.contains(APP_PREFERENCES_NOTIFICATION)) {
             notification.setChecked(settings.getBoolean(APP_PREFERENCES_NOTIFICATION,
                     false));
+        }
+
+        if(settings.contains(APP_PREFERENCES_NAME)) {
             name.setText(settings.getString(APP_PREFERENCES_NAME,
                     ""));
         }
@@ -98,10 +104,12 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(APP_PREFERENCES_NOTIFICATION,notification.isChecked());
         editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
         editor.apply();
+
         if(settings.contains(APP_PREFERENCES_NOTIFICATION)) {
             notification.setChecked(settings.getBoolean(APP_PREFERENCES_NOTIFICATION,
                     false));

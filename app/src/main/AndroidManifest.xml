@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".EditCardActivity"></activity>
+        <activity android:name=".EditCardActivity"/>
         <activity android:name=".AddCardActivity" />
 
         <meta-data
