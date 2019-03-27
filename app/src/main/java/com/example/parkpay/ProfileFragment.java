@@ -26,7 +26,7 @@ import java.util.Objects;
 public class ProfileFragment extends Fragment {
     TextView editProfile;
     TextView name;
-    Button signOut;
+    TextView signOut;
     Context c;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_NOTIFICATION ="TURN_NOTIFICATION";
@@ -43,7 +43,7 @@ public class ProfileFragment extends Fragment {
         editProfile=(TextView)view.findViewById(R.id.editProfile);
         name=(TextView)view.findViewById(R.id.nameProfile);
         notification = (Switch) view.findViewById(R.id.turnNotification);
-        signOut=(Button)view.findViewById(R.id.signOut);
+        signOut=(TextView) view.findViewById(R.id.signOut);
         c=getContext();
 
         settings= Objects.requireNonNull(this.getActivity())

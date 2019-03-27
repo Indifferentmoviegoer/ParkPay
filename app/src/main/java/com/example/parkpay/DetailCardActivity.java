@@ -7,10 +7,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,11 +45,14 @@ public class DetailCardActivity extends AppCompatActivity {
     Button deleteCard;
     Button payCard;
     Button editCard;
+    ImageView updateCard;
     Context c;
+
     SharedPreferences settings;
     ArrayList<String> child = new ArrayList<String>();
     ArrayList<String> children2 = new ArrayList<String>();
     int groupPosition;
+    private Toolbar toolbar;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
@@ -72,6 +77,9 @@ public class DetailCardActivity extends AppCompatActivity {
         bonusCard=(TextView)findViewById(R.id.bonusCard);
         deleteCard=(Button)findViewById(R.id.deleteCard);
         editCard=(Button)findViewById(R.id.editCard);
+        updateCard=(ImageView)findViewById(R.id.updateCard);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         payCard=(Button)findViewById(R.id.payCard);
         settings= Objects.requireNonNull(c)
@@ -190,6 +198,18 @@ public class DetailCardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        updateCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
+
+                doGetRequest();
+
+            }
+        });
+
     }
 
     public void doPostRequestCardInfo(String url){

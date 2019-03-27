@@ -8,11 +8,13 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,9 +57,10 @@ public class CardFragment extends Fragment {
     ExpandableListView listView;
     ArrayList<ArrayList<String>> groups;
     ArrayList<String> child;
-    ArrayList<String> children1 = new ArrayList<String>();
+    ArrayList<String> children1;
     ArrayList<String> children2;
     ExpListAdapter adapter;
+    ImageView updateCard;
 
     SharedPreferences settings;
     Context c;
@@ -65,18 +68,22 @@ public class CardFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view=inflater.inflate(R.layout.fragment_card,container,false);
+
         if (container != null) {
             c = container.getContext();
         }
         // Находим наш list
         listView= (ExpandableListView)view.findViewById(R.id.exListView);
+        updateCard=(ImageView)view.findViewById(R.id.updateCard);
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //Создаем набор данных для адаптера
         groups = new ArrayList<ArrayList<String>>();
+        children1 = new ArrayList<String>();
         child = new ArrayList<String>();
         children2 = new ArrayList<String>();
 
@@ -110,6 +117,25 @@ public class CardFragment extends Fragment {
         //Создаем адаптер и передаем context и список с данными
         adapter = new ExpListAdapter(c, groups);
         listView.setAdapter(adapter);
+
+        updateCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.remove(APP_PREFERENCES_CARDS);
+                editor.remove(APP_PREFERENCES_VIRTUAL_CARDS);
+                editor.apply();
+
+                children1.clear();
+                children2.clear();
+
+                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
+
+                doGetRequest();
+
+            }
+        });
 
         return view;
     }
@@ -179,9 +205,25 @@ public class CardFragment extends Fragment {
 
                             MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS, settings);
 
-                            if (settings.contains(APP_PREFERENCES_CARDS)) {
-                                child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
+                            groups.clear();
+                            if(settings.contains(APP_PREFERENCES_CARDS)){
+                                children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                             }
+
+                            children1.add("Новая карта");
+                            groups.add(children1);
+
+                            if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
+                                children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+                            }
+
+                            children2.add("Новая карта");
+                            groups.add(children2);
+                            //Создаем адаптер и передаем context и список с данными
+                            adapter = new ExpListAdapter(c, groups);
+                            listView.setAdapter(adapter);
+
+
 
                         } catch (IOException | JSONException e) {
                             Log.d(TAG, "Ошибка " + e);

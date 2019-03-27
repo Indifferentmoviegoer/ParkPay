@@ -28,10 +28,11 @@ public class NewsFragment extends Fragment {
     private List<Person> persons;
 
     private void initializeData() {
+
         persons = new ArrayList<>();
-        persons.add(new Person("Emma Wilson", "23 years old", R.drawable.par));
-        persons.add(new Person("Lavery Maiss", "25 years old", R.drawable.par));
-        persons.add(new Person("Lillie Watts", "35 years old", R.drawable.par));
+        persons.add(new Person("Акция 1", "Описание или дата окончания акции", "https://static.tonkosti.ru/images/3/3d/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%BC%D0%B0%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0_%28%D0%A7%D0%B8%D1%81%D1%82%D1%8F%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0%29%2C_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80.JPG"));
+        persons.add(new Person("Акция 2", "Описание или дата окончания акции", "https://static.tonkosti.ru/images/3/3d/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%BC%D0%B0%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0_%28%D0%A7%D0%B8%D1%81%D1%82%D1%8F%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0%29%2C_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80.JPG"));
+        persons.add(new Person("Акция 3", "Описание или дата окончания акции", "https://static.tonkosti.ru/images/3/3d/%D0%9F%D0%B5%D1%80%D0%B2%D0%BE%D0%BC%D0%B0%D0%B9%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0_%28%D0%A7%D0%B8%D1%81%D1%82%D1%8F%D0%BA%D0%BE%D0%B2%D1%81%D0%BA%D0%B0%D1%8F_%D1%80%D0%BE%D1%89%D0%B0%29%2C_%D0%9A%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B4%D0%B0%D1%80.JPG"));
     }
 
     public static final String APP_PREFERENCES = "mysettings";

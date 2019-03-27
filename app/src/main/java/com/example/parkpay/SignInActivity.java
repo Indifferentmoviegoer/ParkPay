@@ -51,6 +51,7 @@ public class SignInActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
         signIn = (Button) findViewById(R.id.signIn);
         login = (EditText) findViewById(R.id.email);
         pass = (EditText) findViewById(R.id.password);
@@ -246,7 +247,6 @@ public class SignInActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
-//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("text"));
                         editor.apply();
 
                         if(settings.contains(APP_PREFERENCES_TOKEN)) {
