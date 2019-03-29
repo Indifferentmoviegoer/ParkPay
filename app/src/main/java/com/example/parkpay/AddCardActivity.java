@@ -279,6 +279,10 @@ public class AddCardActivity extends AppCompatActivity {
 
                             if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
+                                Toast.makeText(c,
+                                        "Добавление. Пожалуйста, подождите!",
+                                        Toast.LENGTH_SHORT).show();
+
                                 child.add(numberCard);
                                 MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                                 startActivity(i);

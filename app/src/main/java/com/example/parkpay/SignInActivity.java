@@ -93,6 +93,8 @@ public class SignInActivity extends AppCompatActivity {
             Intent intent = new Intent(SignInActivity.this,
                     MainActivity.class);
             startActivity(intent);
+            overridePendingTransition(0, 0);
+
         }
         help.setOnClickListener(new View.OnClickListener() {
 
@@ -185,6 +187,7 @@ public class SignInActivity extends AppCompatActivity {
                             Intent intent = new Intent(SignInActivity.this,
                                     MainActivity.class);
                             startActivity(intent);
+                            overridePendingTransition(0, 0);
                         }
 
                     } catch (IOException | JSONException e) {
@@ -251,9 +254,10 @@ public class SignInActivity extends AppCompatActivity {
 
                         if(settings.contains(APP_PREFERENCES_TOKEN)) {
 
-                            Intent intent = new Intent(SignInActivity.this,
-                                    MainActivity.class);
-                            startActivity(intent);
+//                            Intent intent = new Intent(SignInActivity.this,
+//                                    MainActivity.class);
+//                            startActivity(intent);
+//                            overridePendingTransition(0, 0);
                         }
 
                     } catch (IOException | JSONException e) {

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +48,7 @@ public class DetailCardActivity extends AppCompatActivity {
     Button editCard;
     ImageView updateCard;
     Context c;
+//    ProgressBar progressBarCard;
 
     SharedPreferences settings;
     ArrayList<String> child = new ArrayList<String>();
@@ -78,6 +80,8 @@ public class DetailCardActivity extends AppCompatActivity {
         deleteCard=(Button)findViewById(R.id.deleteCard);
         editCard=(Button)findViewById(R.id.editCard);
         updateCard=(ImageView)findViewById(R.id.updateCard);
+//        progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
+
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -345,6 +349,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         editor.apply();
 
                         child.remove(cardNumber);
+
                         MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                         startActivity(i);
 
@@ -406,9 +411,9 @@ public class DetailCardActivity extends AppCompatActivity {
 
                             JSONObject Jobject = jsonArray.getJSONObject(i);
 
-                            Log.d(TAG,Jobject.getString("card_id"));
-                            Log.d(TAG,Jobject.getString("name"));
-                            Log.d(TAG,Jobject.getString("code"));
+//                            Log.d(TAG,Jobject.getString("card_id"));
+//                            Log.d(TAG,Jobject.getString("name"));
+//                            Log.d(TAG,Jobject.getString("code"));
 
                             if(Jobject.getString("code").contains(cardNumber)){
                                 SharedPreferences.Editor editor = settings.edit();
@@ -420,6 +425,10 @@ public class DetailCardActivity extends AppCompatActivity {
                                 if(settings.contains(APP_PREFERENCES_CARD_DELETE)&&
                                         settings.contains(APP_PREFERENCES_CARD_NAME)
                                         &&settings.contains(APP_PREFERENCES_CARD_CODE)){
+
+                                    Toast.makeText(c,
+                                            "Идет загрузка. Пожалуйста, подождите!",
+                                            Toast.LENGTH_LONG).show();
 
                                     doPostRequestCardInfo("http://192.168.252.199/card/get_info");
 

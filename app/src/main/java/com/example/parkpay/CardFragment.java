@@ -45,6 +45,7 @@ public class CardFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
+    public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_NAME ="Name";
@@ -58,6 +59,7 @@ public class CardFragment extends Fragment {
     ArrayList<ArrayList<String>> groups;
     ArrayList<String> child;
     ArrayList<String> children1;
+    ArrayList<String> codes;
     ArrayList<String> children2;
     ExpListAdapter adapter;
     ImageView updateCard;
@@ -84,6 +86,7 @@ public class CardFragment extends Fragment {
         //Создаем набор данных для адаптера
         groups = new ArrayList<ArrayList<String>>();
         children1 = new ArrayList<String>();
+        codes = new ArrayList<String>();
         child = new ArrayList<String>();
         children2 = new ArrayList<String>();
 
@@ -101,8 +104,8 @@ public class CardFragment extends Fragment {
 //                    Toast.LENGTH_SHORT).show();
 //        }
 
-        if(settings.contains(APP_PREFERENCES_CARDS)){
-            child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+        if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
+            child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
         }
 
         child.add("Новая карта");
@@ -123,6 +126,7 @@ public class CardFragment extends Fragment {
             public void onClick(View v) {
 
                 SharedPreferences.Editor editor = settings.edit();
+                editor.remove(APP_PREFERENCES_NAMES_CARDS);
                 editor.remove(APP_PREFERENCES_CARDS);
                 editor.remove(APP_PREFERENCES_VIRTUAL_CARDS);
                 editor.apply();
@@ -199,15 +203,17 @@ public class CardFragment extends Fragment {
                                 Log.d(TAG, Jobject.getString("name"));
                                 Log.d(TAG, Jobject.getString("code"));
 
-                                children1.add(Jobject.getString("code"));
+                                children1.add(Jobject.getString("name"));
+                                codes.add(Jobject.getString("code"));
 
                             }
 
-                            MainActivity.saveArrayList(children1, APP_PREFERENCES_CARDS, settings);
+                            MainActivity.saveArrayList(children1, APP_PREFERENCES_NAMES_CARDS, settings);
+                            MainActivity.saveArrayList(codes, APP_PREFERENCES_CARDS, settings);
 
                             groups.clear();
-                            if(settings.contains(APP_PREFERENCES_CARDS)){
-                                children1=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                            if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
+                                children1=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
                             }
 
                             children1.add("Новая карта");
@@ -217,12 +223,12 @@ public class CardFragment extends Fragment {
                                 children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                             }
 
+                            children2.remove("Новая карта");
                             children2.add("Новая карта");
                             groups.add(children2);
                             //Создаем адаптер и передаем context и список с данными
                             adapter = new ExpListAdapter(c, groups);
                             listView.setAdapter(adapter);
-
 
 
                         } catch (IOException | JSONException e) {
