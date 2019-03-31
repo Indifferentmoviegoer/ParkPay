@@ -37,7 +37,13 @@
 
         <activity android:name=".SplashScreen" />
 
-        <activity android:name=".DetailCardActivity" />
+        <activity android:name=".DetailCardActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+    </activity>
 
         <activity android:name=".PayActivity" />
 
@@ -59,11 +65,11 @@
 
         <activity android:name=".SignInActivity"
                   android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity android:name=".SignUpActivity" />

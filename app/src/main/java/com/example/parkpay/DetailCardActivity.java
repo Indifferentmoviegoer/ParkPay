@@ -38,9 +38,13 @@ import okhttp3.Response;
 public class DetailCardActivity extends AppCompatActivity {
 
     TextView numberCard;
+    TextView numberTitleCard;
     TextView nameCard;
+    TextView nameTitleCard;
     TextView moneyCard;
+    TextView moneyTitleCard;
     TextView bonusCard;
+    TextView bonusTitleCard;
     String cardNumber;
     String number;
     Button deleteCard;
@@ -48,7 +52,7 @@ public class DetailCardActivity extends AppCompatActivity {
     Button editCard;
     ImageView updateCard;
     Context c;
-//    ProgressBar progressBarCard;
+    ProgressBar progressBarCard;
 
     SharedPreferences settings;
     ArrayList<String> child = new ArrayList<String>();
@@ -74,18 +78,38 @@ public class DetailCardActivity extends AppCompatActivity {
 
         c=this;
         nameCard=(TextView)findViewById(R.id.nameCard);
+        nameTitleCard=(TextView)findViewById(R.id.nameTitleCard);
         numberCard=(TextView)findViewById(R.id.numberCard);
+        numberTitleCard=(TextView)findViewById(R.id.numberTitleCard);
         moneyCard=(TextView)findViewById(R.id.moneyCard);
+        moneyTitleCard=(TextView)findViewById(R.id.moneyTitleCard);
         bonusCard=(TextView)findViewById(R.id.bonusCard);
+        bonusTitleCard=(TextView)findViewById(R.id.bonusTitleCard);
+        payCard=(Button)findViewById(R.id.payCard);
         deleteCard=(Button)findViewById(R.id.deleteCard);
         editCard=(Button)findViewById(R.id.editCard);
         updateCard=(ImageView)findViewById(R.id.updateCard);
-//        progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
+        progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
+
+        nameCard.setVisibility(View.INVISIBLE);
+        nameTitleCard.setVisibility(View.INVISIBLE);
+        numberCard.setVisibility(View.INVISIBLE);
+        numberTitleCard.setVisibility(View.INVISIBLE);
+        moneyCard.setVisibility(View.INVISIBLE);
+        moneyTitleCard.setVisibility(View.INVISIBLE);
+        bonusCard.setVisibility(View.INVISIBLE);
+        bonusTitleCard.setVisibility(View.INVISIBLE);
+        payCard.setVisibility(View.INVISIBLE);
+        deleteCard.setVisibility(View.INVISIBLE);
+        editCard.setVisibility(View.INVISIBLE);
+        updateCard.setVisibility(View.INVISIBLE);
+
+
 
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        payCard=(Button)findViewById(R.id.payCard);
+
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -207,7 +231,21 @@ public class DetailCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
+//                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
+
+                progressBarCard.setVisibility(View.VISIBLE);
+                nameCard.setVisibility(View.INVISIBLE);
+                nameTitleCard.setVisibility(View.INVISIBLE);
+                numberCard.setVisibility(View.INVISIBLE);
+                numberTitleCard.setVisibility(View.INVISIBLE);
+                moneyCard.setVisibility(View.INVISIBLE);
+                moneyTitleCard.setVisibility(View.INVISIBLE);
+                bonusCard.setVisibility(View.INVISIBLE);
+                bonusTitleCard.setVisibility(View.INVISIBLE);
+                payCard.setVisibility(View.INVISIBLE);
+                deleteCard.setVisibility(View.INVISIBLE);
+                editCard.setVisibility(View.INVISIBLE);
+                updateCard.setVisibility(View.INVISIBLE);
 
                 doGetRequest();
 
@@ -251,6 +289,21 @@ public class DetailCardActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
+                        progressBarCard.setVisibility(View.INVISIBLE);
+                        nameCard.setVisibility(View.VISIBLE);
+                        nameTitleCard.setVisibility(View.VISIBLE);
+                        numberCard.setVisibility(View.VISIBLE);
+                        numberTitleCard.setVisibility(View.VISIBLE);
+                        moneyCard.setVisibility(View.VISIBLE);
+                        moneyTitleCard.setVisibility(View.VISIBLE);
+                        bonusCard.setVisibility(View.VISIBLE);
+                        bonusTitleCard.setVisibility(View.VISIBLE);
+                        payCard.setVisibility(View.VISIBLE);
+                        deleteCard.setVisibility(View.VISIBLE);
+                        editCard.setVisibility(View.VISIBLE);
+                        updateCard.setVisibility(View.VISIBLE);
+
                     }
                 });
             }
@@ -281,8 +334,37 @@ public class DetailCardActivity extends AppCompatActivity {
                         moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
                         bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
 
+                        progressBarCard.setVisibility(View.INVISIBLE);
+                        nameCard.setVisibility(View.VISIBLE);
+                        nameTitleCard.setVisibility(View.VISIBLE);
+                        numberCard.setVisibility(View.VISIBLE);
+                        numberTitleCard.setVisibility(View.VISIBLE);
+                        moneyCard.setVisibility(View.VISIBLE);
+                        moneyTitleCard.setVisibility(View.VISIBLE);
+                        bonusCard.setVisibility(View.VISIBLE);
+                        bonusTitleCard.setVisibility(View.VISIBLE);
+                        payCard.setVisibility(View.VISIBLE);
+                        deleteCard.setVisibility(View.VISIBLE);
+                        editCard.setVisibility(View.VISIBLE);
+                        updateCard.setVisibility(View.VISIBLE);
+
                     } catch (IOException | JSONException e) {
+
                         Log.d(TAG,"Ошибка "+e);
+
+                        progressBarCard.setVisibility(View.INVISIBLE);
+                        nameCard.setVisibility(View.VISIBLE);
+                        nameTitleCard.setVisibility(View.VISIBLE);
+                        numberCard.setVisibility(View.VISIBLE);
+                        numberTitleCard.setVisibility(View.VISIBLE);
+                        moneyCard.setVisibility(View.VISIBLE);
+                        moneyTitleCard.setVisibility(View.VISIBLE);
+                        bonusCard.setVisibility(View.VISIBLE);
+                        bonusTitleCard.setVisibility(View.VISIBLE);
+                        payCard.setVisibility(View.VISIBLE);
+                        deleteCard.setVisibility(View.VISIBLE);
+                        editCard.setVisibility(View.VISIBLE);
+                        updateCard.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -426,14 +508,12 @@ public class DetailCardActivity extends AppCompatActivity {
                                         settings.contains(APP_PREFERENCES_CARD_NAME)
                                         &&settings.contains(APP_PREFERENCES_CARD_CODE)){
 
-                                    Toast.makeText(c,
-                                            "Идет загрузка. Пожалуйста, подождите!",
-                                            Toast.LENGTH_LONG).show();
-
-                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
-
                                     nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
                                     numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
+
+//                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+
+
                                 }
 
                             }
