@@ -176,7 +176,6 @@ public class SignInActivity extends AppCompatActivity {
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
-//                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("text"));
                         editor.apply();
 
                         if(settings.contains(APP_PREFERENCES_TOKEN)) {
