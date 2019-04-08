@@ -92,8 +92,8 @@ public class SignUpActivity extends AppCompatActivity {
         phone= findViewById(R.id.number);
         dateBirthday= findViewById(R.id.dateBirthday);
         signUp= findViewById(R.id.signUp);
-        mailLayout=(TextInputLayout) findViewById(R.id.mailLayout);
-        mailLayout.setHintEnabled(false);
+//        mailLayout=(TextInputLayout) findViewById(R.id.mailLayout);
+//        mailLayout.setHintEnabled(false);
         c=this;
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -121,16 +121,16 @@ public class SignUpActivity extends AppCompatActivity {
 
                     email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
-                    mailLayout.setErrorEnabled(true);
-                    mailLayout.setHintEnabled(false);
-                    mailLayout.setError(getResources().getString(R.string.mailLayout));
+//                    mailLayout.setErrorEnabled(true);
+//                    mailLayout.setHintEnabled(false);
+//                    mailLayout.setError(getResources().getString(R.string.mailLayout));
                 }
 
                 if(MainActivity.isValidEmail(email.getText().toString())){
 
                     email.getBackground().clearColorFilter();
 
-                    mailLayout.setErrorEnabled(false);
+//                    mailLayout.setErrorEnabled(false);
                 }
 
             }

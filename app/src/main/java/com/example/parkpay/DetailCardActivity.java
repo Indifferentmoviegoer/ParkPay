@@ -430,10 +430,21 @@ public class DetailCardActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.apply();
 
-                        child.remove(cardNumber);
+                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "1"))
 
-                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-                        startActivity(i);
+                        {
+                            child.remove(cardNumber);
+
+                            MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                            startActivity(i);
+                        }
+
+                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "0"))
+                        {
+                            Toast
+                                    .makeText(c,Jobject.getString("msg"),Toast.LENGTH_SHORT)
+                                    .show();
+                        }
 
                     } catch (IOException | JSONException e) {
                         Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
@@ -493,11 +504,12 @@ public class DetailCardActivity extends AppCompatActivity {
 
                             JSONObject Jobject = jsonArray.getJSONObject(i);
 
-//                            Log.d(TAG,Jobject.getString("card_id"));
-//                            Log.d(TAG,Jobject.getString("name"));
-//                            Log.d(TAG,Jobject.getString("code"));
-
                             if(Jobject.getString("code").contains(cardNumber)){
+
+                                Log.d(TAG,Jobject.getString("card_id"));
+                                Log.d(TAG,Jobject.getString("name"));
+                                Log.d(TAG,Jobject.getString("code"));
+
                                 SharedPreferences.Editor editor = settings.edit();
                                 editor.putString(APP_PREFERENCES_CARD_DELETE,Jobject.getString("card_id"));
                                 editor.putString(APP_PREFERENCES_CARD_NAME,Jobject.getString("name"));
@@ -511,7 +523,7 @@ public class DetailCardActivity extends AppCompatActivity {
                                     nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
                                     numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
 
-//                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
 
 
                                 }

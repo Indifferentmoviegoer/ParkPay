@@ -4,7 +4,8 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="toolbarStyle">@style/custom_toolbar</item>
         <!--<item name="android:textColorPrimary">@color/white</item>-->
@@ -20,6 +21,21 @@
         <item name="android:layout_height">?attr/actionBarSize</item>
         <item name="theme">@style/Theme.MaterialComponents.Light</item>
         <item name="android:background">@color/colorPrimary</item>
+    </style>
+
+    <style name="edit_profile_input">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">20dp</item>
+        <item name="android:layout_marginStart">20dp</item>
+    </style>
+
+    <style name="edit_profile_label">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">23dp</item>
+        <item name="android:layout_marginTop">10dp</item>
+        <item name="android:textColor">@color/grey</item>
     </style>
 
 

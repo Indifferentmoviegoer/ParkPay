@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -121,13 +123,14 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
         TextView cardChild = (TextView) convertView.findViewById(R.id.cardChild);
         cardChild.setText(mGroups.get(groupPosition).get(childPosition));
 
-        Button button = (Button)convertView.findViewById(R.id.buttonChild);
+        ImageView button = (ImageView) convertView.findViewById(R.id.buttonChild);
+
         if(isLastChild){
-            button.setText("Добавить");
-            button.getBackground().setColorFilter(Color.parseColor("#71CC32"), PorterDuff.Mode.MULTIPLY);
+            button.setImageResource(R.drawable.ic_add);
+//            button.getBackground().setColorFilter(Color.parseColor("#71CC32"), PorterDuff.Mode.MULTIPLY);
         }
         if(!isLastChild){
-            button.setText("Подробнее");
+            button.setImageResource(R.drawable.ic_more);
         }
 
         button.setOnClickListener(new View.OnClickListener() {

@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +53,7 @@ import static android.support.constraint.Constraints.TAG;
 
 public class EditProfileFragment extends Fragment {
 
-    Button save;
+//    Button save;
     EditText name;
     EditText email;
     EditText phone;
@@ -61,7 +62,9 @@ public class EditProfileFragment extends Fragment {
     String emailUser;
     String phoneUser;
     String dateBirthdayUser;
-    TextInputLayout mailLayout;
+//    TextInputLayout mailLayout;
+    ImageView backProfile;
+    ImageView acceptSave;
 
     Context c;
 
@@ -85,14 +88,16 @@ public class EditProfileFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_edit_profile,container,false);
 
-        save=(Button) view.findViewById(R.id.save);
+//        save=(Button) view.findViewById(R.id.save);
         name=(EditText) view.findViewById(R.id.name);
         email=(EditText) view.findViewById(R.id.mail);
         phone=(EditText) view.findViewById(R.id.number);
         dateBirthday=(EditText) view.findViewById(R.id.dateBirthday);
-        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
+//        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
+        backProfile=(ImageView) view.findViewById(R.id.backProfile);
+        acceptSave=(ImageView) view.findViewById(R.id.acceptSave);
 
-        mailLayout.setHintEnabled(false);
+//        mailLayout.setHintEnabled(false);
         c=getContext();
 
         settings= Objects.requireNonNull(this.getActivity())
@@ -122,60 +127,60 @@ public class EditProfileFragment extends Fragment {
 
                     email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
-                    mailLayout.setErrorEnabled(true);
-                    mailLayout.setHintEnabled(false);
-                    mailLayout.setError(getResources().getString(R.string.mailLayout));
+//                    mailLayout.setErrorEnabled(true);
+//                    mailLayout.setHintEnabled(false);
+//                    mailLayout.setError(getResources().getString(R.string.mailLayout));
                 }
 
                 if(MainActivity.isValidEmail(email.getText().toString())){
 
                     email.getBackground().clearColorFilter();
 
-                    mailLayout.setErrorEnabled(false);
+//                    mailLayout.setErrorEnabled(false);
                 }
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                nameUser=name.getText().toString();
-                emailUser=email.getText().toString();
-                phoneUser=phone.getText().toString();
-                dateBirthdayUser=dateBirthday.getText().toString();
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
-                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
-                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
-                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
-                editor.apply();
-
-                if (nameUser.equals("")||nameUser.length() == 0||
-                        emailUser.equals("")||emailUser.length() == 0)
-                {
-                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-                    boolean checkConnection=MainActivity.isOnline(c);
-
-//                    if(checkConnection) {
-
-                        doPostRequest("http://192.168.252.199/user/edit");
-//                    }
-//                    else {
-//                        Toast.makeText(c, "Отсутствует интернет соединение!",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-
-
-                }
-            }
-        });
+//        save.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                nameUser=name.getText().toString();
+//                emailUser=email.getText().toString();
+//                phoneUser=phone.getText().toString();
+//                dateBirthdayUser=dateBirthday.getText().toString();
+//
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
+//                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
+//                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
+//                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+//                editor.apply();
+//
+//                if (nameUser.equals("")||nameUser.length() == 0||
+//                        emailUser.equals("")||emailUser.length() == 0)
+//                {
+//                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//                else {
+//
+//                    boolean checkConnection=MainActivity.isOnline(c);
+//
+////                    if(checkConnection) {
+//
+//                        doPostRequest("http://192.168.252.199/user/edit");
+////                    }
+////                    else {
+////                        Toast.makeText(c, "Отсутствует интернет соединение!",
+////                                Toast.LENGTH_SHORT).show();
+////                    }
+//
+//
+//                }
+//            }
+//        });
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -221,6 +226,60 @@ public class EditProfileFragment extends Fragment {
             phone.setText(settings.getString(APP_PREFERENCES_NUMBER, ""));
             dateBirthday.setText(settings.getString(APP_PREFERENCES_DATE_BIRTHDAY, ""));
         }
+
+        backProfile.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .replaceFragments(ProfileFragment.class);
+
+            }
+        });
+
+        acceptSave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                nameUser=name.getText().toString();
+                emailUser=email.getText().toString();
+                phoneUser=phone.getText().toString();
+                dateBirthdayUser=dateBirthday.getText().toString();
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
+                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
+                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
+                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+                editor.apply();
+
+                if (nameUser.equals("")||nameUser.length() == 0||
+                        emailUser.equals("")||emailUser.length() == 0)
+                {
+                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+//                    if(checkConnection) {
+
+                    doPostRequest("http://192.168.252.199/user/edit");
+//                    }
+//                    else {
+//                        Toast.makeText(c, "Отсутствует интернет соединение!",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+
+
+                }
+            }
+        });
+
+
         return view;
     }
 

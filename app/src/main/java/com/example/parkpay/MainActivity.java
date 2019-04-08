@@ -42,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
+    public static final String APP_PREFERENCES_PASSWORD ="Password";
+    public static final String APP_PREFERENCES_LOGIN ="Login";
+    private static final String TAG = "myLogs";
     SharedPreferences settings;
     BottomNavigationView bottomNav;
 
@@ -61,6 +64,12 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new CardFragment()).commit();
+        }
+
+        if(settings.contains(APP_PREFERENCES_TOKEN)){
+
+            doPostRequestRefresh("http://192.168.252.199/login");
+
         }
     }
 
@@ -164,6 +173,67 @@ public class MainActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.nav_cart);
 //        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
 //                new CardFragment()).commit();
+    }
+
+    public void doPostRequestRefresh(String url){
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("login",settings.getString(APP_PREFERENCES_LOGIN,""));
+            json.put("password",settings.getString(APP_PREFERENCES_PASSWORD,""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .post(body)
+                .url(url)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                    }
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+
+                        JSONObject Jobject = new JSONObject(jsonData);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
+                        editor.apply();
+
+                    } catch (IOException | JSONException e) {
+
+                        Log.d(TAG,"Ошибка: "+e);
+                    }
+                });
+            }
+        });
     }
 
 //    @Override
