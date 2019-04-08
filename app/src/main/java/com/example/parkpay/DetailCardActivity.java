@@ -426,14 +426,30 @@ public class DetailCardActivity extends AppCompatActivity {
                         Log.d(TAG,Jobject.getString("status"));
                         Log.d(TAG,Jobject.getString("msg"));
 
+
+
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.apply();
 
-                        child.remove(cardNumber);
+                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1"))
+                        {
+                            Toast.makeText(c,
+                                    "Удаление. Пожалуйста, подождите!",
+                                    Toast.LENGTH_SHORT).show();
 
-                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-                        startActivity(i);
+                            child.remove(cardNumber);
+
+                            MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                            startActivity(i);
+                        }
+
+                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "0"))
+                        {
+                            Toast.makeText(c,
+                                    Jobject.getString("msg"),
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
                     } catch (IOException | JSONException e) {
                         Toast.makeText(c,"Ошибка "+e,Toast.LENGTH_SHORT).show();
@@ -511,7 +527,7 @@ public class DetailCardActivity extends AppCompatActivity {
                                     nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
                                     numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
 
-//                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
+                                    doPostRequestCardInfo("http://192.168.252.199/card/get_info");
 
 
                                 }
