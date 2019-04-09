@@ -75,6 +75,8 @@ public class ProfileFragment extends Fragment {
                                         SignInActivity.class);
                                 startActivity(intent);
 
+                                Objects.requireNonNull(getActivity()).finish();
+
                             }
                         });
                 builder.setNegativeButton("Нет",

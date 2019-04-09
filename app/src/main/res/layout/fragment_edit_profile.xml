@@ -61,7 +61,7 @@
         </android.support.v7.widget.Toolbar>
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profile_image"
+            android:id="@+id/photoProfile"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_marginTop="15dp"
@@ -73,7 +73,7 @@
             app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
         <TextView
-            android:id="@+id/change_photo_text"
+            android:id="@+id/changePhotoText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -82,14 +82,14 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/profile_image" />
+            app:layout_constraintTop_toBottomOf="@id/photoProfile" />
 
         <TextView
             android:id="@+id/name_label"
             style="@style/edit_profile_label"
             android:labelFor="@id/name"
             android:text="@string/name"
-            app:layout_constraintTop_toBottomOf="@id/change_photo_text"
+            app:layout_constraintTop_toBottomOf="@id/changePhotoText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
 

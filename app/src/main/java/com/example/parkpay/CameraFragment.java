@@ -102,6 +102,10 @@ public class CameraFragment extends Fragment {
         });
         downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialogInterface, int i) {
+
+//                Intent i = new Intent(c,
+//                        MainActivity.class);
+//                startActivity(i);
             }
         });
         return downloadDialog.show();

@@ -3,7 +3,9 @@ package com.example.parkpay;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -21,6 +23,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -65,6 +68,7 @@ public class EditProfileFragment extends Fragment {
 //    TextInputLayout mailLayout;
     ImageView backProfile;
     ImageView acceptSave;
+    TextView changePhotoText;
 
     Context c;
 
@@ -81,6 +85,24 @@ public class EditProfileFragment extends Fragment {
 
     SharedPreferences settings;
 
+
+    private static final int TAKE_PICTURE_REQUEST_CODE = 1;
+    private ImageView photoProfile;
+
+    private void takeCameraPicture() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+            this.startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+        }
+    }
+
+    public void onActivityResult(int n, int n2, Intent intent) {
+        if (n == 1 && n2 == -1) {
+            Bitmap bitmap = (Bitmap)((Bundle)Objects.requireNonNull((Object)intent.getExtras())).get("data");
+            this.photoProfile.setImageBitmap(bitmap);
+        }
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
@@ -96,6 +118,8 @@ public class EditProfileFragment extends Fragment {
 //        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
         backProfile=(ImageView) view.findViewById(R.id.backProfile);
         acceptSave=(ImageView) view.findViewById(R.id.acceptSave);
+        changePhotoText=(TextView) view.findViewById(R.id.changePhotoText);
+        photoProfile=(ImageView) view.findViewById(R.id.photoProfile);
 
 //        mailLayout.setHintEnabled(false);
         c=getContext();
@@ -279,6 +303,13 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
+        changePhotoText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeCameraPicture();
+            }
+        });
+
 
         return view;
     }
@@ -357,8 +388,16 @@ public class EditProfileFragment extends Fragment {
                             if(settings.contains(APP_PREFERENCES_STATUS)){
                                 if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
+                                    Toast.makeText(c,"Сохранение",Toast.LENGTH_SHORT).show();
+
                                     ((MainActivity) Objects.requireNonNull(getActivity()))
                                             .replaceFragments(ProfileFragment.class);
+                                }
+                                else {
+
+                                    Toast
+                                            .makeText(c,Jobject.getString("msg"),Toast.LENGTH_SHORT)
+                                            .show();
                                 }
                             }
 
