@@ -38,26 +38,25 @@ import okhttp3.Response;
 public class DetailCardActivity extends AppCompatActivity {
 
     TextView numberCard;
-    TextView numberTitleCard;
-    TextView nameCard;
-    TextView nameTitleCard;
     TextView moneyCard;
     TextView moneyTitleCard;
     TextView bonusCard;
     TextView bonusTitleCard;
-    String cardNumber;
+    TextView titleDetailCard;
+    String cardNumber="";
     String number;
     Button deleteCard;
     Button payCard;
     Button editCard;
     ImageView updateCard;
+    ImageView imageCard;
     Context c;
     ProgressBar progressBarCard;
 
     SharedPreferences settings;
     ArrayList<String> child = new ArrayList<String>();
     ArrayList<String> children2 = new ArrayList<String>();
-    int groupPosition;
+    int groupPosition=10;
     private Toolbar toolbar;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
@@ -69,6 +68,8 @@ public class DetailCardActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
     public static final String APP_PREFERENCES_MONEY ="money";
     public static final String APP_PREFERENCES_BONUS ="bonus";
+    public static final String APP_PREFERENCES_POSITION_CARD ="position";
+    public static final String APP_PREFERENCES_POSITION_GROUP ="group";
     private static final String TAG = "myLogs";
 
     @Override
@@ -77,32 +78,30 @@ public class DetailCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_card);
 
         c=this;
-        nameCard=(TextView)findViewById(R.id.nameCard);
-        nameTitleCard=(TextView)findViewById(R.id.nameTitleCard);
         numberCard=(TextView)findViewById(R.id.numberCard);
-        numberTitleCard=(TextView)findViewById(R.id.numberTitleCard);
         moneyCard=(TextView)findViewById(R.id.moneyCard);
         moneyTitleCard=(TextView)findViewById(R.id.moneyTitleCard);
         bonusCard=(TextView)findViewById(R.id.bonusCard);
         bonusTitleCard=(TextView)findViewById(R.id.bonusTitleCard);
+        titleDetailCard=(TextView)findViewById(R.id.titleDetailCard);
         payCard=(Button)findViewById(R.id.payCard);
         deleteCard=(Button)findViewById(R.id.deleteCard);
         editCard=(Button)findViewById(R.id.editCard);
         updateCard=(ImageView)findViewById(R.id.updateCard);
+        imageCard=(ImageView)findViewById(R.id.imageCard);
         progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
 
-        nameCard.setVisibility(View.INVISIBLE);
-        nameTitleCard.setVisibility(View.INVISIBLE);
         numberCard.setVisibility(View.INVISIBLE);
-        numberTitleCard.setVisibility(View.INVISIBLE);
         moneyCard.setVisibility(View.INVISIBLE);
         moneyTitleCard.setVisibility(View.INVISIBLE);
         bonusCard.setVisibility(View.INVISIBLE);
         bonusTitleCard.setVisibility(View.INVISIBLE);
+        titleDetailCard.setVisibility(View.INVISIBLE);
         payCard.setVisibility(View.INVISIBLE);
         deleteCard.setVisibility(View.INVISIBLE);
         editCard.setVisibility(View.INVISIBLE);
         updateCard.setVisibility(View.INVISIBLE);
+        imageCard.setVisibility(View.INVISIBLE);
 
 
 
@@ -113,23 +112,10 @@ public class DetailCardActivity extends AppCompatActivity {
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                number= null;
-                groupPosition= 10;
-            } else {
-                number= extras.getString("POSITION_CARD");
-                groupPosition= extras.getInt("POSITION_GROUP");
-            }
-        } else {
-            number= (String) savedInstanceState.getSerializable("POSITION_CARD");
-            groupPosition= (int) savedInstanceState.getSerializable("POSITION_GROUP");
-        }
-        if(number!=null){
-            numberCard.setText(number);
-            cardNumber=numberCard.getText().toString();
-        }
+        number=settings.getString(APP_PREFERENCES_POSITION_CARD,"");
+        groupPosition=settings.getInt(APP_PREFERENCES_POSITION_GROUP,0);
+        numberCard.setText(number);
+        cardNumber=numberCard.getText().toString();
 
         boolean checkConnection=MainActivity.isOnline(c);
 
@@ -176,11 +162,6 @@ public class DetailCardActivity extends AppCompatActivity {
 //                                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
 //                                                    Toast.LENGTH_SHORT).show();
 //                                        }
-
-//                                        child.remove(cardNumber);
-//
-//                                        MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
-//                                        startActivity(i);
                                     }
                                     if(groupPosition==1){
 
@@ -234,18 +215,17 @@ public class DetailCardActivity extends AppCompatActivity {
 //                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
 
                 progressBarCard.setVisibility(View.VISIBLE);
-                nameCard.setVisibility(View.INVISIBLE);
-                nameTitleCard.setVisibility(View.INVISIBLE);
                 numberCard.setVisibility(View.INVISIBLE);
-                numberTitleCard.setVisibility(View.INVISIBLE);
                 moneyCard.setVisibility(View.INVISIBLE);
                 moneyTitleCard.setVisibility(View.INVISIBLE);
                 bonusCard.setVisibility(View.INVISIBLE);
                 bonusTitleCard.setVisibility(View.INVISIBLE);
+                titleDetailCard.setVisibility(View.INVISIBLE);
                 payCard.setVisibility(View.INVISIBLE);
                 deleteCard.setVisibility(View.INVISIBLE);
                 editCard.setVisibility(View.INVISIBLE);
                 updateCard.setVisibility(View.INVISIBLE);
+                imageCard.setVisibility(View.INVISIBLE);
 
                 doGetRequest();
 
@@ -291,18 +271,17 @@ public class DetailCardActivity extends AppCompatActivity {
                     public void run() {
 
                         progressBarCard.setVisibility(View.INVISIBLE);
-                        nameCard.setVisibility(View.VISIBLE);
-                        nameTitleCard.setVisibility(View.VISIBLE);
                         numberCard.setVisibility(View.VISIBLE);
-                        numberTitleCard.setVisibility(View.VISIBLE);
                         moneyCard.setVisibility(View.VISIBLE);
                         moneyTitleCard.setVisibility(View.VISIBLE);
                         bonusCard.setVisibility(View.VISIBLE);
                         bonusTitleCard.setVisibility(View.VISIBLE);
+                        titleDetailCard.setVisibility(View.VISIBLE);
                         payCard.setVisibility(View.VISIBLE);
                         deleteCard.setVisibility(View.VISIBLE);
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
+                        imageCard.setVisibility(View.VISIBLE);
 
                     }
                 });
@@ -335,36 +314,34 @@ public class DetailCardActivity extends AppCompatActivity {
                         bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
 
                         progressBarCard.setVisibility(View.INVISIBLE);
-                        nameCard.setVisibility(View.VISIBLE);
-                        nameTitleCard.setVisibility(View.VISIBLE);
                         numberCard.setVisibility(View.VISIBLE);
-                        numberTitleCard.setVisibility(View.VISIBLE);
                         moneyCard.setVisibility(View.VISIBLE);
                         moneyTitleCard.setVisibility(View.VISIBLE);
                         bonusCard.setVisibility(View.VISIBLE);
                         bonusTitleCard.setVisibility(View.VISIBLE);
+                        titleDetailCard.setVisibility(View.VISIBLE);
                         payCard.setVisibility(View.VISIBLE);
                         deleteCard.setVisibility(View.VISIBLE);
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
+                        imageCard.setVisibility(View.VISIBLE);
 
                     } catch (IOException | JSONException e) {
 
                         Log.d(TAG,"Ошибка "+e);
 
                         progressBarCard.setVisibility(View.INVISIBLE);
-                        nameCard.setVisibility(View.VISIBLE);
-                        nameTitleCard.setVisibility(View.VISIBLE);
                         numberCard.setVisibility(View.VISIBLE);
-                        numberTitleCard.setVisibility(View.VISIBLE);
                         moneyCard.setVisibility(View.VISIBLE);
                         moneyTitleCard.setVisibility(View.VISIBLE);
                         bonusCard.setVisibility(View.VISIBLE);
                         bonusTitleCard.setVisibility(View.VISIBLE);
+                        titleDetailCard.setVisibility(View.VISIBLE);
                         payCard.setVisibility(View.VISIBLE);
                         deleteCard.setVisibility(View.VISIBLE);
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
+                        imageCard.setVisibility(View.VISIBLE);
                     }
                 });
             }
@@ -434,6 +411,10 @@ public class DetailCardActivity extends AppCompatActivity {
 
                         {
                             child.remove(cardNumber);
+
+                            Toast
+                                    .makeText(c,"Удаление карты",Toast.LENGTH_SHORT)
+                                    .show();
 
                             MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                             startActivity(i);
@@ -520,7 +501,7 @@ public class DetailCardActivity extends AppCompatActivity {
                                         settings.contains(APP_PREFERENCES_CARD_NAME)
                                         &&settings.contains(APP_PREFERENCES_CARD_CODE)){
 
-                                    nameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+                                    titleDetailCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
                                     numberCard.setText(settings.getString(APP_PREFERENCES_CARD_CODE, ""));
 
                                     doPostRequestCardInfo("http://192.168.252.199/card/get_info");

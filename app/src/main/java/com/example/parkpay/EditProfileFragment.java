@@ -1,19 +1,24 @@
 package com.example.parkpay;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -31,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -53,6 +59,7 @@ import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 import static android.support.constraint.Constraints.TAG;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class EditProfileFragment extends Fragment {
 
@@ -81,7 +88,9 @@ public class EditProfileFragment extends Fragment {
     public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
     public static final String APP_PREFERENCES_TOKEN ="Token";
+    public static final String APP_PREFERENCES_PHOTO ="Photo";
     private static final String TAG = "myLogs";
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     SharedPreferences settings;
 
@@ -92,15 +101,46 @@ public class EditProfileFragment extends Fragment {
     private void takeCameraPicture() {
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
-            this.startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+
+            if (checkSelfPermission(c,Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        MY_CAMERA_REQUEST_CODE);
+            }
+            else {
+                startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+            }
+
         }
     }
 
     public void onActivityResult(int n, int n2, Intent intent) {
         if (n == 1 && n2 == -1) {
             Bitmap bitmap = (Bitmap)((Bundle)Objects.requireNonNull((Object)intent.getExtras())).get("data");
-            this.photoProfile.setImageBitmap(bitmap);
+            photoProfile.setImageBitmap(bitmap);
+
+            String img=encodeToBase64(bitmap);
+
+            SharedPreferences.Editor editor = settings.edit();
+                editor.putString(APP_PREFERENCES_PHOTO,img);
+                editor.apply();
         }
+    }
+
+    public static String encodeToBase64(Bitmap image) {
+        Bitmap immage = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+
+        Log.d("Image Log:", imageEncoded);
+        return imageEncoded;
+    }
+
+    public static Bitmap decodeToBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -126,6 +166,12 @@ public class EditProfileFragment extends Fragment {
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        if(settings.contains(APP_PREFERENCES_PHOTO))
+        {
+            Bitmap bit=decodeToBase64(settings.getString(APP_PREFERENCES_PHOTO,""));
+            photoProfile.setImageBitmap(bit);
+        }
 
         Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___________");
         MaskImpl mask = MaskImpl.createTerminated(slots);
@@ -245,6 +291,8 @@ public class EditProfileFragment extends Fragment {
         if(settings.contains(APP_PREFERENCES_NUMBER)&&settings.contains(APP_PREFERENCES_DATE_BIRTHDAY)
                 &&settings.contains(APP_PREFERENCES_MAIL)&&settings.contains(APP_PREFERENCES_NAME)) {
 
+            changePhotoText.setText(settings.getString(APP_PREFERENCES_NAME, ""));
+
             name.setText(settings.getString(APP_PREFERENCES_NAME, ""));
             email.setText(settings.getString(APP_PREFERENCES_MAIL, ""));
             phone.setText(settings.getString(APP_PREFERENCES_NUMBER, ""));
@@ -312,6 +360,29 @@ public class EditProfileFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+
+            } else {
+
+                Toast.makeText(c, "camera permission denied", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
     }
 
     private void updateLabel() {

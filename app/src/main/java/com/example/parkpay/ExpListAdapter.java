@@ -22,6 +22,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
+    public static final String APP_PREFERENCES_POSITION_CARD ="position";
+    public static final String APP_PREFERENCES_POSITION_GROUP ="group";
     public static final String APP_PREFERENCES_DETAIL_CARD ="detailCard";
     SharedPreferences settings;
 
@@ -147,9 +149,6 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                     if(groupPosition==1) {
                         ((MainActivity) Objects.requireNonNull(mContext))
                                 .replaceFragments(AddVirtualCardFragment.class);
-//                        Intent i = new Intent(mContext, AddCardActivity.class);
-//                        i.putExtra("POSITION_GROUP", 1);
-//                        mContext.startActivity(i);
                     }
                 }
 
@@ -161,8 +160,12 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                             child= MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                         }
                         Intent i = new Intent(mContext, DetailCardActivity.class);
-                        i.putExtra("POSITION_CARD", child.get(childPosition));
-                        i.putExtra("POSITION_GROUP", 0);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_POSITION_CARD,child.get(childPosition));
+                        editor.putInt(APP_PREFERENCES_POSITION_GROUP,0);
+                        editor.apply();
+
                         mContext.startActivity(i);
                     }
 
@@ -171,9 +174,14 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                         if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
                             child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
                         }
+
                         Intent i = new Intent(mContext, DetailCardActivity.class);
-                        i.putExtra("POSITION_CARD", child.get(childPosition));
-                        i.putExtra("POSITION_GROUP", 1);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_POSITION_CARD,child.get(childPosition));
+                        editor.putInt(APP_PREFERENCES_POSITION_GROUP,1);
+                        editor.apply();
+
                         mContext.startActivity(i);
                     }
                 }

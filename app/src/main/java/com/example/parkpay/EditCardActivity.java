@@ -46,6 +46,7 @@ public class EditCardActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
+    public static final String APP_PREFERENCES_CARD_NAME ="cardName";
     public static final String APP_PREFERENCES_STATUS ="Status";
     public static final String APP_PREFERENCES_MSG ="Msg";
     public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
@@ -62,6 +63,11 @@ public class EditCardActivity extends AppCompatActivity {
         editCardButton=(Button)findViewById(R.id.editCardButton);
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
+
+
+        if(settings.contains(APP_PREFERENCES_CARD_NAME)){
+            editNameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
+        }
 
         editCardButton.setOnClickListener(new View.OnClickListener() {
             @Override

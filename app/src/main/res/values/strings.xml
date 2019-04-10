@@ -55,7 +55,10 @@
 
     <string name="editCardInfo">Редактирование карты</string>
     <string name="payCardInfo">Пополнение карты</string>
+    <string name="addCardTitle">Добавление карты</string>
     <string name="registration">Регистрация</string>
     <string name="signInTitle">Авторизация</string>
+
+    <string name="result">ca-app-pub-9760468716956149/2317568936</string>
 
 </resources>
