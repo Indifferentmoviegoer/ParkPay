@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,7 @@ public class PayActivity extends AppCompatActivity {
     String payAmount;
     Button buttonPay;
     BigDecimal sum;
+    ImageView backPay;
     Context c;
     private static final String TAG = "myLogs";
     private static final int REQUEST_CODE_TOKENIZE = 33;
@@ -58,8 +60,20 @@ public class PayActivity extends AppCompatActivity {
 
         amountPay=(EditText)findViewById(R.id.amountPay);
         buttonPay=(Button)findViewById(R.id.buttonPay);
+        backPay=(ImageView)findViewById(R.id.backPay);
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
+
+        backPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(c,
+                        DetailCardActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         buttonPay.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -93,11 +107,11 @@ public class PayActivity extends AppCompatActivity {
                     TokenizationResult result = Checkout.createTokenizationResult(data);
                     Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Результат "+result);
-//                    doPostRequest("http://192.168.252.199/card/add_money");
+                    doPostRequest("http://192.168.252.199/card/add_money");
 
                 case RESULT_CANCELED:
                     Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
-                    doPostRequest("http://192.168.252.199/card/add_money");
+//                    doPostRequest("http://192.168.252.199/card/add_money");
                     // user canceled tokenization
                     break;
             }

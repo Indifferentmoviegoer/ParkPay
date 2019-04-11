@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,7 @@ public class EditCardActivity extends AppCompatActivity {
     Button editCardButton;
     String codeCard;
     String nameCard;
+    ImageView backEdit;
     Context c;
     SharedPreferences settings;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
@@ -61,6 +63,7 @@ public class EditCardActivity extends AppCompatActivity {
         editCodeCard=(EditText)findViewById(R.id.editCodeCard);
         editNameCard=(EditText)findViewById(R.id.editNameCard);
         editCardButton=(Button)findViewById(R.id.editCardButton);
+        backEdit=(ImageView) findViewById(R.id.backEdit);
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
 
@@ -68,6 +71,17 @@ public class EditCardActivity extends AppCompatActivity {
         if(settings.contains(APP_PREFERENCES_CARD_NAME)){
             editNameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
         }
+
+        backEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(c,
+                        DetailCardActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         editCardButton.setOnClickListener(new View.OnClickListener() {
             @Override

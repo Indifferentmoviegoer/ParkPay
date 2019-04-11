@@ -30,7 +30,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/titleEditProfile"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:src="@drawable/ic_back"
+                    android:src="@drawable/ic_close"
                     />
 
                 <TextView

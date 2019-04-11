@@ -50,6 +50,7 @@ public class DetailCardActivity extends AppCompatActivity {
     Button editCard;
     ImageView updateCard;
     ImageView imageCard;
+    ImageView closeDetail;
     Context c;
     ProgressBar progressBarCard;
 
@@ -89,6 +90,7 @@ public class DetailCardActivity extends AppCompatActivity {
         editCard=(Button)findViewById(R.id.editCard);
         updateCard=(ImageView)findViewById(R.id.updateCard);
         imageCard=(ImageView)findViewById(R.id.imageCard);
+        closeDetail=(ImageView)findViewById(R.id.closeDetail);
         progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
 
         numberCard.setVisibility(View.INVISIBLE);
@@ -102,6 +104,7 @@ public class DetailCardActivity extends AppCompatActivity {
         editCard.setVisibility(View.INVISIBLE);
         updateCard.setVisibility(View.INVISIBLE);
         imageCard.setVisibility(View.INVISIBLE);
+        closeDetail.setVisibility(View.INVISIBLE);
 
 
 
@@ -128,6 +131,18 @@ public class DetailCardActivity extends AppCompatActivity {
 //            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
 //                    Toast.LENGTH_SHORT).show();
 //        }
+
+        closeDetail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(c,
+                        MainActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
 
         deleteCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -226,6 +241,7 @@ public class DetailCardActivity extends AppCompatActivity {
                 editCard.setVisibility(View.INVISIBLE);
                 updateCard.setVisibility(View.INVISIBLE);
                 imageCard.setVisibility(View.INVISIBLE);
+                closeDetail.setVisibility(View.INVISIBLE);
 
                 doGetRequest();
 
@@ -282,6 +298,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
                         imageCard.setVisibility(View.VISIBLE);
+                        closeDetail.setVisibility(View.VISIBLE);
 
                     }
                 });
@@ -325,6 +342,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
                         imageCard.setVisibility(View.VISIBLE);
+                        closeDetail.setVisibility(View.VISIBLE);
 
                     } catch (IOException | JSONException e) {
 
@@ -342,6 +360,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         editCard.setVisibility(View.VISIBLE);
                         updateCard.setVisibility(View.VISIBLE);
                         imageCard.setVisibility(View.VISIBLE);
+                        closeDetail.setVisibility(View.VISIBLE);
                     }
                 });
             }

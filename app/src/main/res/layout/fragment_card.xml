@@ -60,7 +60,8 @@
                 android:baselineAligned="false"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 android:indicatorLeft="180dp"
-                android:indicatorRight="500dp" />
+                android:indicatorRight="500dp"
+                />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </RelativeLayout>

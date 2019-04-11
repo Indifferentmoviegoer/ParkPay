@@ -378,7 +378,7 @@ public class EditProfileFragment extends Fragment {
 
             } else {
 
-                Toast.makeText(c, "camera permission denied", Toast.LENGTH_LONG).show();
+                //Toast.makeText(c, "", Toast.LENGTH_LONG).show();
 
             }
 

@@ -6,10 +6,12 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -134,6 +136,59 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
         if(!isLastChild){
             button.setImageResource(R.drawable.ic_more);
         }
+
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(isLastChild) {
+
+                    if(groupPosition==0) {
+                        Intent i = new Intent(mContext, AddCardActivity.class);
+                        mContext.startActivity(i);
+                    }
+
+                    if(groupPosition==1) {
+                        ((MainActivity) Objects.requireNonNull(mContext))
+                                .replaceFragments(AddVirtualCardFragment.class);
+                    }
+                }
+
+                if(!isLastChild) {
+
+                    if(groupPosition==0) {
+
+                        if (settings.contains(APP_PREFERENCES_CARDS)) {
+                            child= MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                        }
+                        Intent i = new Intent(mContext, DetailCardActivity.class);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_POSITION_CARD,child.get(childPosition));
+                        editor.putInt(APP_PREFERENCES_POSITION_GROUP,0);
+                        editor.apply();
+
+                        mContext.startActivity(i);
+                    }
+
+                    if(groupPosition==1) {
+
+                        if (settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)) {
+                            child = MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+                        }
+
+                        Intent i = new Intent(mContext, DetailCardActivity.class);
+
+                        SharedPreferences.Editor editor = settings.edit();
+                        editor.putString(APP_PREFERENCES_POSITION_CARD,child.get(childPosition));
+                        editor.putInt(APP_PREFERENCES_POSITION_GROUP,1);
+                        editor.apply();
+
+                        mContext.startActivity(i);
+                    }
+                }
+            }
+        });
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
