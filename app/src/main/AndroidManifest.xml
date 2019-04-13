@@ -29,6 +29,14 @@
         <activity android:name=".AddCardActivity" />
 
         <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-9760468716956149~8831006393"/>
+
+        <meta-data
+            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
+            android:value="true"/>
+
+        <meta-data
             android:name="ymp_firebase_app_id"
             android:value="1:1061747613431:android:9be6226371a31003" />
         <meta-data
@@ -59,11 +67,21 @@
 
         <activity android:name=".SignInActivity"
             android:noHistory="true">
+<<<<<<< HEAD
             <intent-filter>
             <action android:name="android.intent.action.MAIN" />
 
             <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+=======
+
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+>>>>>>> redesign
         </activity>
 
         <activity android:name=".SignUpActivity" />

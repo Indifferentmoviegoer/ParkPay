@@ -60,6 +60,11 @@ public class SignInActivity extends AppCompatActivity {
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
 
+        TypefaceUtil
+                .overrideFont(getApplicationContext(),
+                "SERIF",
+                "font/roboto_regular.ttf");
+
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

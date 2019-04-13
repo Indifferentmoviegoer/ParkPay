@@ -35,6 +35,7 @@
     <string name="signOut">Выйти</string>
 
     <string name="editInfo">Сохранить изменения</string>
+    <string name="editProfileInfo">Редактирование</string>
 
     <string name="more">Подробнее</string>
     <string name="pay">Пополнить карту</string>
@@ -50,5 +51,14 @@
     <string name="titleNumberCard">Номер карты:</string>
     <string name="titleMoneyCard">Денежный баланс:</string>
     <string name="titleBonusCard">Количество бонусов:</string>
+
+
+    <string name="editCardInfo">Редактирование карты</string>
+    <string name="payCardInfo">Пополнение карты</string>
+    <string name="addCardTitle">Добавление карты</string>
+    <string name="registration">Регистрация</string>
+    <string name="signInTitle">Авторизация</string>
+
+    <string name="result">ca-app-pub-9760468716956149/2317568936</string>
 
 </resources>

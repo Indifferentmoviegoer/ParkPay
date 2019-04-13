@@ -31,7 +31,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/app_name"
+                        android:text="@string/cards"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         app:layout_constraintBottom_toBottomOf="parent"
@@ -60,7 +60,8 @@
                 android:baselineAligned="false"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 android:indicatorLeft="180dp"
-                android:indicatorRight="500dp" />
+                android:indicatorRight="500dp"
+                />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </RelativeLayout>

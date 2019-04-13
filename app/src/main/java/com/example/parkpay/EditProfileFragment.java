@@ -1,17 +1,24 @@
 package com.example.parkpay;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,6 +27,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -27,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -49,10 +59,11 @@ import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 import static android.support.constraint.Constraints.TAG;
+import static android.support.v4.content.PermissionChecker.checkSelfPermission;
 
 public class EditProfileFragment extends Fragment {
 
-    Button save;
+//    Button save;
     EditText name;
     EditText email;
     EditText phone;
@@ -61,7 +72,10 @@ public class EditProfileFragment extends Fragment {
     String emailUser;
     String phoneUser;
     String dateBirthdayUser;
-    TextInputLayout mailLayout;
+//    TextInputLayout mailLayout;
+    ImageView backProfile;
+    ImageView acceptSave;
+    TextView changePhotoText;
 
     Context c;
 
@@ -74,9 +88,60 @@ public class EditProfileFragment extends Fragment {
     public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
     public static final String APP_PREFERENCES_TOKEN ="Token";
+    public static final String APP_PREFERENCES_PHOTO ="Photo";
     private static final String TAG = "myLogs";
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
 
     SharedPreferences settings;
+
+
+    private static final int TAKE_PICTURE_REQUEST_CODE = 1;
+    private ImageView photoProfile;
+
+    private void takeCameraPicture() {
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
+
+            if (checkSelfPermission(c,Manifest.permission.CAMERA)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(new String[]{Manifest.permission.CAMERA},
+                        MY_CAMERA_REQUEST_CODE);
+            }
+            else {
+                startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+            }
+
+        }
+    }
+
+    public void onActivityResult(int n, int n2, Intent intent) {
+        if (n == 1 && n2 == -1) {
+            Bitmap bitmap = (Bitmap)((Bundle)Objects.requireNonNull((Object)intent.getExtras())).get("data");
+            photoProfile.setImageBitmap(bitmap);
+
+            String img=encodeToBase64(bitmap);
+
+            SharedPreferences.Editor editor = settings.edit();
+                editor.putString(APP_PREFERENCES_PHOTO,img);
+                editor.apply();
+        }
+    }
+
+    public static String encodeToBase64(Bitmap image) {
+        Bitmap immage = image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
+
+        Log.d("Image Log:", imageEncoded);
+        return imageEncoded;
+    }
+
+    public static Bitmap decodeToBase64(String input) {
+        byte[] decodedByte = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
+    }
 
     @SuppressLint("ClickableViewAccessibility")
     @Nullable
@@ -85,18 +150,28 @@ public class EditProfileFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_edit_profile,container,false);
 
-        save=(Button) view.findViewById(R.id.save);
+//        save=(Button) view.findViewById(R.id.save);
         name=(EditText) view.findViewById(R.id.name);
         email=(EditText) view.findViewById(R.id.mail);
         phone=(EditText) view.findViewById(R.id.number);
         dateBirthday=(EditText) view.findViewById(R.id.dateBirthday);
-        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
+//        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
+        backProfile=(ImageView) view.findViewById(R.id.backProfile);
+        acceptSave=(ImageView) view.findViewById(R.id.acceptSave);
+        changePhotoText=(TextView) view.findViewById(R.id.changePhotoText);
+        photoProfile=(ImageView) view.findViewById(R.id.photoProfile);
 
-        mailLayout.setHintEnabled(false);
+//        mailLayout.setHintEnabled(false);
         c=getContext();
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        if(settings.contains(APP_PREFERENCES_PHOTO))
+        {
+            Bitmap bit=decodeToBase64(settings.getString(APP_PREFERENCES_PHOTO,""));
+            photoProfile.setImageBitmap(bit);
+        }
 
         Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___________");
         MaskImpl mask = MaskImpl.createTerminated(slots);
@@ -122,60 +197,60 @@ public class EditProfileFragment extends Fragment {
 
                     email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
-                    mailLayout.setErrorEnabled(true);
-                    mailLayout.setHintEnabled(false);
-                    mailLayout.setError(getResources().getString(R.string.mailLayout));
+//                    mailLayout.setErrorEnabled(true);
+//                    mailLayout.setHintEnabled(false);
+//                    mailLayout.setError(getResources().getString(R.string.mailLayout));
                 }
 
                 if(MainActivity.isValidEmail(email.getText().toString())){
 
                     email.getBackground().clearColorFilter();
 
-                    mailLayout.setErrorEnabled(false);
+//                    mailLayout.setErrorEnabled(false);
                 }
             }
         });
 
-        save.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                nameUser=name.getText().toString();
-                emailUser=email.getText().toString();
-                phoneUser=phone.getText().toString();
-                dateBirthdayUser=dateBirthday.getText().toString();
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
-                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
-                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
-                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
-                editor.apply();
-
-                if (nameUser.equals("")||nameUser.length() == 0||
-                        emailUser.equals("")||emailUser.length() == 0)
-                {
-                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-                    boolean checkConnection=MainActivity.isOnline(c);
-
-//                    if(checkConnection) {
-
-                        doPostRequest("http://192.168.252.199/user/edit");
-//                    }
-//                    else {
-//                        Toast.makeText(c, "Отсутствует интернет соединение!",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-
-
-                }
-            }
-        });
+//        save.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                nameUser=name.getText().toString();
+//                emailUser=email.getText().toString();
+//                phoneUser=phone.getText().toString();
+//                dateBirthdayUser=dateBirthday.getText().toString();
+//
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
+//                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
+//                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
+//                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+//                editor.apply();
+//
+//                if (nameUser.equals("")||nameUser.length() == 0||
+//                        emailUser.equals("")||emailUser.length() == 0)
+//                {
+//                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
+//                            Toast.LENGTH_SHORT).show();
+//                }
+//                else {
+//
+//                    boolean checkConnection=MainActivity.isOnline(c);
+//
+////                    if(checkConnection) {
+//
+//                        doPostRequest("http://192.168.252.199/user/edit");
+////                    }
+////                    else {
+////                        Toast.makeText(c, "Отсутствует интернет соединение!",
+////                                Toast.LENGTH_SHORT).show();
+////                    }
+//
+//
+//                }
+//            }
+//        });
 
         DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
 
@@ -216,12 +291,98 @@ public class EditProfileFragment extends Fragment {
         if(settings.contains(APP_PREFERENCES_NUMBER)&&settings.contains(APP_PREFERENCES_DATE_BIRTHDAY)
                 &&settings.contains(APP_PREFERENCES_MAIL)&&settings.contains(APP_PREFERENCES_NAME)) {
 
+            changePhotoText.setText(settings.getString(APP_PREFERENCES_NAME, ""));
+
             name.setText(settings.getString(APP_PREFERENCES_NAME, ""));
             email.setText(settings.getString(APP_PREFERENCES_MAIL, ""));
             phone.setText(settings.getString(APP_PREFERENCES_NUMBER, ""));
             dateBirthday.setText(settings.getString(APP_PREFERENCES_DATE_BIRTHDAY, ""));
         }
+
+        backProfile.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .replaceFragments(ProfileFragment.class);
+
+            }
+        });
+
+        acceptSave.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                nameUser=name.getText().toString();
+                emailUser=email.getText().toString();
+                phoneUser=phone.getText().toString();
+                dateBirthdayUser=dateBirthday.getText().toString();
+
+                SharedPreferences.Editor editor = settings.edit();
+                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
+                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
+                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
+                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+                editor.apply();
+
+                if (nameUser.equals("")||nameUser.length() == 0||
+                        emailUser.equals("")||emailUser.length() == 0)
+                {
+                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
+                            Toast.LENGTH_SHORT).show();
+                }
+                else {
+
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+//                    if(checkConnection) {
+
+                    doPostRequest("http://192.168.252.199/user/edit");
+//                    }
+//                    else {
+//                        Toast.makeText(c, "Отсутствует интернет соединение!",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+
+
+                }
+            }
+        });
+
+        changePhotoText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                takeCameraPicture();
+            }
+        });
+
+
         return view;
+    }
+
+    @Override
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
+
+            } else {
+
+                //Toast.makeText(c, "", Toast.LENGTH_LONG).show();
+
+            }
+
+        }
     }
 
     private void updateLabel() {
@@ -298,8 +459,16 @@ public class EditProfileFragment extends Fragment {
                             if(settings.contains(APP_PREFERENCES_STATUS)){
                                 if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
+                                    Toast.makeText(c,"Сохранение",Toast.LENGTH_SHORT).show();
+
                                     ((MainActivity) Objects.requireNonNull(getActivity()))
                                             .replaceFragments(ProfileFragment.class);
+                                }
+                                else {
+
+                                    Toast
+                                            .makeText(c,Jobject.getString("msg"),Toast.LENGTH_SHORT)
+                                            .show();
                                 }
                             }
 
