@@ -428,16 +428,6 @@ public class DetailCardActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.apply();
 
-<<<<<<< HEAD
-                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1"))
-                        {
-                            Toast.makeText(c,
-                                    "Удаление. Пожалуйста, подождите!",
-                                    Toast.LENGTH_SHORT).show();
-
-                            child.remove(cardNumber);
-
-=======
                         if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "1"))
 
                         {
@@ -447,24 +437,14 @@ public class DetailCardActivity extends AppCompatActivity {
                                     .makeText(c,"Удаление карты",Toast.LENGTH_SHORT)
                                     .show();
 
->>>>>>> redesign
                             MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                             startActivity(i);
                         }
 
-<<<<<<< HEAD
-                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "0"))
-                        {
+                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "0")) {
                             Toast.makeText(c,
                                     Jobject.getString("msg"),
                                     Toast.LENGTH_SHORT).show();
-=======
-                        if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "0"))
-                        {
-                            Toast
-                                    .makeText(c,Jobject.getString("msg"),Toast.LENGTH_SHORT)
-                                    .show();
->>>>>>> redesign
                         }
 
                     } catch (IOException | JSONException e) {
