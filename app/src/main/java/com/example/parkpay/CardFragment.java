@@ -7,7 +7,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabItem;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -55,14 +59,14 @@ public class CardFragment extends Fragment {
     public static final String APP_PREFERENCES_STATUS ="Status";
     private static final String TAG = "myLogs";
 
-    ExpandableListView listView;
-    ArrayList<ArrayList<String>> groups;
-    ArrayList<String> child;
-    ArrayList<String> children1;
-    ArrayList<String> codes;
-    ArrayList<String> children2;
-    ExpListAdapter adapter;
-    ImageView updateCard;
+//    ImageView updateCard;
+
+    TabLayout tabLayout;
+    TabItem tabChats;
+    TabItem tabStatus;
+    ViewPager viewPager;
+    PageAdapter pageAdapter;
+
 
     SharedPreferences settings;
     Context c;
@@ -76,243 +80,76 @@ public class CardFragment extends Fragment {
         if (container != null) {
             c = container.getContext();
         }
-        // Находим наш list
-        listView= (ExpandableListView)view.findViewById(R.id.exListView);
-        updateCard=(ImageView)view.findViewById(R.id.updateCard);
+
+        tabLayout = view.findViewById(R.id.switchFragment);
+        tabChats = view.findViewById(R.id.realCardFragment);
+        tabStatus = view.findViewById(R.id.virtualCardFragment);
+        viewPager = view.findViewById(R.id.viewPager);
+
+        pageAdapter = new PageAdapter(getChildFragmentManager(),
+                tabLayout.getTabCount());
+
+        viewPager.setAdapter(pageAdapter);
+
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+//        viewPager.add(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+//                if (tab.getPosition() == 1) {
+
+                    viewPager.setCurrentItem(tab.getPosition());
+//                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+//                            R.color.colorAccent));
+
+//                } else if (tab.getPosition() == 2) {
+
+//                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
+//                            android.R.color.darker_gray));
+
+//                }
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+//        updateCard=(ImageView)view.findViewById(R.id.updateCard);
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        //Создаем набор данных для адаптера
-        groups = new ArrayList<ArrayList<String>>();
-        children1 = new ArrayList<String>();
-        codes = new ArrayList<String>();
-        child = new ArrayList<String>();
-        children2 = new ArrayList<String>();
-
-        boolean checkConnection=MainActivity.isOnline(c);
-
-//        if(checkConnection) {
-
-        doGetRequest();
-
-        doGetProfileRequest();
-
-//        }
-//        else {
-//            Toast.makeText(c, "Отсутствует интернет соединение!",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-
-        if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
-            child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
-        }
-
-        child.add("Новая карта");
-        groups.add(child);
-
-        if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
-            children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-        }
-
-        children2.add("Новая карта");
-        groups.add(children2);
-        //Создаем адаптер и передаем context и список с данными
-        adapter = new ExpListAdapter(c, groups);
-        listView.setAdapter(adapter);
-
-        updateCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.remove(APP_PREFERENCES_NAMES_CARDS);
-                editor.remove(APP_PREFERENCES_CARDS);
-                editor.remove(APP_PREFERENCES_VIRTUAL_CARDS);
-                editor.apply();
-
-                children1.clear();
-                children2.clear();
-
-                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
-
-                doGetRequest();
-
-            }
-        });
+//        updateCard.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.remove(APP_PREFERENCES_NAMES_CARDS);
+//                editor.remove(APP_PREFERENCES_CARDS);
+//                editor.remove(APP_PREFERENCES_VIRTUAL_CARDS);
+//                editor.apply();
+//
+//                children1.clear();
+//                children2.clear();
+//
+//                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
+//
+//                doGetRequest();
+//
+//            }
+//        });
 
         return view;
-    }
-
-    public void doGetRequest(){
-
-        OkHttpClient client = new OkHttpClient();
-
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
-                .addPathSegment("card")
-                .addPathSegment("list")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-
-        final Request request = new Request.Builder()
-                .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .method("GET", null)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                if(call.request().body()!=null)
-                {
-                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
-                }
-
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        try {
-
-                            String jsonData = null;
-                            if (response.body() != null) {
-                                jsonData = response.body().string();
-                            }
-
-                            JSONArray jsonArray = new JSONArray(jsonData);
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-
-                                JSONObject Jobject = jsonArray.getJSONObject(i);
-
-                                Log.d(TAG, Jobject.getString("card_id"));
-                                Log.d(TAG, Jobject.getString("name"));
-                                Log.d(TAG, Jobject.getString("code"));
-
-                                children1.add(Jobject.getString("name"));
-                                codes.add(Jobject.getString("code"));
-
-                            }
-
-                            MainActivity.saveArrayList(children1, APP_PREFERENCES_NAMES_CARDS, settings);
-                            MainActivity.saveArrayList(codes, APP_PREFERENCES_CARDS, settings);
-
-                            groups.clear();
-                            if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
-                                children1=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
-                            }
-
-                            children1.add("Новая карта");
-                            groups.add(children1);
-
-                            if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
-                                children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                            }
-
-                            children2.remove("Новая карта");
-                            children2.add("Новая карта");
-                            groups.add(children2);
-                            //Создаем адаптер и передаем context и список с данными
-                            adapter = new ExpListAdapter(c, groups);
-                            listView.setAdapter(adapter);
-
-
-                        } catch (IOException | JSONException e) {
-                            Log.d(TAG, "Ошибка " + e);
-                        }
-                    });
-                }
-            }
-        });
-    }
-
-    public void doGetProfileRequest(){
-
-        OkHttpClient client = new OkHttpClient();
-
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
-                .addPathSegment("user")
-                .addPathSegment("get_info")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-
-        final Request request = new Request.Builder()
-                .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
-                .method("GET", null)
-                .build();
-        Call call = client.newCall(request);
-
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-                if(call.request().body()!=null)
-                {
-                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
-                }
-
-                if (getActivity() != null) {
-
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
-                }
-            }
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
-
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(() -> {
-                        try {
-
-                            String jsonData = null;
-                            if (response.body() != null) {
-                                jsonData = response.body().string();
-                            }
-
-                            JSONObject parentObject = new JSONObject(jsonData);
-                            JSONObject Jobject = parentObject.getJSONObject("user");
-
-                            Log.d(TAG, Jobject.getString("name"));
-                            Log.d(TAG, Jobject.getString("email"));
-                            Log.d(TAG, Jobject.getString("phone"));
-                            Log.d(TAG, Jobject.getString("birthday"));
-
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(APP_PREFERENCES_NAME, Jobject.getString("name"));
-                            editor.putString(APP_PREFERENCES_MAIL, Jobject.getString("email"));
-                            editor.putString(APP_PREFERENCES_NUMBER, Jobject.getString("phone"));
-                            editor.putString(APP_PREFERENCES_DATE_BIRTHDAY, Jobject.getString("birthday"));
-                            editor.apply();
-
-                        } catch (IOException | JSONException e) {
-                            Log.d(TAG, "Ошибка " + e);
-                        }
-                    });
-                }
-            }
-        });
     }
 
 }
