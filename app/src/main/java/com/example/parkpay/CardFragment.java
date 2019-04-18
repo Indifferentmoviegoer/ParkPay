@@ -4,46 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.SimpleExpandableListAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Objects;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class CardFragment extends Fragment {
 
@@ -59,7 +30,8 @@ public class CardFragment extends Fragment {
     public static final String APP_PREFERENCES_STATUS ="Status";
     private static final String TAG = "myLogs";
 
-//    ImageView updateCard;
+    //    ImageView updateCard;
+    ImageView addCard;
 
     TabLayout tabLayout;
     TabItem tabChats;
@@ -85,6 +57,7 @@ public class CardFragment extends Fragment {
         tabChats = view.findViewById(R.id.realCardFragment);
         tabStatus = view.findViewById(R.id.virtualCardFragment);
         viewPager = view.findViewById(R.id.viewPager);
+        addCard=(ImageView)view.findViewById(R.id.addCard);
 
         pageAdapter = new PageAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount());
@@ -92,25 +65,40 @@ public class CardFragment extends Fragment {
         viewPager.setAdapter(pageAdapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-//        viewPager.add(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        tabLayout.getSelectedTabPosition();
+
+        //tabLayout.setupWithViewPager(viewPager);
+
+        addCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                    Intent intent = new Intent(c, AddCardActivity.class);
+                    c.startActivity(intent);
+            }
+        });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-//                if (tab.getPosition() == 1) {
-
                     viewPager.setCurrentItem(tab.getPosition());
-//                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
-//                            R.color.colorAccent));
 
-//                } else if (tab.getPosition() == 2) {
+                    addCard.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (tab.getPosition() == 0) {
+                                Intent intent = new Intent(c, AddCardActivity.class);
+                                c.startActivity(intent);
+                            }
+                            else if (tab.getPosition() == 1) {
+                                Intent intent = new Intent(c, AddVirtualCardActivity.class);
+                                c.startActivity(intent);
+                            }
 
-//                    tabLayout.setBackgroundColor(ContextCompat.getColor(MainActivity.this,
-//                            android.R.color.darker_gray));
-
-//                }
-
+                        }
+                    });
             }
 
             @Override

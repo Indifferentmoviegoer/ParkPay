@@ -149,8 +149,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                     }
 
                     if(groupPosition==1) {
-                        ((MainActivity) Objects.requireNonNull(mContext))
-                                .replaceFragments(AddVirtualCardFragment.class);
+                        Intent i = new Intent(mContext, AddVirtualCardActivity.class);
+                        mContext.startActivity(i);
                     }
                 }
 
@@ -202,8 +202,8 @@ public class ExpListAdapter extends BaseExpandableListAdapter{
                     }
 
                     if(groupPosition==1) {
-                        ((MainActivity) Objects.requireNonNull(mContext))
-                                .replaceFragments(AddVirtualCardFragment.class);
+                        Intent i = new Intent(mContext, AddVirtualCardActivity.class);
+                        mContext.startActivity(i);
                     }
                 }
 

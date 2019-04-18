@@ -44,7 +44,6 @@ public class DetailCardActivity extends AppCompatActivity {
     TextView bonusTitleCard;
     TextView titleDetailCard;
     String cardNumber="";
-    String number;
     Button deleteCard;
     Button payCard;
     Button editCard;
@@ -57,7 +56,7 @@ public class DetailCardActivity extends AppCompatActivity {
     SharedPreferences settings;
     ArrayList<String> child = new ArrayList<String>();
     ArrayList<String> children2 = new ArrayList<String>();
-    int groupPosition=10;
+    //int groupPosition=10;
     private Toolbar toolbar;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
@@ -115,10 +114,9 @@ public class DetailCardActivity extends AppCompatActivity {
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        number=settings.getString(APP_PREFERENCES_POSITION_CARD,"");
-        groupPosition=settings.getInt(APP_PREFERENCES_POSITION_GROUP,0);
-        numberCard.setText(number);
-        cardNumber=numberCard.getText().toString();
+        cardNumber=settings.getString(APP_PREFERENCES_POSITION_CARD,"");
+        //groupPosition=settings.getInt(APP_PREFERENCES_POSITION_GROUP,0);
+        numberCard.setText(cardNumber);
 
         boolean checkConnection=MainActivity.isOnline(c);
 
@@ -148,7 +146,7 @@ public class DetailCardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(number!=null){
+                if(cardNumber!=null){
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(c);
                     builder.setMessage(Html
@@ -160,7 +158,7 @@ public class DetailCardActivity extends AppCompatActivity {
 
                                     Intent i = new Intent(c, MainActivity.class);
 
-                                    if(groupPosition==0){
+//                                    if(groupPosition==0){
 
                                         if(settings.contains(APP_PREFERENCES_CARDS)){
                                             child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
@@ -177,19 +175,19 @@ public class DetailCardActivity extends AppCompatActivity {
 //                                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
 //                                                    Toast.LENGTH_SHORT).show();
 //                                        }
-                                    }
-                                    if(groupPosition==1){
-
-                                        if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
-
-                                            children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                                        }
-
-                                        children2.remove(cardNumber);
-
-                                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
-                                        startActivity(i);
-                                    }
+//                                    }
+//                                    if(groupPosition==1){
+//
+//                                        if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
+//
+//                                            children2=MainActivity.getArrayList(APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                                        }
+//
+//                                        children2.remove(cardNumber);
+//
+//                                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
+//                                        startActivity(i);
+//                                    }
                                 }
                             });
                     builder.setNegativeButton("Нет",
@@ -431,7 +429,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "1"))
 
                         {
-                            child.remove(cardNumber);
+//                            child.remove(cardNumber);
 
                             Toast
                                     .makeText(c,"Удаление карты",Toast.LENGTH_SHORT)

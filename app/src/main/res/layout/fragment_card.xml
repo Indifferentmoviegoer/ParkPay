@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".CardFragment">
 
-    <ScrollView
-        android:id="@+id/scrollView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        >
-
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -39,14 +32,14 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
-                        android:id="@+id/updateCard"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/addCard"
+                        android:layout_height="30dp"
+                        android:layout_width="30dp"
                         android:layout_marginEnd="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:src="@drawable/ic_update"
+                        android:src="@drawable/ic_add_card"
                         />
 
                 </android.support.constraint.ConstraintLayout>
@@ -54,20 +47,25 @@
             </android.support.v7.widget.Toolbar>
 
             <!--<ExpandableListView-->
-                <!--android:id="@+id/exListView"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:baselineAligned="false"-->
-                <!--app:layout_constraintTop_toBottomOf="@id/toolbar"-->
-                <!--android:indicatorLeft="180dp"-->
-                <!--android:indicatorRight="500dp"-->
-                <!--/>-->
+            <!--android:id="@+id/exListView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:baselineAligned="false"-->
+            <!--app:layout_constraintTop_toBottomOf="@id/toolbar"-->
+            <!--android:indicatorLeft="180dp"-->
+            <!--android:indicatorRight="500dp"-->
+            <!--/>-->
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/switchFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/toolbar">
+                android:background="@color/colorAccent"
+                app:tabSelectedTextColor="@color/white"
+                app:tabTextColor="@color/grey"
+                app:tabIndicatorColor="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/toolbar"
+                >
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/realCardFragment"
@@ -99,8 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@id/switchFragment"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
                 />
-
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
 </RelativeLayout>

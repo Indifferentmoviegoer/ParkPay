@@ -351,12 +351,12 @@ public class EditProfileFragment extends Fragment {
             }
         });
 
-        changePhotoText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                takeCameraPicture();
-            }
-        });
+//        changePhotoText.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                takeCameraPicture();
+//            }
+//        });
 
 
         return view;

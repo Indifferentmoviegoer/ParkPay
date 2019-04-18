@@ -19,7 +19,7 @@ public class PageAdapter extends FragmentPagerAdapter {
             case 0:
                 return new RealCardFragment();
             case 1:
-                return new EditProfileFragment();
+                return new VirtualCardFragment();
             default:
                 return new RealCardFragment();
         }

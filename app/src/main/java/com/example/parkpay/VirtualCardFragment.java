@@ -46,7 +46,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class RealCardFragment extends Fragment {
+public class VirtualCardFragment extends Fragment {
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
@@ -60,9 +60,9 @@ public class RealCardFragment extends Fragment {
     public static final String APP_PREFERENCES_STATUS ="Status";
     private static final String TAG = "myLogs";
 
-//    ExpandableListView listView;
+    //    ExpandableListView listView;
 //    ArrayList<ArrayList<String>> groups;
-      ArrayList<String> child;
+    ArrayList<String> child;
     ArrayList<String> children1;
     ArrayList<String> children2;
     ArrayList<String> codes;
@@ -115,34 +115,15 @@ public class RealCardFragment extends Fragment {
         if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
             child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
         }
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
+        //child.add("Новая карта");
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
             children2=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
         }
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
+        //children2.add("Номер карты");
 
-        //if(child) {
-            customAdapter = new CustomAdapter(c, child, children2);
-            simpleList.setAdapter(customAdapter);
-        //}
-        //else{
-        //    simpleList.setVisibility(View.INVISIBLE);
-        //}
+        customAdapter = new CustomAdapter(c, child,children2);
+        simpleList.setAdapter(customAdapter);
 
         return view;
     }
@@ -224,22 +205,8 @@ public class RealCardFragment extends Fragment {
                                 codes=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                             }
 
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
+                           // children1.add("Новая карта");
+                            //codes.add("Номер карты");
                             customAdapter = new CustomAdapter(c, children1,codes);
                             simpleList.setAdapter(customAdapter);
 
