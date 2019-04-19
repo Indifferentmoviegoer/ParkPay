@@ -171,8 +171,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         bottomNav.setSelectedItemId(R.id.nav_cart);
-//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-//                new CardFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                new CardFragment()).commit();
     }
 
     public void doPostRequestRefresh(String url){

@@ -19,6 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,9 +42,11 @@ public class EditCardActivity extends AppCompatActivity {
     EditText editCodeCard;
     EditText editNameCard;
     Button editCardButton;
+
     String codeCard;
     String nameCard;
     ImageView backEdit;
+
     Context c;
     SharedPreferences settings;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
@@ -115,7 +120,10 @@ public class EditCardActivity extends AppCompatActivity {
                 if(event.getAction() == MotionEvent.ACTION_UP) {
                     if(event.getRawX() >= (editCodeCard.getRight() - editCodeCard.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                        scanQR(v);
+                        IntentIntegrator integrator = new IntentIntegrator(EditCardActivity.this);
+                        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+                        integrator.setPrompt("Сканирование QR кода");
+                        integrator.initiateScan();
 
                         return true;
                     }
@@ -133,62 +141,29 @@ public class EditCardActivity extends AppCompatActivity {
         }
     }
 
-    // Запуск сканера qr-кода:
-    public void scanQR(View v) {
-        try {
-            // Запускаем переход на com.google.zxing.client.android.SCAN с помощью intent:
-            Intent intent = new Intent(ACTION_SCAN);
-            intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
-            startActivityForResult(intent, 0);
-        } catch (ActivityNotFoundException anfe) {
-            // Предлагаем загрузить с Play Market:
-            showDialog(EditCardActivity.this, "Сканнер не найден", "Установить сканер с Play Market?", "Да", "Нет").show();
-        }
-    }
-
-    // alert dialog для перехода к загрузке приложения сканера:
-    private static AlertDialog showDialog(final Activity act, CharSequence title,
-                                          CharSequence message, CharSequence buttonYes, CharSequence buttonNo) {
-        AlertDialog.Builder downloadDialog = new AlertDialog.Builder(act);
-        downloadDialog.setTitle(title);
-        downloadDialog.setMessage(message);
-        downloadDialog.setPositiveButton(buttonYes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-                // Ссылка поискового запроса для загрузки приложения:
-                Uri uri = Uri.parse("market://search?q=pname:" + "com.google.zxing.client.android");
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                try {
-                    act.startActivity(intent);
-                } catch (ActivityNotFoundException anfe) {
-
-                }
-            }
-        });
-        downloadDialog.setNegativeButton(buttonNo, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialogInterface, int i) {
-            }
-        });
-        return downloadDialog.show();
-    }
-
-    // Обрабатываем результат, полученный от приложения сканера:
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == 0) {
-            if (resultCode == RESULT_OK) {
-                // Получаем данные после работы сканера и выводим их в Toast сообщении:
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+        if(result != null) {
+            if(result.getContents() == null) {
+
+                Log.d(TAG,"Отменено");
+
+            } else {
+
+                Log.d(TAG,"Результат: " + result.getContents());
+
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_CARD_CODE,contents);
+                editor.putString(APP_PREFERENCES_CARD_CODE,result.getContents());
                 editor.apply();
-                // numberCard.setText(contents);
-//                Toast toast = Toast.makeText(c, "Содержание: " + contents + " Формат: " + format, Toast.LENGTH_LONG);
-//                toast.show();
                 Intent i = new Intent(c,
                         EditCardActivity.class);
                 startActivity(i);
+
             }
+        } else {
+            super.onActivityResult(requestCode, resultCode, intent);
         }
     }
 

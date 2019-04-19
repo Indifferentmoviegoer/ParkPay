@@ -19,6 +19,7 @@ public class CustomAdapter extends BaseAdapter {
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_POSITION_CARD ="position";
+    public static final String APP_PREFERENCES_POSITION_GROUP ="group";
     SharedPreferences settings;
     private ArrayList<String> child;
 
@@ -83,6 +84,7 @@ public class CustomAdapter extends BaseAdapter {
 
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putString(APP_PREFERENCES_POSITION_CARD, child.get(i));
+                    editor.putInt(APP_PREFERENCES_POSITION_GROUP, i);
                     editor.apply();
 
                     context.startActivity(intent);

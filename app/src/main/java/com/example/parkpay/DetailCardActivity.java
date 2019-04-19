@@ -60,7 +60,6 @@ public class DetailCardActivity extends AppCompatActivity {
     private Toolbar toolbar;
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_STATUS ="Status";
     public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
@@ -70,6 +69,7 @@ public class DetailCardActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_BONUS ="bonus";
     public static final String APP_PREFERENCES_POSITION_CARD ="position";
     public static final String APP_PREFERENCES_POSITION_GROUP ="group";
+    public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     private static final String TAG = "myLogs";
 
     @Override
@@ -162,6 +162,7 @@ public class DetailCardActivity extends AppCompatActivity {
 
                                         if(settings.contains(APP_PREFERENCES_CARDS)){
                                             child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                                            children2=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
                                         }
 
                                         boolean checkConnection=MainActivity.isOnline(c);
@@ -429,13 +430,16 @@ public class DetailCardActivity extends AppCompatActivity {
                         if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS,""), "1"))
 
                         {
-//                            child.remove(cardNumber);
+                            child.remove(settings.getInt(APP_PREFERENCES_POSITION_GROUP,0));
+                            children2.remove(settings.getInt(APP_PREFERENCES_POSITION_GROUP,0));
 
                             Toast
                                     .makeText(c,"Удаление карты",Toast.LENGTH_SHORT)
                                     .show();
 
                             MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
+                            MainActivity.saveArrayList(children2, APP_PREFERENCES_NAMES_CARDS,settings);
+
                             startActivity(i);
                         }
 

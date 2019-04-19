@@ -60,13 +60,10 @@ public class VirtualCardFragment extends Fragment {
     public static final String APP_PREFERENCES_STATUS ="Status";
     private static final String TAG = "myLogs";
 
-    //    ExpandableListView listView;
-//    ArrayList<ArrayList<String>> groups;
     ArrayList<String> child;
     ArrayList<String> children1;
     ArrayList<String> children2;
     ArrayList<String> codes;
-//    ExpListAdapter adapter;
 
     ListView simpleList;
     CustomAdapter customAdapter;
@@ -78,13 +75,13 @@ public class VirtualCardFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view=inflater.inflate(R.layout.fragment_real_card,container,false);
+        View view=inflater.inflate(R.layout.fragment_virtual_card,container,false);
 
         if (container != null) {
             c = container.getContext();
         }
 
-        simpleList = (ListView)view.findViewById(R.id.realCard);
+        simpleList = (ListView)view.findViewById(R.id.virtualCard);
 
 
         settings= Objects.requireNonNull(this.getActivity())
@@ -97,6 +94,8 @@ public class VirtualCardFragment extends Fragment {
         child = new ArrayList<String>();
 
         simpleList.invalidateViews();
+
+
 
         boolean checkConnection=MainActivity.isOnline(c);
 
@@ -113,17 +112,38 @@ public class VirtualCardFragment extends Fragment {
 //        }
 
         if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
+
             child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
         }
-        //child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
+//        child.add("Новая карта");
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
+
             children2=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
         }
-        //children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
+//        children2.add("Номер карты");
 
-        customAdapter = new CustomAdapter(c, child,children2);
+        //if(child) {
+        customAdapter = new CustomAdapter(c, child, children2);
         simpleList.setAdapter(customAdapter);
+        //}
+        //else{
+        //    simpleList.setVisibility(View.INVISIBLE);
+        //}
 
         return view;
     }
@@ -197,6 +217,9 @@ public class VirtualCardFragment extends Fragment {
 
                             children1.clear();
                             codes.clear();
+
+
+
                             if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
                                 children1=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
                             }
@@ -205,13 +228,28 @@ public class VirtualCardFragment extends Fragment {
                                 codes=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                             }
 
-                           // children1.add("Новая карта");
-                            //codes.add("Номер карты");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            children1.add("Новая карта");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
+//                            codes.add("Номер карты");
                             customAdapter = new CustomAdapter(c, children1,codes);
                             simpleList.setAdapter(customAdapter);
 
 
                         } catch (IOException | JSONException e) {
+
                             Log.d(TAG, "Ошибка " + e);
                         }
                     });

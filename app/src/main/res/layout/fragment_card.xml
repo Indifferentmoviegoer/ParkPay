@@ -46,16 +46,6 @@
 
             </android.support.v7.widget.Toolbar>
 
-            <!--<ExpandableListView-->
-            <!--android:id="@+id/exListView"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:baselineAligned="false"-->
-            <!--app:layout_constraintTop_toBottomOf="@id/toolbar"-->
-            <!--android:indicatorLeft="180dp"-->
-            <!--android:indicatorRight="500dp"-->
-            <!--/>-->
-
             <android.support.design.widget.TabLayout
                 android:id="@+id/switchFragment"
                 android:layout_width="match_parent"
@@ -65,23 +55,14 @@
                 app:tabTextColor="@color/grey"
                 app:tabIndicatorColor="@color/white"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
+                android:elevation="10dp"
                 >
 
                 <android.support.design.widget.TabItem
                     android:id="@+id/realCardFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Реальные" >
-
-                    <!--<ExpandableListView-->
-                    <!--android:id="@+id/exListView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:baselineAligned="false"-->
-                    <!--app:layout_constraintTop_toBottomOf="@id/realCardFragment"-->
-                    <!--android:indicatorLeft="180dp"-->
-                    <!--android:indicatorRight="500dp"-->
-                    <!--/>-->
+                    android:text="@string/real" >
 
                 </android.support.design.widget.TabItem>
 
@@ -89,7 +70,7 @@
                     android:id="@+id/virtualCardFragment"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Виртуальные" />
+                    android:text="@string/noReal" />
             </android.support.design.widget.TabLayout>
 
             <android.support.v4.view.ViewPager
