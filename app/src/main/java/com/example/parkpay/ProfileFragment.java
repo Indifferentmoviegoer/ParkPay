@@ -40,6 +40,7 @@ public class ProfileFragment extends Fragment {
     TextView editProfile;
     TextView name;
     TextView signOut;
+    TextView quantityVisits;
     ImageView imageProfile;
 
     private PublisherAdView adView;
@@ -52,6 +53,7 @@ public class ProfileFragment extends Fragment {
     public static final String APP_PREFERENCES_NAME ="Name";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_PHOTO ="Photo";
+    public static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
     SharedPreferences settings;
     Switch notification;
     @Nullable
@@ -64,6 +66,7 @@ public class ProfileFragment extends Fragment {
         name=(TextView)view.findViewById(R.id.nameProfile);
         notification = (Switch) view.findViewById(R.id.turnNotification);
         signOut=(TextView) view.findViewById(R.id.signOut);
+        quantityVisits=(TextView) view.findViewById(R.id.quantityVisits);
         imageProfile=(ImageView) view.findViewById(R.id.imageProfile);
         c=getContext();
 
@@ -76,6 +79,10 @@ public class ProfileFragment extends Fragment {
             imageProfile.setImageBitmap(bit);
         }
 
+        if(settings.contains(APP_PREFERENCES_QUANTITY_VISITS))
+        {
+            quantityVisits.setText(settings.getString(APP_PREFERENCES_QUANTITY_VISITS,""));
+        }
 
 
         MobileAds.initialize(c,"ca-app-pub-9760468716956149~8831006393");

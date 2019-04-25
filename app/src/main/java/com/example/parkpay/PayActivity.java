@@ -107,11 +107,11 @@ public class PayActivity extends AppCompatActivity {
                     TokenizationResult result = Checkout.createTokenizationResult(data);
                     Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Результат "+result);
-                    doPostRequest("http://192.168.252.199/card/add_money");
+//                    doPostRequest("http://192.168.252.199/card/add_money");
 
                 case RESULT_CANCELED:
                     Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
-//                    doPostRequest("http://192.168.252.199/card/add_money");
+                    doPostRequest("http://192.168.252.199/card/add_money");
                     // user canceled tokenization
                     break;
             }

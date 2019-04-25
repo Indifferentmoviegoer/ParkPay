@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -46,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
     SharedPreferences settings;
-    BottomNavigationView bottomNav;
+    BottomNavigationViewEx bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +58,14 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        bottomNav = findViewById(R.id.bottom_navigation);
+        bottomNav = (BottomNavigationViewEx)findViewById(R.id.bottom_navigation);
+
+        bottomNav.setIconSize(29,29);
+        bottomNav.setTextVisibility(false);
+        bottomNav.enableAnimation(false);
+        bottomNav.enableShiftingMode(false);
+        bottomNav.enableItemShiftingMode(false);
+
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device

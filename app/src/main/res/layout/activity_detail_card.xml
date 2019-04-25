@@ -68,8 +68,8 @@
 
             <ImageView
                 android:id="@+id/imageCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="343dp"
+                android:layout_height="211dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="10dp"
                 app:layout_constraintBottom_toTopOf="@id/payCard"
@@ -77,7 +77,43 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/card" />
+                android:src="@drawable/card" />
+
+            <ImageView
+                android:id="@+id/imageDelete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="300dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toEndOf="@id/imageCard"
+                app:layout_constraintEnd_toEndOf="@id/imageCard"
+                app:layout_constraintTop_toTopOf="@id/imageCard"
+                app:srcCompat="@drawable/ic_delete" />
+
+            <ImageView
+                android:id="@+id/imageEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="300dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintStart_toEndOf="@id/imageCard"
+                app:layout_constraintEnd_toEndOf="@id/imageCard"
+                app:layout_constraintTop_toTopOf="@id/imageCard"
+                app:srcCompat="@drawable/ic_edit" />
+
+            <TextView
+                android:id="@+id/nameCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:textColor="@color/white"
+                android:text="EEEEEEEEEEEEEEEE"
+                android:textSize="25sp"
+                app:layout_constraintStart_toStartOf="@id/imageCard"
+                app:layout_constraintEnd_toEndOf="@id/imageCard"
+                app:layout_constraintBottom_toTopOf="@id/numberCard"
+                />
 
             <TextView
                 android:id="@+id/numberCard"
@@ -85,7 +121,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 android:text="EEEEEEEEEEEEEEEE"
                 android:textSize="25sp"
                 app:layout_constraintStart_toStartOf="@id/imageCard"
@@ -101,7 +137,7 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="160dp"
                 android:text="@string/titleMoneyCard"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/imageCard"
                 app:layout_constraintEnd_toEndOf="@id/imageCard"
                 app:layout_constraintTop_toBottomOf="@id/numberCard"/>
@@ -113,7 +149,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="30dp"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
                 app:layout_constraintTop_toBottomOf="@id/numberCard" />
 
@@ -123,7 +159,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="160dp"
                 android:text="@string/titleBonusCard"
-                android:textColor="@color/black"
+                android:textColor="@color/white"
                 app:layout_constraintStart_toStartOf="@id/imageCard"
                 app:layout_constraintEnd_toEndOf="@id/imageCard"
                 app:layout_constraintTop_toBottomOf="@id/moneyTitleCard"/>
@@ -134,41 +170,27 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@id/bonusTitleCard"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
                 app:layout_constraintTop_toBottomOf="@id/moneyCard" />
 
             <Button
                 android:id="@+id/payCard"
-                android:layout_width="match_parent"
+                android:layout_width="343dp"
                 android:layout_height="wrap_content"
                 android:text="@string/pay"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/editCard" />
+                app:layout_constraintStart_toStartOf="@id/imageEdit"
+                app:layout_constraintEnd_toEndOf="@id/imageDelete"
+                app:layout_constraintTop_toBottomOf="@id/imageCard"
+                />
 
-            <Button
-                android:id="@+id/editCard"
+            <ListView
+                android:id="@+id/historyList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/edit"
-                android:backgroundTint="@color/green"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
+                app:layout_constraintTop_toBottomOf="@id/payCard"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/deleteCard" />
-
-            <Button
-                android:id="@+id/deleteCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/red"
-                android:text="@string/deleteCard"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent" />
+                />
 
             <ProgressBar
                 android:id="@+id/progressBarCard"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -58,12 +59,20 @@ public class RealCardFragment extends Fragment {
     public static final String APP_PREFERENCES_MAIL ="Email";
     public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
+    public static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
+    public static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
+    public static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
     private static final String TAG = "myLogs";
 
-      ArrayList<String> child;
-    ArrayList<String> children1;
+    ArrayList<String> child;
     ArrayList<String> children2;
+    ArrayList<String> moneyChild;
+    ArrayList<String> bonusChild;
+
+    ArrayList<String> children1;
     ArrayList<String> codes;
+    ArrayList<String> money;
+    ArrayList<String> bonus;
 
     ListView simpleList;
     CustomAdapter customAdapter;
@@ -88,14 +97,21 @@ public class RealCardFragment extends Fragment {
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //Создаем набор данных для адаптера
-        children1 = new ArrayList<String>();
-        children2 = new ArrayList<String>();
-        codes = new ArrayList<String>();
         child = new ArrayList<String>();
+        children2 = new ArrayList<String>();
+        moneyChild = new ArrayList<String>();
+        bonusChild = new ArrayList<String>();
+
+        children1 = new ArrayList<String>();
+        codes = new ArrayList<String>();
+        money = new ArrayList<String>();
+        bonus = new ArrayList<String>();
+
 
         simpleList.invalidateViews();
 
-
+        StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(mypolicy);
 
         boolean checkConnection=MainActivity.isOnline(c);
 
@@ -104,6 +120,10 @@ public class RealCardFragment extends Fragment {
         doGetRequest();
 
         doGetProfileRequest();
+
+        getVisits();
+
+        //getVisits();
 
 //        }
 //        else {
@@ -137,8 +157,19 @@ public class RealCardFragment extends Fragment {
 //        children2.add("Номер карты");
 //        children2.add("Номер карты");
 
+        if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
+
+            moneyChild=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
+        }
+
+        if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
+
+            bonusChild=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
+        }
+
+
         //if(child) {
-            customAdapter = new CustomAdapter(c, child, children2);
+            customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild);
             simpleList.setAdapter(customAdapter);
         //}
         //else{
@@ -206,17 +237,25 @@ public class RealCardFragment extends Fragment {
                                 Log.d(TAG, Jobject.getString("card_id"));
                                 Log.d(TAG, Jobject.getString("name"));
                                 Log.d(TAG, Jobject.getString("code"));
+                                Log.d(TAG, Jobject.getString("balance_money"));
+                                Log.d(TAG, Jobject.getString("balance_bonus"));
 
                                 children1.add(Jobject.getString("name"));
                                 codes.add(Jobject.getString("code"));
+                                money.add(Jobject.getString("balance_money"));
+                                bonus.add(Jobject.getString("balance_bonus"));
 
                             }
 
                             MainActivity.saveArrayList(children1, APP_PREFERENCES_NAMES_CARDS, settings);
                             MainActivity.saveArrayList(codes, APP_PREFERENCES_CARDS, settings);
+                            MainActivity.saveArrayList(money, APP_PREFERENCES_MONEY_CHILD, settings);
+                            MainActivity.saveArrayList(bonus, APP_PREFERENCES_BONUS_CHILD, settings);
 
                             children1.clear();
                             codes.clear();
+                            money.clear();
+                            bonus.clear();
 
 
 
@@ -228,6 +267,14 @@ public class RealCardFragment extends Fragment {
                                 codes=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
                             }
 
+                            if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
+                                money=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
+                            }
+
+                            if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
+                                bonus=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
+                            }
+
 //                            children1.add("Новая карта");
 //                            children1.add("Новая карта");
 //                            children1.add("Новая карта");
@@ -244,7 +291,7 @@ public class RealCardFragment extends Fragment {
 //                            codes.add("Номер карты");
 //                            codes.add("Номер карты");
 //                            codes.add("Номер карты");
-                            customAdapter = new CustomAdapter(c, children1,codes);
+                            customAdapter = new CustomAdapter(c, children1,codes,money,bonus);
                             simpleList.setAdapter(customAdapter);
 
 
@@ -325,6 +372,69 @@ public class RealCardFragment extends Fragment {
                             editor.apply();
 
                         } catch (IOException | JSONException e) {
+                            Log.d(TAG, "Ошибка " + e);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public void getVisits(){
+
+        OkHttpClient client = new OkHttpClient();
+
+        HttpUrl mySearchUrl = new HttpUrl.Builder()
+                .scheme("http")
+                .host("192.168.252.199")
+                .addPathSegment("user")
+                .addPathSegment("visits")
+                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
+                .build();
+
+        Log.d(TAG,mySearchUrl.toString());
+
+        final Request request = new Request.Builder()
+                .url(mySearchUrl)
+                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .method("GET", null)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                    });
+                }
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        try {
+
+                            String jsonData = null;
+                            if (response.body() != null) {
+                                jsonData = response.body().string();
+                            }
+
+                            //JSONObject Jobject = new JSONObject(jsonData);
+
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(APP_PREFERENCES_QUANTITY_VISITS,jsonData);
+                            editor.apply();
+
+                            Log.d(TAG,jsonData);
+
+
+                        } catch (IOException e) {
                             Log.d(TAG, "Ошибка " + e);
                         }
                     });
