@@ -398,7 +398,6 @@ public class EditProfileFragment extends Fragment {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
             json.put("name",nameUser);
             json.put("email",emailUser);
             json.put("phone",phoneUser);
@@ -414,6 +413,8 @@ public class EditProfileFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
         Log.d(TAG,request.toString());

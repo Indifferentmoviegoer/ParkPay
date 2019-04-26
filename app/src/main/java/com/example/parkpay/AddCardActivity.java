@@ -202,7 +202,6 @@ public class AddCardActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
             json.put("code_card",numberCard);
             json.put("name",nameCard);
 
@@ -216,6 +215,8 @@ public class AddCardActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
 

@@ -26,14 +26,22 @@
             android:padding="16dp"
             >
 
+            <ImageView
+                android:id="@+id/person_photo"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:scaleType="centerCrop"
+                />
+
             <TextView
                 android:id="@+id/person_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Путин в шутку назвал допустившего неточность переводчика 'бандитом'"
-                android:gravity="center"
-                android:textSize="20sp"
-                android:textStyle="bold|italic"
+                android:text="Заголовок"
+                android:textSize="30sp"
+                android:layout_below="@+id/person_photo"
                 android:textColor="@color/black"
                 />
 
@@ -42,19 +50,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Текст"
-                android:layout_marginTop="20dp"
                 android:layout_below="@+id/person_name"
                 android:textColor="@color/black"
                 />
-
             <TextView
-                android:id="@+id/dateNews"
+                android:id="@+id/dateStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:text="Текст"
-                android:textStyle="bold"
                 android:layout_below="@+id/person_age"
+                android:textColor="@color/black"
+                />
+            <TextView
+                android:id="@+id/dateEnd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Текст"
+                android:layout_below="@+id/dateStart"
                 android:textColor="@color/black"
                 />
 

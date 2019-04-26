@@ -62,17 +62,20 @@ public class RealCardFragment extends Fragment {
     public static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
     public static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
     public static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
+    public static final String APP_PREFERENCES_CARD_ID ="cardId";
     private static final String TAG = "myLogs";
 
     ArrayList<String> child;
     ArrayList<String> children2;
     ArrayList<String> moneyChild;
     ArrayList<String> bonusChild;
+    ArrayList<String> idCard;
 
     ArrayList<String> children1;
     ArrayList<String> codes;
     ArrayList<String> money;
     ArrayList<String> bonus;
+    ArrayList<String> cardId;
 
     ListView simpleList;
     CustomAdapter customAdapter;
@@ -101,11 +104,13 @@ public class RealCardFragment extends Fragment {
         children2 = new ArrayList<String>();
         moneyChild = new ArrayList<String>();
         bonusChild = new ArrayList<String>();
+        idCard = new ArrayList<String>();
 
         children1 = new ArrayList<String>();
         codes = new ArrayList<String>();
         money = new ArrayList<String>();
         bonus = new ArrayList<String>();
+        cardId = new ArrayList<String>();
 
 
         simpleList.invalidateViews();
@@ -123,8 +128,6 @@ public class RealCardFragment extends Fragment {
 
         getVisits();
 
-        //getVisits();
-
 //        }
 //        else {
 //            Toast.makeText(c, "Отсутствует интернет соединение!",
@@ -135,27 +138,11 @@ public class RealCardFragment extends Fragment {
 
             child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
         }
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
-//        child.add("Новая карта");
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
 
             children2=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
         }
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
-//        children2.add("Номер карты");
 
         if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
 
@@ -167,9 +154,18 @@ public class RealCardFragment extends Fragment {
             bonusChild=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
         }
 
+        if(settings.contains(APP_PREFERENCES_CARD_ID)){
+
+            idCard=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
+        }
+
+//        child.add("Новая карта");
+//        children2.add("Новая карта");
+//        moneyChild.add("Новая карта");
+//        bonusChild.add("Новая карта");
 
         //if(child) {
-            customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild);
+            customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild,idCard);
             simpleList.setAdapter(customAdapter);
         //}
         //else{
@@ -188,7 +184,6 @@ public class RealCardFragment extends Fragment {
                 .host("192.168.252.199")
                 .addPathSegment("card")
                 .addPathSegment("list")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
                 .build();
 
         Log.d(TAG,mySearchUrl.toString());
@@ -196,6 +191,8 @@ public class RealCardFragment extends Fragment {
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);
@@ -244,6 +241,7 @@ public class RealCardFragment extends Fragment {
                                 codes.add(Jobject.getString("code"));
                                 money.add(Jobject.getString("balance_money"));
                                 bonus.add(Jobject.getString("balance_bonus"));
+                                cardId.add(Jobject.getString("card_id"));
 
                             }
 
@@ -251,11 +249,13 @@ public class RealCardFragment extends Fragment {
                             MainActivity.saveArrayList(codes, APP_PREFERENCES_CARDS, settings);
                             MainActivity.saveArrayList(money, APP_PREFERENCES_MONEY_CHILD, settings);
                             MainActivity.saveArrayList(bonus, APP_PREFERENCES_BONUS_CHILD, settings);
+                            MainActivity.saveArrayList(cardId, APP_PREFERENCES_CARD_ID, settings);
 
                             children1.clear();
                             codes.clear();
                             money.clear();
                             bonus.clear();
+                            cardId.clear();
 
 
 
@@ -275,23 +275,16 @@ public class RealCardFragment extends Fragment {
                                 bonus=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
                             }
 
+                            if(settings.contains(APP_PREFERENCES_CARD_ID)){
+                                cardId=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
+                            }
+
 //                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            children1.add("Новая карта");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-//                            codes.add("Номер карты");
-                            customAdapter = new CustomAdapter(c, children1,codes,money,bonus);
+//                            codes.add("Новая карта");
+//                            money.add("Новая карта");
+//                            bonus.add("Новая карта");
+
+                            customAdapter = new CustomAdapter(c, children1,codes,money,bonus,cardId);
                             simpleList.setAdapter(customAdapter);
 
 
@@ -314,7 +307,6 @@ public class RealCardFragment extends Fragment {
                 .host("192.168.252.199")
                 .addPathSegment("user")
                 .addPathSegment("get_info")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
                 .build();
 
         Log.d(TAG,mySearchUrl.toString());
@@ -322,6 +314,8 @@ public class RealCardFragment extends Fragment {
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);
@@ -389,7 +383,6 @@ public class RealCardFragment extends Fragment {
                 .host("192.168.252.199")
                 .addPathSegment("user")
                 .addPathSegment("visits")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
                 .build();
 
         Log.d(TAG,mySearchUrl.toString());
@@ -397,6 +390,8 @@ public class RealCardFragment extends Fragment {
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);

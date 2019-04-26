@@ -173,7 +173,6 @@ public class EditCardActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
             json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
             json.put("name",nameCard);
             json.put("code_card",codeCard);
@@ -188,6 +187,8 @@ public class EditCardActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
 

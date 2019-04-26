@@ -168,20 +168,20 @@ public class DetailCardActivity extends AppCompatActivity {
 
 //        history.invalidateViews();
 
-        if(settings.contains(APP_PREFERENCES_NAME_OPERATION)){
-
-            nameOperation=MainActivity.getArrayList(APP_PREFERENCES_NAME_OPERATION,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_DATE_OPERATION)){
-
-            dateOperation=MainActivity.getArrayList(APP_PREFERENCES_DATE_OPERATION,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_VALUE_OPERATION)){
-
-            valueOperation=MainActivity.getArrayList(APP_PREFERENCES_VALUE_OPERATION,settings);
-        }
+//        if(settings.contains(APP_PREFERENCES_NAME_OPERATION)){
+//
+//            nameOperation=MainActivity.getArrayList(APP_PREFERENCES_NAME_OPERATION,settings);
+//        }
+//
+//        if(settings.contains(APP_PREFERENCES_DATE_OPERATION)){
+//
+//            dateOperation=MainActivity.getArrayList(APP_PREFERENCES_DATE_OPERATION,settings);
+//        }
+//
+//        if(settings.contains(APP_PREFERENCES_VALUE_OPERATION)){
+//
+//            valueOperation=MainActivity.getArrayList(APP_PREFERENCES_VALUE_OPERATION,settings);
+//        }
 
         //historyAdapter = new HistoryAdapter(c, nameOperation, dateOperation,valueOperation);
         //history.setAdapter(historyAdapter);
@@ -452,7 +452,6 @@ public class DetailCardActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token",settings.getString(APP_PREFERENCES_TOKEN, ""));
             json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE, ""));
 
         } catch (JSONException e) {
@@ -465,6 +464,8 @@ public class DetailCardActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
 
@@ -546,7 +547,6 @@ public class DetailCardActivity extends AppCompatActivity {
                 .host("192.168.252.199")
                 .addPathSegment("card")
                 .addPathSegment("list")
-                .addQueryParameter("token", settings.getString(APP_PREFERENCES_TOKEN, ""))
                 .build();
 
         Log.d(TAG,mySearchUrl.toString());
@@ -554,6 +554,8 @@ public class DetailCardActivity extends AppCompatActivity {
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
                 .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);
@@ -627,7 +629,6 @@ public class DetailCardActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token", settings.getString(APP_PREFERENCES_TOKEN, ""));
             json.put("code_card", settings.getString(APP_PREFERENCES_CARD_CODE, ""));
 
         } catch (JSONException e) {
@@ -640,6 +641,8 @@ public class DetailCardActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
 
@@ -684,7 +687,11 @@ public class DetailCardActivity extends AppCompatActivity {
 
                         JSONArray jsonArray = new JSONArray(jsonData);
 
-                        //child = new ArrayList<String>();
+                        history.invalidateViews();
+
+                        operationName.clear();
+                        operationDate.clear();
+                        operationValue.clear();
 
                         for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -698,28 +705,6 @@ public class DetailCardActivity extends AppCompatActivity {
                             operationDate.add(Jobject.getString("date"));
                             operationValue.add(Jobject.getString("value"));
 
-                        }
-
-                        MainActivity.saveArrayList(operationName, APP_PREFERENCES_NAME_OPERATION, settings);
-                        MainActivity.saveArrayList(operationDate, APP_PREFERENCES_DATE_OPERATION,settings);
-                        MainActivity.saveArrayList(operationValue, APP_PREFERENCES_VALUE_OPERATION, settings);
-
-                        operationName.clear();
-                        operationDate.clear();
-                        operationValue.clear();
-
-
-
-                        if(settings.contains(APP_PREFERENCES_NAME_OPERATION)){
-                            operationName=MainActivity.getArrayList(APP_PREFERENCES_NAME_OPERATION,settings);
-                        }
-
-                        if(settings.contains(APP_PREFERENCES_DATE_OPERATION)){
-                            operationDate=MainActivity.getArrayList(APP_PREFERENCES_DATE_OPERATION,settings);
-                        }
-
-                        if(settings.contains(APP_PREFERENCES_VALUE_OPERATION)){
-                            operationValue=MainActivity.getArrayList(APP_PREFERENCES_VALUE_OPERATION,settings);
                         }
 
                         historyAdapter = new HistoryAdapter(c, operationName,operationDate,operationValue);

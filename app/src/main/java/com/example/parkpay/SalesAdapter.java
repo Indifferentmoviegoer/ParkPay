@@ -10,21 +10,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.net.URI;
 import java.util.List;
 
-public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
+public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.PersonViewHolder>{
 
-    List<Person> persons;
+    List<Sale> persons;
 
-    RVAdapter(List<Person> persons){
+    SalesAdapter(List<Sale> persons){
         this.persons = persons;
     }
 
     @NonNull
     @Override
     public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sales_item, viewGroup, false);
         PersonViewHolder pvh = new PersonViewHolder(v);
         return pvh;
     }
@@ -33,7 +32,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
     public void onBindViewHolder(@NonNull PersonViewHolder personViewHolder, int i) {
         personViewHolder.personName.setText(persons.get(i).name);
         personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.dateNews.setText(persons.get(i).date);
+        personViewHolder.dateStart.setText(persons.get(i).dateStart);
+        personViewHolder.dateEnd.setText(persons.get(i).dateEnd);
     }
 
     @Override
@@ -51,14 +51,17 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.PersonViewHolder>{
         CardView cv;
         TextView personName;
         TextView personAge;
-        TextView dateNews;
+        TextView dateStart;
+        TextView dateEnd;
 
         PersonViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
             personName = (TextView)itemView.findViewById(R.id.person_name);
             personAge = (TextView)itemView.findViewById(R.id.person_age);
-            dateNews = (TextView)itemView.findViewById(R.id.dateNews);
+            dateStart = (TextView)itemView.findViewById(R.id.dateStart);
+            dateEnd = (TextView)itemView.findViewById(R.id.dateEnd);
+
         }
 
     }

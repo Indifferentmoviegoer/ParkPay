@@ -6,12 +6,12 @@ import java.util.List;
 class Person {
     String name;
     String age;
-    String photoId;
+    String date;
 
-    Person(String name, String age, String photoId) {
+    Person(String name, String age, String date) {
         this.name = name;
         this.age = age;
-        this.photoId = photoId;
+        this.date = date;
     }
 
 

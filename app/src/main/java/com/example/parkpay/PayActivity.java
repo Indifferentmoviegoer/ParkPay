@@ -53,6 +53,8 @@ public class PayActivity extends AppCompatActivity {
     public static final String APP_PREFERENCES_STATUS ="Status";
     public static final String APP_PREFERENCES_MSG ="Message";
 
+    TokenizationResult result;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +90,7 @@ public class PayActivity extends AppCompatActivity {
                 else {
                     sum=new BigDecimal(amountPay.getText().toString());
                     timeToStartCheckout();
+                    //timeToStartCheckoutTest();
 //                    Intent intent = new Intent(getApplicationContext(),
 //                            MainActivity.class);
 //                    startActivity(intent);
@@ -104,14 +107,14 @@ public class PayActivity extends AppCompatActivity {
             switch (resultCode) {
                 case RESULT_OK:
                     // successful tokenization
-                    TokenizationResult result = Checkout.createTokenizationResult(data);
+                    result = Checkout.createTokenizationResult(data);
                     Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Результат "+result);
-//                    doPostRequest("http://192.168.252.199/card/add_money");
+                    doPostRequest("http://192.168.252.199/card/add_money");
 
                 case RESULT_CANCELED:
                     Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
-                    doPostRequest("http://192.168.252.199/card/add_money");
+//                    doPostRequest("http://192.168.252.199/card/add_money");
                     // user canceled tokenization
                     break;
             }
@@ -148,9 +151,10 @@ public class PayActivity extends AppCompatActivity {
 
         JSONObject json = new JSONObject();
         try {
-            json.put("token",settings.getString(APP_PREFERENCES_TOKEN,""));
+//            json.put("token",settings.getString(APP_PREFERENCES_TOKEN,""));
             json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE,""));
             json.put("value",sum);
+            json.put("token",result);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -160,6 +164,8 @@ public class PayActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .url(url)
                 .build();
 

@@ -17,27 +17,27 @@
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/card" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/imageDelete"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginStart="300dp"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--app:layout_constraintStart_toEndOf="@id/imageCard"-->
-        <!--app:layout_constraintEnd_toEndOf="@id/imageCard"-->
-        <!--app:layout_constraintTop_toTopOf="@id/imageCard"-->
-        <!--app:srcCompat="@drawable/ic_delete" />-->
+    <ImageView
+        android:id="@+id/imageDelete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="300dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@id/imageCard"
+        app:layout_constraintEnd_toEndOf="@id/imageCard"
+        app:layout_constraintTop_toTopOf="@id/imageCard"
+        app:srcCompat="@drawable/ic_delete" />
 
-    <!--<ImageView-->
-        <!--android:id="@+id/imageEdit"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginEnd="300dp"-->
-        <!--android:layout_marginTop="5dp"-->
-        <!--app:layout_constraintStart_toEndOf="@id/imageCard"-->
-        <!--app:layout_constraintEnd_toEndOf="@id/imageCard"-->
-        <!--app:layout_constraintTop_toTopOf="@id/imageCard"-->
-        <!--app:srcCompat="@drawable/ic_edit" />-->
+    <ImageView
+        android:id="@+id/imageEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="300dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toEndOf="@id/imageCard"
+        app:layout_constraintEnd_toEndOf="@id/imageCard"
+        app:layout_constraintTop_toTopOf="@id/imageCard"
+        app:srcCompat="@drawable/ic_edit" />
 
     <TextView
         android:id="@+id/item"
@@ -112,5 +112,17 @@
         android:textColor="@color/white"
         app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
         app:layout_constraintTop_toBottomOf="@id/moneyCard" />
+
+    <Button
+        android:id="@+id/addMoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Пополнить"
+        android:textSize="11sp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintEnd_toEndOf="@id/imageCard"
+        app:layout_constraintBottom_toBottomOf="@id/bonusTitleCard"
+        app:layout_constraintTop_toTopOf="@id/moneyTitleCard"
+        />
 
 </android.support.constraint.ConstraintLayout>
