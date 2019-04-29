@@ -7,14 +7,19 @@
         android:title="@string/cards"
         />
     <item
-        android:id="@+id/nav_news"
-        android:icon="@drawable/ic_news"
+        android:id="@+id/nav_map"
+        android:icon="@drawable/ic_map"
         android:title="@string/news"
         />
     <item
         android:id="@+id/nav_camera"
         android:icon="@drawable/ic_camera"
         android:title="@string/camera"
+        />
+    <item
+        android:id="@+id/nav_news"
+        android:icon="@drawable/ic_news"
+        android:title="@string/news"
         />
     <item
         android:id="@+id/nav_profile"

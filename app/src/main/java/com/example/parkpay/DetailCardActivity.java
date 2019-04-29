@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,7 +54,7 @@ public class DetailCardActivity extends AppCompatActivity {
     TextView nameCard;
     String cardNumber="";
     //Button deleteCard;
-    Button payCard;
+    ImageView payCard;
     //Button editCard;
     ImageView updateCard;
     ImageView imageCard;
@@ -114,7 +115,7 @@ public class DetailCardActivity extends AppCompatActivity {
         titleDetailCard=(TextView)findViewById(R.id.titleDetailCard);
         nameCard=(TextView)findViewById(R.id.nameCard);
         history=(ListView)findViewById(R.id.historyList);
-        payCard=(Button)findViewById(R.id.payCard);
+        payCard=(ImageView)findViewById(R.id.payCard);
         imageDelete=(ImageView)findViewById(R.id.imageDelete);
         imageEdit=(ImageView) findViewById(R.id.imageEdit);
         updateCard=(ImageView)findViewById(R.id.updateCard);
@@ -271,6 +272,8 @@ public class DetailCardActivity extends AppCompatActivity {
                             });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
                 }
             }
         });

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,6 +102,9 @@ public class CustomAdapter extends BaseAdapter {
 
         view = inflter.inflate(R.layout.list_real_item, null);
 
+//        LayoutInflater li = LayoutInflater.from(context);
+//        View promptsView = li.inflate(R.layout.alert_dialog, null);
+
         TextView item = (TextView) view.findViewById(R.id.item);
         TextView subitem = (TextView) view.findViewById(R.id.subitem);
 
@@ -110,7 +114,7 @@ public class CustomAdapter extends BaseAdapter {
         ImageView imageDelete=(ImageView) view.findViewById(R.id.imageDelete);
         ImageView imageEdit=(ImageView) view.findViewById(R.id.imageEdit);
 
-        Button addMoney=(Button) view.findViewById(R.id.addMoney);
+        ImageView addMoney=(ImageView) view.findViewById(R.id.addMoney);
 
         item.setText(Item.get(i));
         subitem.setText(SubItem.get(i));
@@ -130,6 +134,7 @@ public class CustomAdapter extends BaseAdapter {
 //                    context.startActivity(intent);
 //
 //                } else {
+
 
                     if (settings.contains(APP_PREFERENCES_CARDS)) {
                         child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
@@ -152,6 +157,7 @@ public class CustomAdapter extends BaseAdapter {
             public void onClick(View v) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                    builder.setView();
                     builder.setMessage(Html
                             .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
                     builder.setCancelable(false);
@@ -189,6 +195,8 @@ public class CustomAdapter extends BaseAdapter {
                             });
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
+                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
                 }
         });
 

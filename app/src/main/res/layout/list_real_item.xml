@@ -15,6 +15,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.0"
+        android:contentDescription="TODO"
         app:srcCompat="@drawable/card" />
 
     <ImageView
@@ -26,6 +27,7 @@
         app:layout_constraintStart_toEndOf="@id/imageCard"
         app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintTop_toTopOf="@id/imageCard"
+        android:contentDescription="TODO"
         app:srcCompat="@drawable/ic_delete" />
 
     <ImageView
@@ -37,6 +39,7 @@
         app:layout_constraintStart_toEndOf="@id/imageCard"
         app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintTop_toTopOf="@id/imageCard"
+        android:contentDescription="TODO"
         app:srcCompat="@drawable/ic_edit" />
 
     <TextView
@@ -113,13 +116,17 @@
         app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
         app:layout_constraintTop_toBottomOf="@id/moneyCard" />
 
-    <Button
+    <ImageView
         android:id="@+id/addMoney"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:contentDescription="TODO"
+        android:src="@drawable/ic_money"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:text="Пополнить"
-        android:textSize="11sp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="17dp"
+        android:textSize="15sp"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintBottom_toBottomOf="@id/bonusTitleCard"
         app:layout_constraintTop_toTopOf="@id/moneyTitleCard"

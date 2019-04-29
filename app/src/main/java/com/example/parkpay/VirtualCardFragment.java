@@ -163,6 +163,7 @@ public class VirtualCardFragment extends Fragment {
 //        children2.add("Новая карта");
 //        moneyChild.add("Новая карта");
 //        bonusChild.add("Новая карта");
+//        idCard.add("Новая карта");
 
         //if(child) {
         customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild,idCard);
@@ -283,6 +284,7 @@ public class VirtualCardFragment extends Fragment {
 //                            codes.add("Новая карта");
 //                            money.add("Новая карта");
 //                            bonus.add("Новая карта");
+//                            cardId.add("Новая карта");
 
                             customAdapter = new CustomAdapter(c, children1,codes,money,bonus,cardId);
                             simpleList.setAdapter(customAdapter);

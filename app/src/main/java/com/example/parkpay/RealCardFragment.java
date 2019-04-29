@@ -159,14 +159,27 @@ public class RealCardFragment extends Fragment {
             idCard=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
         }
 
-//        child.add("Новая карта");
-//        children2.add("Новая карта");
-//        moneyChild.add("Новая карта");
-//        bonusChild.add("Новая карта");
+        child.add("Новая карта");
+        children2.add("Новая карта");
+        moneyChild.add("Новая карта");
+        bonusChild.add("Новая карта");
+        idCard.add("Новая карта");
+
+        child.add("Новая карта");
+        children2.add("Новая карта");
+        moneyChild.add("Новая карта");
+        bonusChild.add("Новая карта");
+        idCard.add("Новая карта");
+
+        child.add("Новая карта");
+        children2.add("Новая карта");
+        moneyChild.add("Новая карта");
+        bonusChild.add("Новая карта");
+        idCard.add("Новая карта");
 
         //if(child) {
-            customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild,idCard);
-            simpleList.setAdapter(customAdapter);
+        customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild,idCard);
+        simpleList.setAdapter(customAdapter);
         //}
         //else{
         //    simpleList.setVisibility(View.INVISIBLE);
@@ -279,10 +292,24 @@ public class RealCardFragment extends Fragment {
                                 cardId=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
                             }
 
-//                            children1.add("Новая карта");
-//                            codes.add("Новая карта");
-//                            money.add("Новая карта");
-//                            bonus.add("Новая карта");
+                            children1.add("Новая карта");
+                            codes.add("Новая карта");
+                            money.add("Новая карта");
+                            bonus.add("Новая карта");
+                            cardId.add("Новая карта");
+
+                            children1.add("Новая карта");
+                            codes.add("Новая карта");
+                            money.add("Новая карта");
+                            bonus.add("Новая карта");
+                            cardId.add("Новая карта");
+
+                            children1.add("Новая карта");
+                            codes.add("Новая карта");
+                            money.add("Новая карта");
+                            bonus.add("Новая карта");
+                            cardId.add("Новая карта");
+
 
                             customAdapter = new CustomAdapter(c, children1,codes,money,bonus,cardId);
                             simpleList.setAdapter(customAdapter);
@@ -422,11 +449,15 @@ public class RealCardFragment extends Fragment {
 
                             //JSONObject Jobject = new JSONObject(jsonData);
 
-                            SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(APP_PREFERENCES_QUANTITY_VISITS,jsonData);
-                            editor.apply();
-
                             Log.d(TAG,jsonData);
+                            if (jsonData != null) {
+                                if (!jsonData.contains("<"))
+                                {
+                                    SharedPreferences.Editor editor = settings.edit();
+                                    editor.putString(APP_PREFERENCES_QUANTITY_VISITS,jsonData);
+                                    editor.apply();
+                                }
+                            }
 
 
                         } catch (IOException e) {

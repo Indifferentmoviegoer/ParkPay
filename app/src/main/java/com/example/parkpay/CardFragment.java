@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabItem;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -38,7 +40,7 @@ public class CardFragment extends Fragment {
     TabItem tabStatus;
     ViewPager viewPager;
     PageAdapter pageAdapter;
-
+    //FloatingActionButton addCard;
 
     SharedPreferences settings;
     Context c;
@@ -57,16 +59,20 @@ public class CardFragment extends Fragment {
         tabChats = view.findViewById(R.id.realCardFragment);
         tabStatus = view.findViewById(R.id.virtualCardFragment);
         viewPager = view.findViewById(R.id.viewPager);
-        addCard=(ImageView)view.findViewById(R.id.addCard);
+        //addCard=(ImageView)view.findViewById(R.id.addCard);
+        addCard = (ImageView)view.findViewById(R.id.addCard);
 
         pageAdapter = new PageAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount());
+
+        //tabLayout.setupWithViewPager(viewPager);
 
         viewPager.setAdapter(pageAdapter);
 
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         tabLayout.getSelectedTabPosition();
+
 
         //tabLayout.setupWithViewPager(viewPager);
 

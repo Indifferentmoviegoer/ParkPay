@@ -7,11 +7,11 @@
                 android:type="linear"
                 android:startColor="#de6161"
                 android:endColor="#2657eb"
-                android:angle="45.0" />
+                android:angle="45.0"/>
             <corners
                 android:radius="10.0dip" />
             <stroke android:width="5px"
-                android:color="#000"/>
+                android:color="#000" />
         </shape>
     </item>
 </selector>

@@ -36,6 +36,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/titleDetailCard"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="TODO"
                         android:src="@drawable/ic_close"
                         />
 
@@ -59,6 +60,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:contentDescription="TODO"
                         android:src="@drawable/ic_update"
                         />
 
@@ -77,6 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar"
                 app:layout_constraintVertical_bias="0.0"
+                android:contentDescription="TODO"
                 android:src="@drawable/card" />
 
             <ImageView
@@ -88,6 +91,7 @@
                 app:layout_constraintStart_toEndOf="@id/imageCard"
                 app:layout_constraintEnd_toEndOf="@id/imageCard"
                 app:layout_constraintTop_toTopOf="@id/imageCard"
+                android:contentDescription="TODO"
                 app:srcCompat="@drawable/ic_delete" />
 
             <ImageView
@@ -99,6 +103,7 @@
                 app:layout_constraintStart_toEndOf="@id/imageCard"
                 app:layout_constraintEnd_toEndOf="@id/imageCard"
                 app:layout_constraintTop_toTopOf="@id/imageCard"
+                android:contentDescription="TODO"
                 app:srcCompat="@drawable/ic_edit" />
 
             <TextView
@@ -174,21 +179,37 @@
                 app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
                 app:layout_constraintTop_toBottomOf="@id/moneyCard" />
 
-            <Button
+            <ImageView
                 android:id="@+id/payCard"
-                android:layout_width="343dp"
-                android:layout_height="wrap_content"
-                android:text="@string/pay"
-                app:layout_constraintStart_toStartOf="@id/imageEdit"
-                app:layout_constraintEnd_toEndOf="@id/imageDelete"
-                app:layout_constraintTop_toBottomOf="@id/imageCard"
+                android:contentDescription="TODO"
+                android:src="@drawable/ic_money"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:text="Пополнить"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="17dp"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@id/imageCard"
+                app:layout_constraintBottom_toBottomOf="@id/bonusTitleCard"
+                app:layout_constraintTop_toTopOf="@id/moneyTitleCard"
                 />
+
+            <!--<Button-->
+                <!--android:id="@+id/payCard"-->
+                <!--android:layout_width="343dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="@string/pay"-->
+                <!--app:layout_constraintStart_toStartOf="@id/imageEdit"-->
+                <!--app:layout_constraintEnd_toEndOf="@id/imageDelete"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/imageCard"-->
+                <!--/>-->
 
             <ListView
                 android:id="@+id/historyList"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:layout_constraintTop_toBottomOf="@id/payCard"
+                app:layout_constraintTop_toBottomOf="@id/imageCard"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 />

@@ -91,11 +91,14 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.nav_cart:
                             selectedFragment = new CardFragment();
                             break;
-                        case R.id.nav_news:
-                            selectedFragment = new NewsFragment();
+                        case R.id.nav_map:
+                            selectedFragment = new ParksFragment();
                             break;
                         case R.id.nav_camera:
                             selectedFragment = new CameraFragment();
+                            break;
+                        case R.id.nav_news:
+                            selectedFragment = new NewsFragment();
                             break;
                         case R.id.nav_profile:
                             selectedFragment = new ProfileFragment();

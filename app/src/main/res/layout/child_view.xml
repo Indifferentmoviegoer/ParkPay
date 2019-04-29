@@ -22,6 +22,7 @@
         android:layout_marginEnd="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="TODO"
         android:focusable="false"
         />
 </android.support.constraint.ConstraintLayout>

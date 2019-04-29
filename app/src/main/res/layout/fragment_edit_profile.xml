@@ -29,6 +29,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/titleEditProfile"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="TODO"
                     android:src="@drawable/ic_close"
                     />
 
@@ -52,6 +53,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="TODO"
                     android:src="@drawable/ic_accept"
                     />
 
