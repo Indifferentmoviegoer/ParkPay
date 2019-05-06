@@ -49,6 +49,9 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_PARK_ID ="parkID";
+    public static final String APP_PREFERENCES_LAT ="lat";
+    public static final String APP_PREFERENCES_LNG ="lng";
+    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
     SharedPreferences settings;
 
     private static final String TAG = "myLogs";
@@ -103,7 +106,10 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
         //uiSettings.setScrollGesturesEnabled(false);
         //uiSettings.setTiltGesturesEnabled(false);
 
-        LatLng ny = new LatLng(45.057965, 38.992034);
+        LatLng ny = new LatLng(
+                settings.getFloat(APP_PREFERENCES_LAT,0),
+                settings.getFloat(APP_PREFERENCES_LNG,0)
+        );
 
         addMarker();
 
@@ -120,25 +126,28 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
             markerIcon = getMarkerIconFromDrawable(Objects.requireNonNull(circleDrawable));
 
             gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.058338, 38.991372))
-                    .title("Аттракцион 1")
-                    .snippet("Аттракцион 1")
+                    .position(new LatLng(
+                            settings.getFloat(APP_PREFERENCES_LAT,0),
+                            settings.getFloat(APP_PREFERENCES_LNG,0)
+                    ))
+                    .title(settings.getString(APP_PREFERENCES_NAME_OBJECT,""))
+                    //.snippet("Аттракцион 1")
                     .icon(markerIcon)
             );
-
-            gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.058189, 38.991636))
-                    .title("Аттракцион 2")
-                    .snippet("Аттракцион 2")
-                    .icon(markerIcon)
-            );
-
-            gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.057458, 38.991373))
-                    .title("Аттракцион 3")
-                    .snippet("Аттракцион 3")
-                    .icon(markerIcon)
-            );
+//
+//            gmap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(45.058189, 38.991636))
+//                    .title("Аттракцион 2")
+//                    .snippet("Аттракцион 2")
+//                    .icon(markerIcon)
+//            );
+//
+//            gmap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(45.057458, 38.991373))
+//                    .title("Аттракцион 3")
+//                    .snippet("Аттракцион 3")
+//                    .icon(markerIcon)
+//            );
         }
     }
 

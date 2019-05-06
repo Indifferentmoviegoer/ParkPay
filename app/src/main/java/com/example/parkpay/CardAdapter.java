@@ -37,7 +37,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class CustomAdapter extends BaseAdapter {
+public class CardAdapter extends BaseAdapter {
 
     public static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
@@ -63,9 +63,9 @@ public class CustomAdapter extends BaseAdapter {
     int flags[];
     LayoutInflater inflter;
 
-    public CustomAdapter(Context applicationContext, ArrayList<String> Item,
-                         ArrayList<String> SubItem,ArrayList<String> MoneyCard,ArrayList<String> BonusCard,
-                         ArrayList<String> CardId) {
+    public CardAdapter(Context applicationContext, ArrayList<String> Item,
+                       ArrayList<String> SubItem, ArrayList<String> MoneyCard, ArrayList<String> BonusCard,
+                       ArrayList<String> CardId) {
         this.context = applicationContext;
         this.Item = Item;
         this.SubItem = SubItem;
@@ -158,6 +158,7 @@ public class CustomAdapter extends BaseAdapter {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
 //                    builder.setView();
+                    builder.setTitle("Удаление карты");
                     builder.setMessage(Html
                             .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
                     builder.setCancelable(false);
@@ -196,7 +197,8 @@ public class CustomAdapter extends BaseAdapter {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
                 }
         });
 

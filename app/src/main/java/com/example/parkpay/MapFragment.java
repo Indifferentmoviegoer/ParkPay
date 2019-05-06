@@ -4,12 +4,16 @@ import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Point;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +28,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,6 +55,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static final String APP_PREFERENCES_TOKEN = "Token";
     public static final String APP_PREFERENCES_PHOTO = "Photo";
     public static final String APP_PREFERENCES_QUANTITY_VISITS = "quantityVisits";
+    public static final String APP_PREFERENCES_LAT ="lat";
+    public static final String APP_PREFERENCES_LNG ="lng";
+    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
+
     SharedPreferences settings;
     Switch notification;
 
@@ -113,11 +123,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         gmap.setIndoorEnabled(true);
         UiSettings uiSettings = gmap.getUiSettings();
         uiSettings.setIndoorLevelPickerEnabled(true);
-        uiSettings.setMyLocationButtonEnabled(true);
+        uiSettings.setMyLocationButtonEnabled(false);
         uiSettings.setMapToolbarEnabled(true);
         uiSettings.setCompassEnabled(true);
+        uiSettings.setZoomControlsEnabled(true);
+        //uiSettings.setScrollGesturesEnabled(false);
+        //uiSettings.setTiltGesturesEnabled(false);
 
-        LatLng ny = new LatLng(45.057965, 38.992034);
+        LatLng ny = new LatLng(
+                settings.getFloat(APP_PREFERENCES_LAT,0),
+                settings.getFloat(APP_PREFERENCES_LNG,0)
+        );
 
         addMarker();
 
@@ -127,25 +143,46 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private void addMarker(){
 
+        BitmapDescriptor markerIcon;
+
         if(null != gmap){
-            gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.058338, 38.991372))
-                    .title("Аттракцион 1")
-                    .draggable(true)
-            );
+
+            Drawable circleDrawable = ContextCompat.getDrawable(c, R.drawable.ic_carousel);
+            markerIcon = getMarkerIconFromDrawable(Objects.requireNonNull(circleDrawable));
 
             gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.058189, 38.991636))
-                    .title("Аттракцион 2")
-                    .draggable(true)
+                    .position(new LatLng(
+                            settings.getFloat(APP_PREFERENCES_LAT,0),
+                            settings.getFloat(APP_PREFERENCES_LNG,0)
+                    ))
+                    .title(settings.getString(APP_PREFERENCES_NAME_OBJECT,""))
+                    //.snippet("Аттракцион 1")
+                    .icon(markerIcon)
             );
-
-            gmap.addMarker(new MarkerOptions()
-                    .position(new LatLng(45.057458, 38.991373))
-                    .title("Аттракцион 3")
-                    .draggable(true)
-            );
+//
+//            gmap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(45.058189, 38.991636))
+//                    .title("Аттракцион 2")
+//                    .snippet("Аттракцион 2")
+//                    .icon(markerIcon)
+//            );
+//
+//            gmap.addMarker(new MarkerOptions()
+//                    .position(new LatLng(45.057458, 38.991373))
+//                    .title("Аттракцион 3")
+//                    .snippet("Аттракцион 3")
+//                    .icon(markerIcon)
+//            );
         }
+    }
+
+    private BitmapDescriptor getMarkerIconFromDrawable(Drawable drawable) {
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 
     @Override

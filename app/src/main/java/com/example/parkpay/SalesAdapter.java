@@ -1,5 +1,6 @@
 package com.example.parkpay;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
@@ -10,35 +11,41 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
-public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.PersonViewHolder>{
+public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHolder>{
 
-    List<Sale> persons;
+    List<Sale> sales;
+    private Context context;
 
-    SalesAdapter(List<Sale> persons){
-        this.persons = persons;
+    SalesAdapter(Context context, List<Sale> persons){
+        this.sales = persons;
+        this.context = context;
     }
 
     @NonNull
     @Override
-    public PersonViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public SaleViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sales_item, viewGroup, false);
-        PersonViewHolder pvh = new PersonViewHolder(v);
+        SaleViewHolder pvh = new SaleViewHolder(v);
         return pvh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PersonViewHolder personViewHolder, int i) {
-        personViewHolder.personName.setText(persons.get(i).name);
-        personViewHolder.personAge.setText(persons.get(i).age);
-        personViewHolder.dateStart.setText(persons.get(i).dateStart);
-        personViewHolder.dateEnd.setText(persons.get(i).dateEnd);
+    public void onBindViewHolder(@NonNull SaleViewHolder saleViewHolder, int i) {
+        saleViewHolder.saleName.setText(sales.get(i).name);
+        saleViewHolder.personAge.setText(sales.get(i).text);
+        saleViewHolder.dateStart.setText(sales.get(i).dateStart);
+        saleViewHolder.dateEnd.setText(sales.get(i).dateEnd);
+
+        Glide.with(context).load(sales.get(i).getImageUrl()).into(saleViewHolder.photo);
     }
 
     @Override
     public int getItemCount() {
-        return persons.size();
+        return sales.size();
     }
 
     @Override
@@ -46,21 +53,23 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.PersonViewHo
         super.onAttachedToRecyclerView(recyclerView);
     }
 
-    public static class PersonViewHolder extends RecyclerView.ViewHolder {
+    public static class SaleViewHolder extends RecyclerView.ViewHolder {
 
         CardView cv;
-        TextView personName;
+        TextView saleName;
         TextView personAge;
         TextView dateStart;
         TextView dateEnd;
+        ImageView photo;
 
-        PersonViewHolder(View itemView) {
+        SaleViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
-            personName = (TextView)itemView.findViewById(R.id.person_name);
-            personAge = (TextView)itemView.findViewById(R.id.person_age);
+            saleName = (TextView)itemView.findViewById(R.id.sale_name);
+            personAge = (TextView)itemView.findViewById(R.id.sale_text);
             dateStart = (TextView)itemView.findViewById(R.id.dateStart);
             dateEnd = (TextView)itemView.findViewById(R.id.dateEnd);
+            photo = (ImageView)itemView.findViewById(R.id.sale_photo);
 
         }
 

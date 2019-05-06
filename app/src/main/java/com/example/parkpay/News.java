@@ -3,26 +3,27 @@ package com.example.parkpay;
 import java.util.ArrayList;
 import java.util.List;
 
-class Sale {
+class News {
     String name;
-    String text;
-    String dateStart;
-    String dateEnd;
     String photo;
+    String date;
+    String text;
+    String link;
 
-    Sale(
+    News(
             String name,
+            String photo,
+            String date,
             String text,
-            String dateStart,
-            String dateEnd,
-            String photo
+            String link
     ) {
         this.name = name;
-        this.text = text;
-        this.dateStart = dateStart;
-        this.dateEnd = dateEnd;
         this.photo = photo;
+        this.date = date;
+        this.text = text;
+        this.link = link;
     }
+
     public String getImageUrl() {
         return photo;
     }

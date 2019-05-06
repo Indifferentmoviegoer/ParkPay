@@ -1,32 +1,17 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SimpleExpandableListAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -34,17 +19,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RealCardFragment extends Fragment {
@@ -78,7 +60,7 @@ public class RealCardFragment extends Fragment {
     ArrayList<String> cardId;
 
     ListView simpleList;
-    CustomAdapter customAdapter;
+    CardAdapter cardAdapter;
 
     SharedPreferences settings;
     Context c;
@@ -178,8 +160,8 @@ public class RealCardFragment extends Fragment {
         idCard.add("Новая карта");
 
         //if(child) {
-        customAdapter = new CustomAdapter(c, child, children2,moneyChild,bonusChild,idCard);
-        simpleList.setAdapter(customAdapter);
+        cardAdapter = new CardAdapter(c, child, children2,moneyChild,bonusChild,idCard);
+        simpleList.setAdapter(cardAdapter);
         //}
         //else{
         //    simpleList.setVisibility(View.INVISIBLE);
@@ -311,8 +293,8 @@ public class RealCardFragment extends Fragment {
                             cardId.add("Новая карта");
 
 
-                            customAdapter = new CustomAdapter(c, children1,codes,money,bonus,cardId);
-                            simpleList.setAdapter(customAdapter);
+                            cardAdapter = new CardAdapter(c, children1,codes,money,bonus,cardId);
+                            simpleList.setAdapter(cardAdapter);
 
 
                         } catch (IOException | JSONException e) {

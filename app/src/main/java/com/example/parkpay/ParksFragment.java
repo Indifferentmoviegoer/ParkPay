@@ -13,15 +13,21 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.SimpleExpandableListAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +42,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -53,22 +60,13 @@ public class ParksFragment extends Fragment {
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_PARK_IDS ="parkIDs";
     public static final String APP_PREFERENCES_PARK_NAMES ="names";
+    public static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
-    ArrayList<String> child;
-    ArrayList<String> children2;
-    ArrayList<String> moneyChild;
-    ArrayList<String> bonusChild;
-    ArrayList<String> idCard;
+    RecyclerView rv;
+    ProgressBar progressBarParks;
 
-    ArrayList<String> children1;
-    ArrayList<String> codes;
-    ArrayList<String> money;
-    ArrayList<String> bonus;
-    ArrayList<String> cardId;
-
-    ListView simpleList;
-    ParksAdapter customAdapter;
+    private List<Park> parks;
 
     SharedPreferences settings;
     Context c;
@@ -79,108 +77,98 @@ public class ParksFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_parks,container,false);
 
-        if (container != null) {
-            c = container.getContext();
-        }
-
-        simpleList = (ListView)view.findViewById(R.id.parks);
-
+        progressBarParks=(ProgressBar) view.findViewById(R.id.progressBarParks);
+        rv = (RecyclerView)view.findViewById(R.id.rvParks);
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        //Создаем набор данных для адаптера
-        child = new ArrayList<String>();
-        children2 = new ArrayList<String>();
-        moneyChild = new ArrayList<String>();
-        bonusChild = new ArrayList<String>();
-        idCard = new ArrayList<String>();
+        rv.setVisibility(View.INVISIBLE);
 
-        children1 = new ArrayList<String>();
-        codes = new ArrayList<String>();
-        money = new ArrayList<String>();
-        bonus = new ArrayList<String>();
-        cardId = new ArrayList<String>();
+        c=getContext();
 
 
-        simpleList.invalidateViews();
+        LinearLayoutManager llm = new LinearLayoutManager(c);
+        rv.setLayoutManager(llm);
 
-        StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(mypolicy);
+        parks = new ArrayList<>();
 
-        boolean checkConnection=MainActivity.isOnline(c);
+        parks.add(new Park(
+                "1",
+                "1",
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                "https://farikqwerty.000webhostapp.com/pic/Samira.jpg"
+        ));
 
-//        if(checkConnection) {
+        parks.add(new Park(
+                "2",
+                "2",
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                "https://farikqwerty.000webhostapp.com/pic/sima.jpg"
+        ));
 
-        doGetRequest();
+        parks.add(new Park(
+                "3",
+                "3",
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                "https://farikqwerty.000webhostapp.com/pic/sima.jpg"
+        ));
 
-//        }
-//        else {
-//            Toast.makeText(c, "Отсутствует интернет соединение!",
-//                    Toast.LENGTH_SHORT).show();
-//        }
+        parks.add(new Park(
+                "4",
+                "4",
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
+        ));
 
-        if(settings.contains(APP_PREFERENCES_PARK_IDS)){
 
-            child=MainActivity.getArrayList(APP_PREFERENCES_PARK_IDS,settings);
-        }
+        parks.add(new Park(
+                "5",
+                "5",
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                0.1f,
+                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
+        ));
 
-        if(settings.contains(APP_PREFERENCES_PARK_NAMES)){
+        ParksAdapter adapter = new ParksAdapter(c,parks);
+        rv.setAdapter(adapter);
 
-            children2=MainActivity.getArrayList(APP_PREFERENCES_PARK_NAMES,settings);
-        }
+        rv.setVisibility(View.VISIBLE);
+        progressBarParks.setVisibility(View.INVISIBLE);
 
-//        if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
-//
-//            moneyChild=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
-//        }
-//
-//        if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
-//
-//            bonusChild=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
-//        }
-//
-//        if(settings.contains(APP_PREFERENCES_CARD_ID)){
-//
-//            idCard=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
-//        }
+        //getParks();
 
-//        child.add("Новая карта1");
-//        children2.add("Новая карта1");
-//        moneyChild.add("Новая карта");
-//        bonusChild.add("Новая карта");
-//        idCard.add("Новая карта");
-//
-//        child.add("Новая карта2");
-//        children2.add("Новая карта2");
-//        moneyChild.add("Новая карта");
-//        bonusChild.add("Новая карта");
-//        idCard.add("Новая карта");
-//
-//        child.add("Новая карта3");
-//        children2.add("Новая карта3");
-//        moneyChild.add("Новая карта");
-//        bonusChild.add("Новая карта");
-//        idCard.add("Новая карта");
 
-        //if(child) {
-        customAdapter = new ParksAdapter(c,
-                child,
-                children2
-//                moneyChild,
-//                bonusChild,
-//                idCard
-        );
-        simpleList.setAdapter(customAdapter);
-        //}
-        //else{
-        //    simpleList.setVisibility(View.INVISIBLE);
-        //}
 
         return view;
     }
 
-    public void doGetRequest(){
+
+    public void getParks(){
 
         OkHttpClient client = new OkHttpClient();
 
@@ -232,83 +220,41 @@ public class ParksFragment extends Fragment {
 
                             JSONArray jsonArray = new JSONArray(jsonData);
 
+
+
                             for (int i = 0; i < jsonArray.length(); i++) {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
 
                                 Log.d(TAG, Jobject.getString("park_id"));
                                 Log.d(TAG, Jobject.getString("name"));
+                                Log.d(TAG, Jobject.getString("lat_top"));
+                                Log.d(TAG, Jobject.getString("lng_top"));
+                                Log.d(TAG, Jobject.getString("lat_bottom"));
+                                Log.d(TAG, Jobject.getString("lng_bottom"));
+                                Log.d(TAG, Jobject.getString("lat_center"));
+                                Log.d(TAG, Jobject.getString("lng_center"));
 
-                                children1.add(Jobject.getString("park_id"));
-                                codes.add(Jobject.getString("name"));
-//                                money.add(Jobject.getString("balance_money"));
-//                                bonus.add(Jobject.getString("balance_bonus"));
-//                                cardId.add(Jobject.getString("card_id"));
+                                parks.add(new Park(
+                                        Jobject.getString("park_id"),
+                                        Jobject.getString("name"),
+                                        Float.parseFloat(Jobject.getString("lat_top")),
+                                        Float.parseFloat(Jobject.getString("lng_top")),
+                                        Float.parseFloat(Jobject.getString("lat_bottom")),
+                                        Float.parseFloat(Jobject.getString("lng_bottom")),
+                                        Float.parseFloat(Jobject.getString("lat_center")),
+                                        Float.parseFloat(Jobject.getString("lng_center")),
+                                        "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
+                                ));
 
                             }
 
-                            MainActivity.saveArrayList(children1, APP_PREFERENCES_PARK_IDS, settings);
-                            MainActivity.saveArrayList(codes, APP_PREFERENCES_PARK_NAMES, settings);
-//                            MainActivity.saveArrayList(money, APP_PREFERENCES_MONEY_CHILD, settings);
-//                            MainActivity.saveArrayList(bonus, APP_PREFERENCES_BONUS_CHILD, settings);
-//                            MainActivity.saveArrayList(cardId, APP_PREFERENCES_CARD_ID, settings);
 
-                            children1.clear();
-                            codes.clear();
-//                            money.clear();
-//                            bonus.clear();
-//                            cardId.clear();
+                            ParksAdapter adapter = new ParksAdapter(c,parks);
+                            rv.setAdapter(adapter);
 
-
-
-                            if(settings.contains(APP_PREFERENCES_PARK_IDS)){
-                                children1=MainActivity.getArrayList(APP_PREFERENCES_PARK_IDS,settings);
-                            }
-
-                            if(settings.contains(APP_PREFERENCES_PARK_NAMES)){
-                                codes=MainActivity.getArrayList(APP_PREFERENCES_PARK_NAMES,settings);
-                            }
-
-//                            if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
-//                                money=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
-//                            }
-//
-//                            if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
-//                                bonus=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
-//                            }
-//
-//                            if(settings.contains(APP_PREFERENCES_CARD_ID)){
-//                                cardId=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
-//                            }
-
-//                            children1.add("Новая карта1");
-//                            codes.add("Новая карта1");
-//                            money.add("Новая карта");
-//                            bonus.add("Новая карта");
-//                            cardId.add("Новая карта");
-//
-//                            children1.add("Новая карта2");
-//                            codes.add("Новая карта2");
-//                            money.add("Новая карта");
-//                            bonus.add("Новая карта");
-//                            cardId.add("Новая карта");
-//
-//                            children1.add("Новая карта3");
-//                            codes.add("Новая карта3");
-//                            money.add("Новая карта");
-//                            bonus.add("Новая карта");
-//                            cardId.add("Новая карта");
-
-
-                            customAdapter = new ParksAdapter(c,
-                                    children1,
-                                    codes
-//                                    money,
-//                                    bonus,
-//                                    cardId
-                            );
-                            simpleList.setAdapter(customAdapter);
-
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarParks.setVisibility(View.INVISIBLE);
 
                         } catch (IOException | JSONException e) {
 

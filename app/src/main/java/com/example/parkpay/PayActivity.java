@@ -110,7 +110,8 @@ public class PayActivity extends AppCompatActivity {
                     result = Checkout.createTokenizationResult(data);
                     Toast.makeText(getApplicationContext(),"Успешно",Toast.LENGTH_LONG).show();
                     Log.d(TAG, "Результат "+result);
-                    doPostRequest("http://192.168.252.199/card/add_money");
+                    //doPostRequest("http://192.168.252.199/card/add_money");
+                    doPostRequest("http://192.168.252.199/card/create_payment");
 
                 case RESULT_CANCELED:
                     Toast.makeText(getApplicationContext(),"Отмена",Toast.LENGTH_SHORT).show();
@@ -202,18 +203,21 @@ public class PayActivity extends AppCompatActivity {
                         editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
                         editor.apply();
 
-                        if(settings.contains(APP_PREFERENCES_STATUS)) {
+//                        if(settings.contains(APP_PREFERENCES_STATUS)) {
+//
+//                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
-                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
+//                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, "")
+//                                                ,Toast.LENGTH_SHORT).show();
 
-                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, "")
-                                                ,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(c,"Успешно"
+                                ,Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent(c,
                                         MainActivity.class);
                                 startActivity(intent);
-                            }
-                        }
+//                            }
+//                        }
 
                     } catch (IOException | JSONException e) {
 

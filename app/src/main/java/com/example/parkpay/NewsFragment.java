@@ -14,12 +14,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -46,7 +42,7 @@ public class NewsFragment extends Fragment {
 
     String[] news = {"Новости", "Акции"};
 
-    private List<Person> persons;
+    private List<News> persons;
     private List<Sale> sales;
 
     public static final String APP_PREFERENCES = "mysettings";
@@ -166,15 +162,22 @@ public class NewsFragment extends Fragment {
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
 
                                 Log.d(TAG, Jobject.getString("title"));
-                                Log.d(TAG, Jobject.getString("content"));
+                                Log.d(TAG, Jobject.getString("image"));
                                 Log.d(TAG, Jobject.getString("date"));
+                                Log.d(TAG, Jobject.getString("text"));
+                                Log.d(TAG, Jobject.getString("link_sourc"));
 
-                                persons.add(new Person(Jobject.getString("title"),
-                                        Jobject.getString("content"),Jobject.getString("date")));
+                                persons.add(new News(
+                                        Jobject.getString("title"),
+                                        Jobject.getString("image"),
+                                        Jobject.getString("date"),
+                                        Jobject.getString("text"),
+                                        Jobject.getString("link_source")
+                                ));
 
                             }
 
-                            RVAdapter adapter = new RVAdapter(persons);
+                            NewsAdapter adapter = new NewsAdapter(c,persons);
                             rv.setAdapter(adapter);
 
                             rv.setVisibility(View.VISIBLE);
@@ -243,18 +246,23 @@ public class NewsFragment extends Fragment {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
 
-                                Log.d(TAG, Jobject.getString("name"));
-                                Log.d(TAG, Jobject.getString("content"));
+                                Log.d(TAG, Jobject.getString("title"));
+                                Log.d(TAG, Jobject.getString("text"));
                                 Log.d(TAG, Jobject.getString("date_start"));
                                 Log.d(TAG, Jobject.getString("date_end"));
+                                Log.d(TAG, Jobject.getString("image"));
 
-                                sales.add(new Sale( Jobject.getString("name"),
-                                        Jobject.getString("content"),Jobject.getString("date_start"),
-                                        Jobject.getString("date_end")));
+                                sales.add(new Sale(
+                                        Jobject.getString("title"),
+                                        Jobject.getString("text"),
+                                        Jobject.getString("date_start"),
+                                        Jobject.getString("date_end"),
+                                        Jobject.getString("image")
+                                ));
 
                             }
 
-                            SalesAdapter adapter = new SalesAdapter(sales);
+                            SalesAdapter adapter = new SalesAdapter(c,sales);
                             rv.setAdapter(adapter);
 
                             rv.setVisibility(View.VISIBLE);

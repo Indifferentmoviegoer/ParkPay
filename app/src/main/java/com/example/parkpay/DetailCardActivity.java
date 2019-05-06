@@ -222,6 +222,7 @@ public class DetailCardActivity extends AppCompatActivity {
                 if(cardNumber!=null){
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                    builder.setTitle("Удаление карты");
                     builder.setMessage(Html
                             .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
                     builder.setCancelable(false);
@@ -273,7 +274,8 @@ public class DetailCardActivity extends AppCompatActivity {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
                 }
             }
         });

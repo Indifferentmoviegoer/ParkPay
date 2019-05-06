@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         bottomNav = (BottomNavigationViewEx)findViewById(R.id.bottom_navigation);
 
-        bottomNav.setIconSize(29,29);
+        bottomNav.setIconSize(25,25);
         bottomNav.setTextVisibility(false);
         bottomNav.enableAnimation(false);
         bottomNav.enableShiftingMode(false);
