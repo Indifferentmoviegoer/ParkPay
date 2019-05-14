@@ -2,7 +2,6 @@ package com.example.parkpay;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -14,21 +13,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class HistoryAdapter extends BaseAdapter {
+class HistoryAdapter extends BaseAdapter {
 
-    public static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_POSITION_CARD ="position";
     public static final String APP_PREFERENCES_POSITION_GROUP ="group";
-    SharedPreferences settings;
+    private final SharedPreferences settings;
     private ArrayList<String> child;
 
-    Context context;
-    ArrayList<String> Item;
-    ArrayList<String> SubItem;
-    ArrayList<String> MoneyCard;
-    int flags[];
-    LayoutInflater inflter;
+    private final Context context;
+    private final ArrayList<String> Item;
+    private final ArrayList<String> SubItem;
+    private final ArrayList<String> MoneyCard;
+    int[] flags;
+    private final LayoutInflater inflter;
 
     public HistoryAdapter(Context applicationContext, ArrayList<String> Item,
                           ArrayList<String> SubItem, ArrayList<String> MoneyCard) {
@@ -58,16 +57,16 @@ public class HistoryAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint("ViewHolder")
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
         view = inflter.inflate(R.layout.list_history_item, null);
 
-        TextView item = (TextView) view.findViewById(R.id.item);
-        TextView subitem = (TextView) view.findViewById(R.id.subitem);
+        TextView item = view.findViewById(R.id.item);
+        TextView subitem = view.findViewById(R.id.subitem);
 
-        TextView moneyCard = (TextView) view.findViewById(R.id.value);
+        TextView moneyCard = view.findViewById(R.id.value);
 
         item.setText(Item.get(i));
         subitem.setText(SubItem.get(i));

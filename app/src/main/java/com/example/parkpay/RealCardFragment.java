@@ -1,17 +1,20 @@
 package com.example.parkpay;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -31,39 +34,35 @@ import okhttp3.Response;
 
 public class RealCardFragment extends Fragment {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CARDS ="Cards";
+    private static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_NAME ="Name";
-    public static final String APP_PREFERENCES_NUMBER ="Number";
-    public static final String APP_PREFERENCES_MAIL ="Email";
-    public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_NAME ="Name";
+    private static final String APP_PREFERENCES_NUMBER ="Number";
+    private static final String APP_PREFERENCES_MAIL ="Email";
+    private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
-    public static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
-    public static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
-    public static final String APP_PREFERENCES_CARD_ID ="cardId";
+    private static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
+    private static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
+    private static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
+    private static final String APP_PREFERENCES_CARD_ID ="cardId";
     private static final String TAG = "myLogs";
 
-    ArrayList<String> child;
-    ArrayList<String> children2;
-    ArrayList<String> moneyChild;
-    ArrayList<String> bonusChild;
-    ArrayList<String> idCard;
+    private ArrayList<String> children1;
+    private ArrayList<String> codes;
+    private ArrayList<String> money;
+    private ArrayList<String> bonus;
+    private ArrayList<String> cardId;
 
-    ArrayList<String> children1;
-    ArrayList<String> codes;
-    ArrayList<String> money;
-    ArrayList<String> bonus;
-    ArrayList<String> cardId;
+    private ListView simpleList;
+    private CardAdapter cardAdapter;
 
-    ListView simpleList;
-    CardAdapter cardAdapter;
+    ImageView addCard;
 
-    SharedPreferences settings;
-    Context c;
+    private SharedPreferences settings;
+    private Context c;
 
     @Nullable
     @Override
@@ -75,24 +74,14 @@ public class RealCardFragment extends Fragment {
             c = container.getContext();
         }
 
-        simpleList = (ListView)view.findViewById(R.id.realCard);
+        simpleList = view.findViewById(R.id.realCard);
+        addCard = (ImageView)view.findViewById(R.id.addCard);
 
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        //Создаем набор данных для адаптера
-        child = new ArrayList<String>();
-        children2 = new ArrayList<String>();
-        moneyChild = new ArrayList<String>();
-        bonusChild = new ArrayList<String>();
-        idCard = new ArrayList<String>();
 
-        children1 = new ArrayList<String>();
-        codes = new ArrayList<String>();
-        money = new ArrayList<String>();
-        bonus = new ArrayList<String>();
-        cardId = new ArrayList<String>();
 
 
         simpleList.invalidateViews();
@@ -100,9 +89,11 @@ public class RealCardFragment extends Fragment {
         StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(mypolicy);
 
-        boolean checkConnection=MainActivity.isOnline(c);
+        addCard.setOnClickListener(v -> {
 
-//        if(checkConnection) {
+            Intent intent = new Intent(c, AddCardActivity.class);
+            c.startActivity(intent);
+        });
 
         doGetRequest();
 
@@ -110,73 +101,16 @@ public class RealCardFragment extends Fragment {
 
         getVisits();
 
-//        }
-//        else {
-//            Toast.makeText(c, "Отсутствует интернет соединение!",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-
-        if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
-
-            child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_CARDS)){
-
-            children2=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
-
-            moneyChild=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
-
-            bonusChild=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
-        }
-
-        if(settings.contains(APP_PREFERENCES_CARD_ID)){
-
-            idCard=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
-        }
-
-        child.add("Новая карта");
-        children2.add("Новая карта");
-        moneyChild.add("Новая карта");
-        bonusChild.add("Новая карта");
-        idCard.add("Новая карта");
-
-        child.add("Новая карта");
-        children2.add("Новая карта");
-        moneyChild.add("Новая карта");
-        bonusChild.add("Новая карта");
-        idCard.add("Новая карта");
-
-        child.add("Новая карта");
-        children2.add("Новая карта");
-        moneyChild.add("Новая карта");
-        bonusChild.add("Новая карта");
-        idCard.add("Новая карта");
-
-        //if(child) {
-        cardAdapter = new CardAdapter(c, child, children2,moneyChild,bonusChild,idCard);
-        simpleList.setAdapter(cardAdapter);
-        //}
-        //else{
-        //    simpleList.setVisibility(View.INVISIBLE);
-        //}
-
         return view;
     }
 
-    public void doGetRequest(){
+    private void doGetRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
+                .scheme("https")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("card")
                 .addPathSegment("list")
                 .build();
@@ -185,7 +119,7 @@ public class RealCardFragment extends Fragment {
 
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
@@ -201,15 +135,12 @@ public class RealCardFragment extends Fragment {
                 }
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -221,6 +152,13 @@ public class RealCardFragment extends Fragment {
                             }
 
                             JSONArray jsonArray = new JSONArray(jsonData);
+
+
+                            children1 = new ArrayList<>();
+                            codes = new ArrayList<>();
+                            money = new ArrayList<>();
+                            bonus = new ArrayList<>();
+                            cardId = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -239,60 +177,6 @@ public class RealCardFragment extends Fragment {
                                 cardId.add(Jobject.getString("card_id"));
 
                             }
-
-                            MainActivity.saveArrayList(children1, APP_PREFERENCES_NAMES_CARDS, settings);
-                            MainActivity.saveArrayList(codes, APP_PREFERENCES_CARDS, settings);
-                            MainActivity.saveArrayList(money, APP_PREFERENCES_MONEY_CHILD, settings);
-                            MainActivity.saveArrayList(bonus, APP_PREFERENCES_BONUS_CHILD, settings);
-                            MainActivity.saveArrayList(cardId, APP_PREFERENCES_CARD_ID, settings);
-
-                            children1.clear();
-                            codes.clear();
-                            money.clear();
-                            bonus.clear();
-                            cardId.clear();
-
-
-
-                            if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
-                                children1=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
-                            }
-
-                            if(settings.contains(APP_PREFERENCES_CARDS)){
-                                codes=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                            }
-
-                            if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
-                                money=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
-                            }
-
-                            if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
-                                bonus=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
-                            }
-
-                            if(settings.contains(APP_PREFERENCES_CARD_ID)){
-                                cardId=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
-                            }
-
-                            children1.add("Новая карта");
-                            codes.add("Новая карта");
-                            money.add("Новая карта");
-                            bonus.add("Новая карта");
-                            cardId.add("Новая карта");
-
-                            children1.add("Новая карта");
-                            codes.add("Новая карта");
-                            money.add("Новая карта");
-                            bonus.add("Новая карта");
-                            cardId.add("Новая карта");
-
-                            children1.add("Новая карта");
-                            codes.add("Новая карта");
-                            money.add("Новая карта");
-                            bonus.add("Новая карта");
-                            cardId.add("Новая карта");
-
-
                             cardAdapter = new CardAdapter(c, children1,codes,money,bonus,cardId);
                             simpleList.setAdapter(cardAdapter);
 
@@ -307,13 +191,13 @@ public class RealCardFragment extends Fragment {
         });
     }
 
-    public void doGetProfileRequest(){
+    private void doGetProfileRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
                 .scheme("http")
-                .host("192.168.252.199")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("user")
                 .addPathSegment("get_info")
                 .build();
@@ -340,15 +224,12 @@ public class RealCardFragment extends Fragment {
 
                 if (getActivity() != null) {
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -383,13 +264,13 @@ public class RealCardFragment extends Fragment {
         });
     }
 
-    public void getVisits(){
+    private void getVisits(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
+                .scheme("https")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("user")
                 .addPathSegment("visits")
                 .build();
@@ -418,7 +299,7 @@ public class RealCardFragment extends Fragment {
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {

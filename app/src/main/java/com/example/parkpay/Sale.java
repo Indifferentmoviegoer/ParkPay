@@ -1,14 +1,11 @@
 package com.example.parkpay;
 
-import java.util.ArrayList;
-import java.util.List;
-
 class Sale {
-    String name;
-    String text;
-    String dateStart;
-    String dateEnd;
-    String photo;
+    final String name;
+    final String text;
+    final String dateStart;
+    final String dateEnd;
+    private String photo;
 
     Sale(
             String name,

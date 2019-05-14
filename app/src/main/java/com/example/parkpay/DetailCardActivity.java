@@ -8,15 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -44,54 +42,52 @@ import okhttp3.Response;
 
 public class DetailCardActivity extends AppCompatActivity {
 
-    TextView numberCard;
-    TextView moneyCard;
-    TextView moneyTitleCard;
-    TextView bonusCard;
-    TextView bonusTitleCard;
-    TextView titleDetailCard;
-    ListView history;
-    TextView nameCard;
-    String cardNumber="";
+    private TextView numberCard;
+    private TextView moneyCard;
+    private TextView moneyTitleCard;
+    private TextView bonusCard;
+    private TextView bonusTitleCard;
+    private TextView titleDetailCard;
+    private ListView history;
+    private TextView nameCard;
+    private String cardNumber="";
     //Button deleteCard;
-    ImageView payCard;
+    private ImageView payCard;
     //Button editCard;
-    ImageView updateCard;
-    ImageView imageCard;
-    ImageView imageDelete;
-    ImageView imageEdit;
-    ImageView closeDetail;
-    Context c;
-    ProgressBar progressBarCard;
+    private ImageView updateCard;
+    private ImageView imageCard;
+    private ImageView imageDelete;
+    private ImageView imageEdit;
+    private ImageView closeDetail;
+    private Context c;
+    private ProgressBar progressBarCard;
 
-    ArrayList<String> nameOperation;
-    ArrayList<String> dateOperation;
-    ArrayList<String> valueOperation;
+    private ArrayList<String> nameOperation;
+    private ArrayList<String> dateOperation;
+    private ArrayList<String> valueOperation;
 
-    ArrayList<String> operationName;
-    ArrayList<String> operationDate;
-    ArrayList<String> operationValue;
+    private ArrayList<String> operationName;
+    private ArrayList<String> operationDate;
+    private ArrayList<String> operationValue;
 
-    HistoryAdapter historyAdapter;
+    private HistoryAdapter historyAdapter;
 
-    SharedPreferences settings;
-    ArrayList<String> child = new ArrayList<String>();
-    ArrayList<String> children2 = new ArrayList<String>();
+    private SharedPreferences settings;
+    private ArrayList<String> child = new ArrayList<>();
+    private ArrayList<String> children2 = new ArrayList<>();
 
-    //int groupPosition=10;
-    private Toolbar toolbar;
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
-    public static final String APP_PREFERENCES_CARD_NAME ="cardName";
-    public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
-    public static final String APP_PREFERENCES_MONEY ="money";
-    public static final String APP_PREFERENCES_BONUS ="bonus";
-    public static final String APP_PREFERENCES_POSITION_CARD ="position";
-    public static final String APP_PREFERENCES_POSITION_GROUP ="group";
-    public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CARDS ="Cards";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
+    private static final String APP_PREFERENCES_CARD_NAME ="cardName";
+    private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
+    private static final String APP_PREFERENCES_MONEY ="money";
+    private static final String APP_PREFERENCES_BONUS ="bonus";
+    private static final String APP_PREFERENCES_POSITION_CARD ="position";
+    private static final String APP_PREFERENCES_POSITION_GROUP ="group";
+    private static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     public static final String APP_PREFERENCES_NAME_OPERATION ="nameOperation";
     public static final String APP_PREFERENCES_DATE_OPERATION ="dateOperation";
     public static final String APP_PREFERENCES_VALUE_OPERATION ="valueOperation";
@@ -107,21 +103,21 @@ public class DetailCardActivity extends AppCompatActivity {
         StrictMode.setThreadPolicy(mypolicy);
 
         c=this;
-        numberCard=(TextView)findViewById(R.id.numberCard);
-        moneyCard=(TextView)findViewById(R.id.moneyCard);
-        moneyTitleCard=(TextView)findViewById(R.id.moneyTitleCard);
-        bonusCard=(TextView)findViewById(R.id.bonusCard);
-        bonusTitleCard=(TextView)findViewById(R.id.bonusTitleCard);
-        titleDetailCard=(TextView)findViewById(R.id.titleDetailCard);
-        nameCard=(TextView)findViewById(R.id.nameCard);
-        history=(ListView)findViewById(R.id.historyList);
-        payCard=(ImageView)findViewById(R.id.payCard);
-        imageDelete=(ImageView)findViewById(R.id.imageDelete);
-        imageEdit=(ImageView) findViewById(R.id.imageEdit);
-        updateCard=(ImageView)findViewById(R.id.updateCard);
-        imageCard=(ImageView)findViewById(R.id.imageCard);
-        closeDetail=(ImageView)findViewById(R.id.closeDetail);
-        progressBarCard=(ProgressBar) findViewById(R.id.progressBarCard);
+        numberCard= findViewById(R.id.numberCard);
+        moneyCard= findViewById(R.id.moneyCard);
+        moneyTitleCard= findViewById(R.id.moneyTitleCard);
+        bonusCard= findViewById(R.id.bonusCard);
+        bonusTitleCard= findViewById(R.id.bonusTitleCard);
+        titleDetailCard= findViewById(R.id.titleDetailCard);
+        nameCard= findViewById(R.id.nameCard);
+        history= findViewById(R.id.historyList);
+        payCard= findViewById(R.id.payCard);
+        imageDelete= findViewById(R.id.imageDelete);
+        imageEdit= findViewById(R.id.imageEdit);
+        updateCard= findViewById(R.id.updateCard);
+        imageCard= findViewById(R.id.imageCard);
+        closeDetail= findViewById(R.id.closeDetail);
+        progressBarCard= findViewById(R.id.progressBarCard);
 
         numberCard.setVisibility(View.INVISIBLE);
         moneyCard.setVisibility(View.INVISIBLE);
@@ -138,7 +134,8 @@ public class DetailCardActivity extends AppCompatActivity {
         imageCard.setVisibility(View.INVISIBLE);
         closeDetail.setVisibility(View.INVISIBLE);
 
-        toolbar = findViewById(R.id.toolbar);
+        //int groupPosition=10;
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         setListViewHeightBasedOnChildren(history);
@@ -159,13 +156,13 @@ public class DetailCardActivity extends AppCompatActivity {
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //Создаем набор данных для адаптера
-        nameOperation= new ArrayList<String>();
-        dateOperation= new ArrayList<String>();
-        valueOperation = new ArrayList<String>();
+        nameOperation= new ArrayList<>();
+        dateOperation= new ArrayList<>();
+        valueOperation = new ArrayList<>();
 
-        operationName= new ArrayList<String>();
-        operationDate= new ArrayList<String>();
-        operationValue= new ArrayList<String>();
+        operationName= new ArrayList<>();
+        operationDate= new ArrayList<>();
+        operationValue= new ArrayList<>();
 
 //        history.invalidateViews();
 
@@ -191,66 +188,40 @@ public class DetailCardActivity extends AppCompatActivity {
         //groupPosition=settings.getInt(APP_PREFERENCES_POSITION_GROUP,0);
         numberCard.setText(cardNumber);
 
-        boolean checkConnection=MainActivity.isOnline(c);
-
-//        if(checkConnection) {
-
         doGetRequest();
 
-//        }
-//        else {
-//            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                    Toast.LENGTH_SHORT).show();
-//        }
+        closeDetail.setOnClickListener(v -> {
 
-        closeDetail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            Intent intent = new Intent(c,
+                    MainActivity.class);
+            startActivity(intent);
 
-                Intent intent = new Intent(c,
-                        MainActivity.class);
-                startActivity(intent);
-
-            }
         });
 
 
-        imageDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imageDelete.setOnClickListener(v -> {
 
-                if(cardNumber!=null){
+            if(cardNumber!=null){
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(c);
-                    builder.setTitle("Удаление карты");
-                    builder.setMessage(Html
-                            .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("Да",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(c);
+                builder.setTitle("Удаление карты");
+                builder.setMessage(Html
+                        .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
+                builder.setCancelable(false);
+                builder.setPositiveButton("Да",
+                        (dialog, id) -> {
 
-                                    Intent i = new Intent(c, MainActivity.class);
+                            Intent i = new Intent(c, MainActivity.class);
 
 //                                    if(groupPosition==0){
 
-                                    if(settings.contains(APP_PREFERENCES_CARDS)){
-                                        child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                                        children2=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
-                                    }
+                            if (settings.contains(APP_PREFERENCES_CARDS)) {
+                                child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
+                                children2 = MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS, settings);
+                            }
 
-                                    boolean checkConnection=MainActivity.isOnline(c);
 
-//                                        if(checkConnection) {
-
-                                    doPostRequest("http://192.168.252.199/card/delete");
-
-//                                        }
-//                                        else {
-//                                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                                                    Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
+                            doPostRequest("https://api.mobile.goldinnfish.com/card/delete");
 //                                    if(groupPosition==1){
 //
 //                                        if(settings.contains(APP_PREFERENCES_VIRTUAL_CARDS)){
@@ -263,73 +234,58 @@ public class DetailCardActivity extends AppCompatActivity {
 //                                        MainActivity.saveArrayList(children2, APP_PREFERENCES_VIRTUAL_CARDS,settings);
 //                                        startActivity(i);
 //                                    }
-                                }
-                            });
-                    builder.setNegativeButton("Нет",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
-                }
+                        });
+                builder.setNegativeButton("Нет",
+                        (dialog, id) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
             }
         });
 
-        imageEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imageEdit.setOnClickListener(v -> {
 
-                Intent intent = new Intent(c,
-                        EditCardActivity.class);
-                startActivity(intent);
-            }
+            Intent intent = new Intent(c,
+                    EditCardActivity.class);
+            startActivity(intent);
         });
 
-        payCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(c,
-                        PayActivity.class);
-                startActivity(intent);
-            }
+        payCard.setOnClickListener(v -> {
+            Intent intent = new Intent(c,
+                    PayActivity.class);
+            startActivity(intent);
         });
 
-        updateCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        updateCard.setOnClickListener(v -> {
 
 //                Toast.makeText(c,"Обновление",Toast.LENGTH_SHORT).show();
 
-                progressBarCard.setVisibility(View.VISIBLE);
-                numberCard.setVisibility(View.INVISIBLE);
-                moneyCard.setVisibility(View.INVISIBLE);
-                moneyTitleCard.setVisibility(View.INVISIBLE);
-                bonusCard.setVisibility(View.INVISIBLE);
-                bonusTitleCard.setVisibility(View.INVISIBLE);
-                titleDetailCard.setVisibility(View.INVISIBLE);
-                nameCard.setVisibility(View.INVISIBLE);
-                history.setVisibility(View.INVISIBLE);
-                payCard.setVisibility(View.INVISIBLE);
-                imageDelete.setVisibility(View.INVISIBLE);
-                imageEdit.setVisibility(View.INVISIBLE);
-                updateCard.setVisibility(View.INVISIBLE);
-                imageCard.setVisibility(View.INVISIBLE);
-                closeDetail.setVisibility(View.INVISIBLE);
+            progressBarCard.setVisibility(View.VISIBLE);
+            numberCard.setVisibility(View.INVISIBLE);
+            moneyCard.setVisibility(View.INVISIBLE);
+            moneyTitleCard.setVisibility(View.INVISIBLE);
+            bonusCard.setVisibility(View.INVISIBLE);
+            bonusTitleCard.setVisibility(View.INVISIBLE);
+            titleDetailCard.setVisibility(View.INVISIBLE);
+            nameCard.setVisibility(View.INVISIBLE);
+            history.setVisibility(View.INVISIBLE);
+            payCard.setVisibility(View.INVISIBLE);
+            imageDelete.setVisibility(View.INVISIBLE);
+            imageEdit.setVisibility(View.INVISIBLE);
+            updateCard.setVisibility(View.INVISIBLE);
+            imageCard.setVisibility(View.INVISIBLE);
+            closeDetail.setVisibility(View.INVISIBLE);
 
-                doGetRequest();
-                getHistory("http://192.168.252.199/card/history");
+            doGetRequest();
+            getHistory("http://192.168.252.199/card/history");
 
-            }
         });
 
     }
 
-    public void doPostRequestCardInfo(String url){
+    private void doPostRequestCardInfo(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -361,9 +317,7 @@ public class DetailCardActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+                runOnUiThread(() -> {
 //                        progressBarCard.setVisibility(View.INVISIBLE);
 //                        numberCard.setVisibility(View.VISIBLE);
 //                        moneyCard.setVisibility(View.VISIBLE);
@@ -379,11 +333,10 @@ public class DetailCardActivity extends AppCompatActivity {
 //                        updateCard.setVisibility(View.VISIBLE);
 //                        imageCard.setVisibility(View.VISIBLE);
 //                        closeDetail.setVisibility(View.VISIBLE);
-                    }
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -409,7 +362,7 @@ public class DetailCardActivity extends AppCompatActivity {
                         moneyCard.setText(settings.getString(APP_PREFERENCES_MONEY, ""));
                         bonusCard.setText(settings.getString(APP_PREFERENCES_BONUS, ""));
 
-                        getHistory("http://192.168.252.199/card/history");
+                        getHistory("https://api.mobile.goldinnfish.com/card/history");
 
 //                        progressBarCard.setVisibility(View.INVISIBLE);
 //                        numberCard.setVisibility(View.VISIBLE);
@@ -451,7 +404,7 @@ public class DetailCardActivity extends AppCompatActivity {
         });
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -484,14 +437,11 @@ public class DetailCardActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -543,13 +493,13 @@ public class DetailCardActivity extends AppCompatActivity {
         });
     }
 
-    public void doGetRequest(){
+    private void doGetRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
                 .scheme("http")
-                .host("192.168.252.199")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("card")
                 .addPathSegment("list")
                 .build();
@@ -577,7 +527,7 @@ public class DetailCardActivity extends AppCompatActivity {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -588,7 +538,7 @@ public class DetailCardActivity extends AppCompatActivity {
 
                         JSONArray jsonArray = new JSONArray(jsonData);
 
-                        child = new ArrayList<String>();
+                        child = new ArrayList<>();
 
                         for(int i=0;i<jsonArray.length();i++){
 
@@ -628,7 +578,7 @@ public class DetailCardActivity extends AppCompatActivity {
         });
     }
 
-    public void getHistory(String url) {
+    private void getHistory(String url) {
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -681,7 +631,7 @@ public class DetailCardActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -758,7 +708,7 @@ public class DetailCardActivity extends AppCompatActivity {
         });
     }
 
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
+    private static void setListViewHeightBasedOnChildren(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null)
             return;

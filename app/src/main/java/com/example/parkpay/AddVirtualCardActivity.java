@@ -1,14 +1,12 @@
 package com.example.parkpay;
 
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
 import android.nfc.Tag;
 import android.nfc.tech.MifareClassic;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,10 +17,10 @@ import java.util.Formatter;
 
 public class AddVirtualCardActivity extends AppCompatActivity {
 
-    ImageView addBack;
-    TextView info;
+    private ImageView addBack;
+    private TextView info;
 
-    Context c;
+    private Context c;
 
     private static final String TAG = "myLogs";
 
@@ -33,18 +31,15 @@ public class AddVirtualCardActivity extends AppCompatActivity {
 
         c=this;
 
-        addBack=(ImageView) findViewById(R.id.addBack);
-        info=(TextView)findViewById(R.id.info);
+        addBack= findViewById(R.id.addBack);
+        info= findViewById(R.id.info);
 
-        addBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addBack.setOnClickListener(v -> {
 
-                Intent intent = new Intent(c,
-                        MainActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(c,
+                    MainActivity.class);
+            startActivity(intent);
 
-            }
         });
     }
 
@@ -60,7 +55,7 @@ public class AddVirtualCardActivity extends AppCompatActivity {
         handleIntent(getIntent());
     }
 
-    public void handleIntent(Intent intent) {
+    private void handleIntent(Intent intent) {
         if ((intent.getFlags() & Intent.FLAG_ACTIVITY_LAUNCHED_FROM_HISTORY) == 0) {
             if (NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.getAction()) ||
                     NfcAdapter.ACTION_TECH_DISCOVERED.equals(intent.getAction())) {
@@ -77,11 +72,10 @@ public class AddVirtualCardActivity extends AppCompatActivity {
                     int type = mfc.getType();
                     int sectorCount = mfc.getSectorCount();
                     String cardID = bytesToHexString(mfc.getTag().getId());
-                    String cardIdArr[] = cardID.split(" ");
-                    String reverseCardId = "";
-                    for (int i=0;i < cardIdArr.length;i++)
-                    {
-                        reverseCardId += cardIdArr[i];
+                    String[] cardIdArr = cardID.split(" ");
+                    StringBuilder reverseCardId = new StringBuilder();
+                    for (String s : cardIdArr) {
+                        reverseCardId.append(s);
                     }
 
                     String typeS = "";
@@ -133,7 +127,7 @@ public class AddVirtualCardActivity extends AppCompatActivity {
             }
         }
     }
-    public static String bytesToHexString(byte[] bytes) {
+    private static String bytesToHexString(byte[] bytes) {
         StringBuilder sb = new StringBuilder(bytes.length * 2);
 
         Formatter formatter = new Formatter(sb);

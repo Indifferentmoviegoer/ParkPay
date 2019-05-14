@@ -1,11 +1,10 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,23 +13,25 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 
 public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.AttractionViewHolder>{
 
-    List<Attraction> attractions;
-    private Context context;
+    private final List<Attraction> attractions;
+    private final Context context;
 
-    public static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_PARK_ID ="parkID";
-    public static final String APP_PREFERENCES_LAT ="lat";
-    public static final String APP_PREFERENCES_LNG ="lng";
-    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
+    private static final String APP_PREFERENCES_LAT ="lat";
+    private static final String APP_PREFERENCES_LNG ="lng";
+    private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
     private static final String TAG = "myLogs";
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
     AttractionsAdapter(Context context, List<Attraction> name){
         this.attractions = name;
@@ -57,47 +58,67 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
         attractionViewHolder.price.setText(attractions.get(i).price);
         attractionViewHolder.bonus.setText(attractions.get(i).bonus);
         attractionViewHolder.text.setText(attractions.get(i).text);
-        attractionViewHolder.weight.setText(attractions.get(i).weight);
-        attractionViewHolder.growth.setText(attractions.get(i).growth);
-        attractionViewHolder.ageMin.setText(attractions.get(i).ageMin);
-        attractionViewHolder.ageMax.setText(attractions.get(i).ageMax);
+
+        String weight=attractions.get(i).weight+" кг";
+        String growth=attractions.get(i).growth+" см";
+        String ageMin=attractions.get(i).ageMin+"+ лет";
+
+
+        attractionViewHolder.weight.setText(weight);
+        attractionViewHolder.growth.setText(growth);
+        attractionViewHolder.ageMin.setText(ageMin);
+
+        String levelFear=attractions.get(i).levelFear;
+
+        if(levelFear.contains("низкий")){
+
+            Glide.with(context).load(R.drawable.ic_baby).into(attractionViewHolder.levelFear);
+        }
+
+        else if(levelFear.contains("средний")){
+
+            Glide.with(context).load(R.drawable.ic_family).into(attractionViewHolder.levelFear);
+        }
+
+        else if(levelFear.contains("высокий")){
+
+            Glide.with(context).load(R.drawable.ic_adult).into(attractionViewHolder.levelFear);
+        }
+        else{
+            Glide.with(context).load(R.drawable.ic_family).into(attractionViewHolder.levelFear);
+        }
+//        attractionViewHolder.ageMax.setText(attractions.get(i).ageMax);
 
         Glide.with(context).load(attractions.get(i).getImageUrl()).into(attractionViewHolder.attrPhoto);
 
-        attractionViewHolder.mapAttr.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        attractionViewHolder.mapAttr.setOnClickListener(v -> {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
-                editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
-                editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
-                editor.apply();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
+            editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
+            editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
+            editor.apply();
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
 
-                ((MainActivity) Objects.requireNonNull(context))
-                        .replaceFragments(MapFragment.class);
-            }
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(MapFragment.class);
         });
 
-        attractionViewHolder.map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        attractionViewHolder.map.setOnClickListener(v -> {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
-                editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
-                editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
-                editor.apply();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
+            editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
+            editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
+            editor.apply();
 
-                ((MainActivity) Objects.requireNonNull(context))
-                        .replaceFragments(MapFragment.class);
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(MapFragment.class);
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
-            }
         });
 
     }
@@ -108,39 +129,41 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     public static class AttractionViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
-        TextView attrName;
-        TextView price;
-        TextView bonus;
-        TextView text;
-        TextView weight;
-        TextView growth;
-        TextView ageMin;
-        TextView ageMax;
-        TextView mapAttr;
-        ImageView attrPhoto;
-        ImageView map;
+        final CardView cv;
+        final TextView attrName;
+        final TextView price;
+        final TextView bonus;
+        final TextView text;
+        final TextView weight;
+        final TextView growth;
+        final TextView ageMin;
+//        final TextView ageMax;
+        final TextView mapAttr;
+        final ImageView attrPhoto;
+        final ImageView map;
+        final ImageView levelFear;
 
         AttractionViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cvAttr);
-            attrName = (TextView)itemView.findViewById(R.id.attraction_name);
-            price = (TextView)itemView.findViewById(R.id.price);
-            bonus = (TextView)itemView.findViewById(R.id.bonus);
-            text = (TextView)itemView.findViewById(R.id.text);
-            weight = (TextView)itemView.findViewById(R.id.weight);
-            growth = (TextView)itemView.findViewById(R.id.growth);
-            ageMin = (TextView)itemView.findViewById(R.id.age_min);
-            ageMax = (TextView)itemView.findViewById(R.id.age_max);
-            mapAttr = (TextView)itemView.findViewById(R.id.mapAttr);
-            attrPhoto = (ImageView)itemView.findViewById(R.id.attraction_photo);
-            map = (ImageView)itemView.findViewById(R.id.attraction_id);
+            cv = itemView.findViewById(R.id.cvAttr);
+            attrName = itemView.findViewById(R.id.attraction_name);
+            price = itemView.findViewById(R.id.price);
+            bonus = itemView.findViewById(R.id.bonus);
+            text = itemView.findViewById(R.id.text);
+            weight = itemView.findViewById(R.id.weight);
+            growth = itemView.findViewById(R.id.growth);
+            ageMin = itemView.findViewById(R.id.age_min);
+//            ageMax = itemView.findViewById(R.id.age_max);
+            mapAttr = itemView.findViewById(R.id.mapAttr);
+            attrPhoto = itemView.findViewById(R.id.attraction_photo);
+            map = itemView.findViewById(R.id.attraction_id);
+            levelFear = itemView.findViewById(R.id.levelFear);
         }
 
     }

@@ -13,18 +13,18 @@
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 style="@style/Toolbar">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -50,9 +50,9 @@
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imageProfile"
@@ -70,16 +70,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/toolbar" />
 
-
-            <!--<ImageView-->
-                <!--android:id="@+id/imageProfile"-->
-                <!--android:layout_width="80dp"-->
-                <!--android:layout_height="59dp"-->
-                <!--app:layout_constraintStart_toStartOf="parent"-->
-                <!--app:layout_constraintTop_toBottomOf="@id/toolbar"-->
-                <!--android:layout_marginStart="0dp"-->
-                <!--android:layout_marginTop="5dp"-->
-                <!--app:srcCompat="@drawable/ic_account" />-->
 
             <TextView
                 android:id="@+id/nameProfile"
@@ -103,28 +93,70 @@
                 app:layout_constraintTop_toBottomOf="@id/nameProfile"
                 android:text="@string/editProfile" />
 
+            <View
+                android:id="@+id/topNot"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/grey"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/imageProfile"
+                />
+
             <Switch
                 android:id="@+id/turnNotification"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/imageProfile"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/imageProfile"
+                app:layout_constraintTop_toBottomOf="@id/topNot"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:text="@string/turnNotification" />
 
-            <com.google.android.gms.ads.doubleclick.PublisherAdView
-                
-                android:id="@+id/result"
+            <View
+                android:id="@+id/topFriend"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/result"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/grey"
                 app:layout_constraintTop_toBottomOf="@id/turnNotification"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/inviteFriend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+                android:textColor="@color/black"
+                android:text="@string/invite"
+                app:layout_constraintTop_toBottomOf="@id/topFriend"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/share"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginEnd="10dp"
+                android:foregroundGravity="center_vertical"
+                app:layout_constraintBottom_toTopOf="@id/bottomFriend"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/topFriend"
+                android:src="@drawable/ic_share"
+                />
+
+            <View
+                android:id="@+id/bottomFriend"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/grey"
+                app:layout_constraintTop_toBottomOf="@id/inviteFriend"
+                app:layout_constraintStart_toStartOf="parent"
                 />
 
             <TextView
@@ -132,30 +164,35 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                app:layout_constraintTop_toBottomOf="@id/result"
+                app:layout_constraintBottom_toTopOf="@id/result"
                 app:layout_constraintStart_toStartOf="parent"
                 android:textColor="@color/black"
-                android:text="Количество посещений:" />
+                />
 
             <TextView
                 android:id="@+id/quantityVisits"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:text="0"
                 android:textColor="@color/black"
-                app:layout_constraintTop_toBottomOf="@id/result"
+                app:layout_constraintBottom_toTopOf="@id/result"
                 app:layout_constraintStart_toEndOf="@id/quantityVisitsTitle" />
 
-            <!--<Button-->
-                <!--android:id="@+id/signOut"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:text="@string/signOut"-->
-                <!--app:layout_constraintEnd_toEndOf="parent"-->
-                <!--app:layout_constraintTop_toTopOf="parent"/>-->
+            <com.google.android.gms.ads.doubleclick.PublisherAdView
 
-        </android.support.constraint.ConstraintLayout>
+                android:id="@+id/result"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                ads:adSize="BANNER"
+                ads:adUnitId="@string/result"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
 </RelativeLayout>

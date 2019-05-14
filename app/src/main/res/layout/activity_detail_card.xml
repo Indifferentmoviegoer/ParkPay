@@ -13,18 +13,18 @@
         android:fillViewport="true"
         >
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 style="@style/Toolbar">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -64,9 +64,9 @@
                         android:src="@drawable/ic_update"
                         />
 
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
-            </android.support.v7.widget.Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
             <ImageView
                 android:id="@+id/imageCard"
@@ -136,48 +136,53 @@
                 />
 
             <TextView
-                android:id="@+id/moneyTitleCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="160dp"
-                android:text="@string/titleMoneyCard"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@id/imageCard"
-                app:layout_constraintEnd_toEndOf="@id/imageCard"
-                app:layout_constraintTop_toBottomOf="@id/numberCard"/>
-
-            <TextView
                 android:id="@+id/moneyCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="30dp"
+                android:textSize="18sp"
+                android:text="100 000"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/imageCard"
+                app:layout_constraintTop_toBottomOf="@id/numberCard"/>
+
+
+            <TextView
+                android:id="@+id/moneyTitleCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:text="Р"
+                android:textSize="18sp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="30dp"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
+                app:layout_constraintStart_toEndOf="@id/moneyCard"
                 app:layout_constraintTop_toBottomOf="@id/numberCard" />
-
-            <TextView
-                android:id="@+id/bonusTitleCard"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="160dp"
-                android:text="@string/titleBonusCard"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@id/imageCard"
-                app:layout_constraintEnd_toEndOf="@id/imageCard"
-                app:layout_constraintTop_toBottomOf="@id/moneyTitleCard"/>
 
             <TextView
                 android:id="@+id/bonusCard"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
+                android:layout_marginStart="30dp"
+                android:text="10"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@id/imageCard"
+                app:layout_constraintTop_toBottomOf="@id/moneyCard"/>
+
+            <TextView
+                android:id="@+id/bonusTitleCard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Б"
+                android:textSize="18sp"
+                android:layout_marginStart="5dp"
                 android:layout_marginEnd="20dp"
                 android:textColor="@color/white"
-                app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
-                app:layout_constraintTop_toBottomOf="@id/moneyCard" />
+                app:layout_constraintStart_toEndOf="@id/bonusCard"
+                app:layout_constraintTop_toBottomOf="@id/moneyTitleCard" />
 
             <ImageView
                 android:id="@+id/payCard"
@@ -212,7 +217,7 @@
                 app:layout_constraintTop_toBottomOf="@id/imageCard"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                />
+                tools:ignore="NestedScrolling" />
 
             <ProgressBar
                 android:id="@+id/progressBarCard"
@@ -228,6 +233,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </RelativeLayout>

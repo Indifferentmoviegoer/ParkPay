@@ -1,15 +1,13 @@
 package com.example.parkpay;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -40,26 +38,27 @@ import okhttp3.Response;
 
 public class AddCardActivity extends AppCompatActivity {
 
-    Button buttonAddCard;
-    EditText numberAddCard;
-    EditText nameAddCard;
-    ImageView backAdd;
+    private AppCompatButton buttonAddCard;
+    private EditText numberAddCard;
+    private EditText nameAddCard;
+    private ImageView backAdd;
+    private ImageView scan;
 
 
-    Context c;
-    SharedPreferences settings;
-    String numberCard;
-    String nameCard;
-    ArrayList<String> child;
+    private Context c;
+    private SharedPreferences settings;
+    private String numberCard;
+    private String nameCard;
+    private ArrayList<String> child;
 
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARD ="Card";
-    public static final String APP_PREFERENCES_CARDS ="Cards";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CARD ="Card";
+    private static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_MSG ="Message";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String APP_PREFERENCES_MSG ="Message";
     private static final String TAG = "myLogs";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -69,96 +68,76 @@ public class AddCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_card);
 
         c=this;
-        buttonAddCard=(Button)findViewById(R.id.buttonAddCard);
-        numberAddCard=(EditText)findViewById(R.id.numberAddCard);
-        nameAddCard=(EditText)findViewById(R.id.nameAddCard);
-        backAdd=(ImageView) findViewById(R.id.backAdd);
+        buttonAddCard=findViewById(R.id.buttonAddCard);
+        numberAddCard=findViewById(R.id.numberAddCard);
+        nameAddCard=findViewById(R.id.nameAddCard);
+        backAdd=findViewById(R.id.backAdd);
+        scan=findViewById(R.id.scan);
 
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        scan.setOnClickListener(view -> {
+
+            IntentIntegrator integrator = new IntentIntegrator(AddCardActivity.this);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+            integrator.setPrompt("Сканирование QR кода");
+            integrator.initiateScan();
+        });
 
         if(settings.contains(APP_PREFERENCES_CARD)){
             numberAddCard.setText(settings.getString(APP_PREFERENCES_CARD, ""));
         }
 
-        backAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        backAdd.setOnClickListener(v -> {
 
-                Intent intent = new Intent(c,
-                        MainActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(c,
+                    MainActivity.class);
+            startActivity(intent);
 
-            }
         });
 
-        buttonAddCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        buttonAddCard.setOnClickListener(v -> {
 
-                child = new ArrayList<String>();
+            child = new ArrayList<>();
 
-                numberCard=numberAddCard.getText().toString();
-                nameCard=nameAddCard.getText().toString();
+            numberCard=numberAddCard.getText().toString();
+            nameCard=nameAddCard.getText().toString();
 
-                    if(settings.contains(APP_PREFERENCES_CARDS)){
+                if(settings.contains(APP_PREFERENCES_CARDS)){
 
-                        child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                    }
+                    child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+                }
 
-                    if(numberCard.equals("") || numberCard.length() == 0){
+                if(numberCard.equals("") || numberCard.length() == 0){
 
-                        Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                    Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
+                            Toast.LENGTH_SHORT).show();
+                }
 
-                    else {
+                else {
 
-                        if(numberCard.length() == 16&&!numberCard.contains(" ")&&
-                                numberCard.matches("^[a-zA-Z0-9]+$"))
-                        {
-                            boolean checkConnection=MainActivity.isOnline(c);
+                    if(numberCard.length() == 16&&!numberCard.contains(" ")&&
+                            numberCard.matches("^[a-zA-Z0-9]+$"))
+                    {
+                        boolean checkConnection=MainActivity.isOnline(c);
 
 //                            if(checkConnection) {
 
-                                doPostRequest("http://192.168.252.199/card/add");
+                            doPostRequest("https://api.mobile.goldinnfish.com/card/add");
 //                            }
 //                            else {
 //                                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
 //                                        Toast.LENGTH_SHORT).show();
 //                            }
-                        }
-
-                        else {
-                            Toast.makeText(getApplicationContext(),
-                                    "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
-                                    Toast.LENGTH_SHORT).show();
-                        }
                     }
-            }
-        });
 
-        numberAddCard.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (numberAddCard.getRight() - numberAddCard.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                        IntentIntegrator integrator = new IntentIntegrator(AddCardActivity.this);
-                        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-                        integrator.setPrompt("Сканирование QR кода");
-                        integrator.initiateScan();
-
-                        return true;
+                    else {
+                        Toast.makeText(getApplicationContext(),
+                                "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 }
-                return false;
-            }
         });
     }
     @Override
@@ -196,7 +175,7 @@ public class AddCardActivity extends AppCompatActivity {
         }
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -225,14 +204,11 @@ public class AddCardActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull Call call, @NotNull IOException e) {
                 Log.v("TAG", Objects.requireNonNull(call.request().body()).toString());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 

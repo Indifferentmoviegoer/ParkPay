@@ -1,12 +1,11 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,23 +14,25 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 import java.util.Objects;
 
 public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHolder>{
 
-    public static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PARK_ID ="parkID";
+    private static final String APP_PREFERENCES_PARK_ID ="parkID";
     public static final String APP_PREFERENCES_LAT ="lat";
-    public static final String APP_PREFERENCES_LNG ="lng";
-    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
+    private static final String APP_PREFERENCES_LNG ="lng";
+    private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
     private static final String TAG = "myLogs";
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
-    List<Park> parks;
-    private Context context;
+    private final List<Park> parks;
+    private final Context context;
 
     ParksAdapter(Context context,List<Park> name){
         this.parks = name;
@@ -58,50 +59,51 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
 
         Glide.with(context).load(parks.get(i).getImageUrl()).into(parkViewHolder.parkPhoto);
 
-        parkViewHolder.cv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        parkViewHolder.cv.setOnClickListener(v -> {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_PARK_ID,parks.get(i).parkId);
-                editor.apply();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_PARK_ID,parks.get(i).parkId);
+            editor.apply();
 
-                ((MainActivity) Objects.requireNonNull(context))
-                        .replaceFragments(AttractionsFragment.class);
-            }
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(AttractionsFragment.class);
         });
 
-        parkViewHolder.parkId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        parkViewHolder.more.setOnClickListener(v -> {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
-                editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-                editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-                editor.apply();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_PARK_ID,parks.get(i).parkId);
+            editor.apply();
 
-                ((MainActivity) Objects.requireNonNull(context))
-                        .replaceFragments(MapFragment.class);
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(AttractionsFragment.class);
+        });
+
+        parkViewHolder.parkId.setOnClickListener(v -> {
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
+            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+            editor.apply();
+
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(MapFragment.class);
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
-            }
         });
 
-        parkViewHolder.map.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        parkViewHolder.map.setOnClickListener(v -> {
 
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
-                editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-                editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-                editor.apply();
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
+            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+            editor.apply();
 
-                ((MainActivity) Objects.requireNonNull(context))
-                        .replaceFragments(MapFragment.class);
-            }
+            ((MainActivity) Objects.requireNonNull(context))
+                    .replaceFragments(MapFragment.class);
         });
 
     }
@@ -112,25 +114,27 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     public static class ParkViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
-        TextView parkName;
-        TextView map;
-        ImageView parkPhoto;
-        ImageView parkId;
+        final CardView cv;
+        final TextView parkName;
+        final TextView map;
+        final TextView more;
+        final ImageView parkPhoto;
+        final ImageView parkId;
 
         ParkViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cvParks);
-            parkName = (TextView)itemView.findViewById(R.id.park_name);
-            map = (TextView)itemView.findViewById(R.id.map);
-            parkPhoto = (ImageView)itemView.findViewById(R.id.park_photo);
-            parkId = (ImageView)itemView.findViewById(R.id.park_id);
+            cv = itemView.findViewById(R.id.cvParks);
+            parkName = itemView.findViewById(R.id.park_name);
+            map = itemView.findViewById(R.id.map);
+            parkPhoto = itemView.findViewById(R.id.park_photo);
+            parkId = itemView.findViewById(R.id.park_id);
+            more = itemView.findViewById(R.id.more);
         }
 
     }

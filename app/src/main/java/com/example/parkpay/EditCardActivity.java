@@ -1,15 +1,13 @@
 package com.example.parkpay;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -39,24 +37,25 @@ import okhttp3.Response;
 
 public class EditCardActivity extends AppCompatActivity {
 
-    EditText editCodeCard;
-    EditText editNameCard;
-    Button editCardButton;
+    private EditText editCodeCard;
+    private EditText editNameCard;
+    private AppCompatButton editCardButton;
+    private ImageView scanEdit;
 
-    String codeCard;
-    String nameCard;
-    ImageView backEdit;
+    private String codeCard;
+    private String nameCard;
+    private ImageView backEdit;
 
-    Context c;
-    SharedPreferences settings;
+    private Context c;
+    private SharedPreferences settings;
     static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
-    public static final String APP_PREFERENCES_CARD_NAME ="cardName";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_MSG ="Msg";
-    public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
+    private static final String APP_PREFERENCES_CARD_NAME ="cardName";
+    private static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String APP_PREFERENCES_MSG ="Msg";
+    private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
     private static final String TAG = "myLogs";
 
     @SuppressLint("ClickableViewAccessibility")
@@ -65,71 +64,54 @@ public class EditCardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_card);
 
-        editCodeCard=(EditText)findViewById(R.id.editCodeCard);
-        editNameCard=(EditText)findViewById(R.id.editNameCard);
-        editCardButton=(Button)findViewById(R.id.editCardButton);
-        backEdit=(ImageView) findViewById(R.id.backEdit);
+        editCodeCard= findViewById(R.id.editCodeCard);
+        editNameCard= findViewById(R.id.editNameCard);
+        editCardButton= findViewById(R.id.editCardButton);
+        backEdit= findViewById(R.id.backEdit);
+        scanEdit= findViewById(R.id.scanEdit);
+
+
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
+
+        scanEdit.setOnClickListener(view -> {
+
+            IntentIntegrator integrator = new IntentIntegrator(EditCardActivity.this);
+            integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+            integrator.setPrompt("Сканирование QR кода");
+            integrator.initiateScan();
+
+        });
 
 
         if(settings.contains(APP_PREFERENCES_CARD_NAME)){
             editNameCard.setText(settings.getString(APP_PREFERENCES_CARD_NAME, ""));
         }
 
-        backEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        backEdit.setOnClickListener(v -> {
 
-                Intent intent = new Intent(c,
-                        DetailCardActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(c,
+                    DetailCardActivity.class);
+            startActivity(intent);
 
-            }
         });
 
-        editCardButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        editCardButton.setOnClickListener(v -> {
 
-                codeCard=editCodeCard.getText().toString();
-                nameCard=editNameCard.getText().toString();
+            codeCard=editCodeCard.getText().toString();
+            nameCard=editNameCard.getText().toString();
 
-                boolean checkConnection=MainActivity.isOnline(c);
+            boolean checkConnection=MainActivity.isOnline(c);
 
-//                if(checkConnection) {
+                if(checkConnection) {
 
-                doPostRequest("http://192.168.252.199/card/edit");
+            doPostRequest("https://api.mobile.goldinnfish.com/card/edit");
 
-//                }
-//                else {
-//                    Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                            Toast.LENGTH_SHORT).show();
-//                }
-            }
-        });
-
-        editCodeCard.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
-
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (editCodeCard.getRight() - editCodeCard.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
-
-                        IntentIntegrator integrator = new IntentIntegrator(EditCardActivity.this);
-                        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
-                        integrator.setPrompt("Сканирование QR кода");
-                        integrator.initiateScan();
-
-                        return true;
-                    }
                 }
-                return false;
-            }
+                else {
+                    Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
         });
     }
 
@@ -167,7 +149,7 @@ public class EditCardActivity extends AppCompatActivity {
         }
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -202,14 +184,11 @@ public class EditCardActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 

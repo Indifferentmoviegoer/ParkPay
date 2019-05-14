@@ -1,28 +1,26 @@
 package com.example.parkpay;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -36,7 +34,6 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -45,18 +42,19 @@ import okhttp3.Response;
 
 public class AttractionsFragment extends Fragment {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PARK_ID ="parkID";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
-    RecyclerView rv;
-    ProgressBar progressBarAttractions;
+    private RecyclerView rv;
+    private ProgressBar progressBarAttractions;
+    private SwipeRefreshLayout swipeAttr;
 
     private List<Attraction> attr;
 
-    SharedPreferences settings;
-    Context c;
+    private SharedPreferences settings;
+    private Context c;
 
     @Nullable
     @Override
@@ -70,12 +68,11 @@ public class AttractionsFragment extends Fragment {
 
         //simpleList = (ListView)view.findViewById(R.id.parks);
 
+        progressBarAttractions= view.findViewById(R.id.progressBarAttractions);
+        rv = view.findViewById(R.id.attrs);
+        swipeAttr = view.findViewById(R.id.swipeAttr);
 
-        settings= Objects.requireNonNull(this.getActivity())
-                .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        progressBarAttractions=(ProgressBar) view.findViewById(R.id.progressBarAttractions);
-        rv = (RecyclerView)view.findViewById(R.id.rvParks);
+        swipeAttr.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -88,96 +85,35 @@ public class AttractionsFragment extends Fragment {
         LinearLayoutManager llm = new LinearLayoutManager(c);
         rv.setLayoutManager(llm);
 
-        attr = new ArrayList<>();
-
-        attr.add(new Attraction(
-                "1",
-                "1",
-                "https://farikqwerty.000webhostapp.com/pic/Samira.jpg",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                0.1f,
-                0.1f
-        ));
-
-        attr.add(new Attraction(
-                "2",
-                "2",
-                "https://farikqwerty.000webhostapp.com/pic/sima.jpg",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                0.1f,
-                0.1f
-        ));
-
-        attr.add(new Attraction(
-                "3",
-                "3",
-                "https://farikqwerty.000webhostapp.com/pic/sima.jpg",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                0.1f,
-                0.1f
-        ));
-
-        attr.add(new Attraction(
-                "4",
-                "4",
-                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                0.1f,
-                0.1f
-        ));
 
 
-        attr.add(new Attraction(
-                "5",
-                "5",
-                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                "s",
-                0.1f,
-                0.1f
-        ));
+        swipeAttr.setOnRefreshListener(() -> {
 
-        AttractionsAdapter adapter = new AttractionsAdapter(c,attr);
-        rv.setAdapter(adapter);
+            new Handler().postDelayed(() -> {
 
-        rv.setVisibility(View.VISIBLE);
-        progressBarAttractions.setVisibility(View.INVISIBLE);
+                swipeAttr.setRefreshing(false);
 
-        //getAttr("http://192.168.252.199/attr/list");
+                attr = new ArrayList<>();
+
+                rv.setVisibility(View.INVISIBLE);
+
+                getAttr("https://api.mobile.goldinnfish.com/attr/list");
+
+                AttractionsAdapter adapter = new AttractionsAdapter(c,attr);
+                rv.setAdapter(adapter);
+
+                rv.setVisibility(View.VISIBLE);
+                progressBarAttractions.setVisibility(View.INVISIBLE);
+            }, 5000);
+        });
+
+//        AttractionsAdapter adapter = new AttractionsAdapter(c,attr);
+//        rv.setAdapter(adapter);
+//
+//        rv.setVisibility(View.VISIBLE);
+//        progressBarAttractions.setVisibility(View.INVISIBLE);
+
+        getAttr("https://api.mobile.goldinnfish.com/attr/list");
 
 
         return view;
@@ -216,15 +152,12 @@ public class AttractionsFragment extends Fragment {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -238,6 +171,8 @@ public class AttractionsFragment extends Fragment {
                             }
 
                             JSONArray jsonArray = new JSONArray(jsonData);
+
+                            attr = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -257,6 +192,16 @@ public class AttractionsFragment extends Fragment {
                                 Log.d(TAG, Jobject.getString("lat"));
                                 Log.d(TAG, Jobject.getString("lng"));
 
+                                String lat=Jobject.getString("lat");
+                                String lng=Jobject.getString("lng");
+
+                                if(lat.contains("null")){
+                                    lat="0.0";
+                                }
+                                if(lng.contains("null")){
+                                    lng="0.0";
+                                }
+
                                 attr.add(new Attraction(
                                         Jobject.getString("atr_id"),
                                         Jobject.getString("rep_name"),
@@ -269,8 +214,8 @@ public class AttractionsFragment extends Fragment {
                                         Jobject.getString("age_min"),
                                         Jobject.getString("age_max"),
                                         Jobject.getString("level_fear"),
-                                        Float.parseFloat(Jobject.getString("lat")),
-                                        Float.parseFloat(Jobject.getString("lng"))
+                                        Float.parseFloat(lat),
+                                        Float.parseFloat(lng)
                                 ));
 
                             }

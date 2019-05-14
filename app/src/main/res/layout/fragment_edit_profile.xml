@@ -7,18 +7,18 @@
     android:fillViewport="true"
     tools:context=".EditProfileFragment">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             style="@style/Toolbar">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -57,9 +57,9 @@
                     android:src="@drawable/ic_accept"
                     />
 
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/photoProfile"
@@ -99,7 +99,8 @@
             android:inputType="text"
             app:layout_constraintTop_toBottomOf="@id/name_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/mail_label"
@@ -116,7 +117,8 @@
             android:inputType="textEmailAddress"
             app:layout_constraintTop_toBottomOf="@id/mail_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/number_label"
@@ -133,7 +135,8 @@
             android:inputType="phone"
             app:layout_constraintTop_toBottomOf="@id/number_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            android:importantForAutofill="no" />
 
         <TextView
             android:id="@+id/dateBirthday_label"
@@ -151,7 +154,10 @@
             android:drawablePadding="12dp"
             app:layout_constraintTop_toBottomOf="@id/dateBirthday_label"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="LabelFor"
+            android:importantForAutofill="no"
+            android:inputType="" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

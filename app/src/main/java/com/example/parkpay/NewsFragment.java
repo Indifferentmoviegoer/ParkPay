@@ -2,12 +2,16 @@ package com.example.parkpay;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -36,19 +41,20 @@ import okhttp3.Response;
 
 public class NewsFragment extends Fragment {
 
-    RecyclerView rv;
-    ProgressBar progressBarNews;
-    Context c;
+    private RecyclerView rv;
+    private ProgressBar progressBarNews;
+    private SwipeRefreshLayout swipeNews;
+    private Context c;
 
-    String[] news = {"Новости", "Акции"};
+    private final String[] news = {"Новости", "Акции"};
 
     private List<News> persons;
     private List<Sale> sales;
 
-    public static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARD ="Card";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    SharedPreferences settings;
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private SharedPreferences settings;
 
     private static final String TAG = "myLogs";
 
@@ -58,8 +64,11 @@ public class NewsFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_news,container,false);
 
-        progressBarNews=(ProgressBar) view.findViewById(R.id.progressBarNews);
-        rv = (RecyclerView)view.findViewById(R.id.rv);
+        progressBarNews= view.findViewById(R.id.progressBarNews);
+        rv = view.findViewById(R.id.rv);
+        swipeNews = view.findViewById(R.id.swipeNews);
+
+        swipeNews.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -68,9 +77,9 @@ public class NewsFragment extends Fragment {
 
         c=getContext();
 
-        Spinner spinner = (Spinner) view.findViewById(R.id.newsTitle);
+        Spinner spinner = view.findViewById(R.id.newsTitle);
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-        ArrayAdapter<String> adapterNews = new ArrayAdapter<String>(c, R.layout.spinner_item, news);
+        ArrayAdapter<String> adapterNews = new ArrayAdapter<>(c, R.layout.spinner_item, news);
         // Определяем разметку для использования при выборе элемента
         adapterNews.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
@@ -81,11 +90,44 @@ public class NewsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
 
+//                    boolean checkConnection=MainActivity.isOnline(c);
+//
+//                    if(checkConnection){
                     getNews();
+//                    }
+//                    else {
+//                        Toast.makeText(c, "Отсутствует интернет соединение!",
+//                                Toast.LENGTH_SHORT).show();
+//                    }
+
+                    swipeNews.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+
+                        swipeNews.setRefreshing(false);
+
+
+//                        if(checkConnection){
+
+                        getNews();
+
+//                        }
+//                        else {
+//                            Toast.makeText(c, "Отсутствует интернет соединение!",
+//                                    Toast.LENGTH_SHORT).show();
+//                        }
+
+                    }, 5000));
                 }
                 if(position==1){
 
                     getSales();
+
+                    swipeNews.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+
+                        swipeNews.setRefreshing(false);
+
+                        getSales();
+
+                    }, 5000));
                 }
             }
 
@@ -101,19 +143,27 @@ public class NewsFragment extends Fragment {
         rv.setLayoutManager(llm);
 
         //initializeData();
-        getNews();
 
+//        boolean checkConnection=MainActivity.isOnline(c);
+//
+//        if(checkConnection){
+            getNews();
+//        }
+//        else {
+//            Toast.makeText(c, "Отсутствует интернет соединение!",
+//                    Toast.LENGTH_SHORT).show();
+//        }
 
         return view;
     }
 
-    public void getNews(){
+    private void getNews(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
+                .scheme("https")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("news")
                 .addPathSegment("list")
                 .build();
@@ -122,9 +172,10 @@ public class NewsFragment extends Fragment {
 
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization","Bearer "+
-                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, ""))
+                )
                 .method("GET", null)
                 .build();
         Call call = client.newCall(request);
@@ -142,7 +193,7 @@ public class NewsFragment extends Fragment {
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -165,7 +216,7 @@ public class NewsFragment extends Fragment {
                                 Log.d(TAG, Jobject.getString("image"));
                                 Log.d(TAG, Jobject.getString("date"));
                                 Log.d(TAG, Jobject.getString("text"));
-                                Log.d(TAG, Jobject.getString("link_sourc"));
+                                Log.d(TAG, Jobject.getString("link_source"));
 
                                 persons.add(new News(
                                         Jobject.getString("title"),
@@ -192,22 +243,23 @@ public class NewsFragment extends Fragment {
         });
     }
 
-    public void getSales(){
+    private void getSales(){
 
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
+                .scheme("https")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("stocks")
                 .addPathSegment("list")
                 .build();
 
         Log.d(TAG,mySearchUrl.toString());
+        Log.d(TAG,Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")));
 
         final Request request = new Request.Builder()
                 .url(mySearchUrl)
-                .addHeader("Content-Type", "application/json; charset=utf-8")
+                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
                 .method("GET", null)
@@ -227,7 +279,7 @@ public class NewsFragment extends Fragment {
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {

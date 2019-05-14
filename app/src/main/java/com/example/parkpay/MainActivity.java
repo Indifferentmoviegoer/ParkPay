@@ -1,22 +1,18 @@
 package com.example.parkpay;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,13 +37,13 @@ import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PASSWORD ="Password";
-    public static final String APP_PREFERENCES_LOGIN ="Login";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_PASSWORD ="Password";
+    private static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
-    SharedPreferences settings;
-    BottomNavigationViewEx bottomNav;
+    private SharedPreferences settings;
+    private BottomNavigationViewEx bottomNav;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         overridePendingTransition(0, 0);
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        bottomNav = (BottomNavigationViewEx)findViewById(R.id.bottom_navigation);
+        bottomNav = findViewById(R.id.bottom_navigation);
 
         bottomNav.setIconSize(25,25);
         bottomNav.setTextVisibility(false);
@@ -71,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         //I added this if statement to keep the selected fragment when rotating the device
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new CardFragment()).commit();
+                    new RealCardFragment()).commit();
         }
 
         if(settings.contains(APP_PREFERENCES_TOKEN)){
@@ -81,36 +77,33 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
+    private final BottomNavigationView.OnNavigationItemSelectedListener navListener =
+            item -> {
+                Fragment selectedFragment = null;
 
-                    switch (item.getItemId()) {
-                        case R.id.nav_cart:
-                            selectedFragment = new CardFragment();
-                            break;
-                        case R.id.nav_map:
-                            selectedFragment = new ParksFragment();
-                            break;
-                        case R.id.nav_camera:
-                            selectedFragment = new CameraFragment();
-                            break;
-                        case R.id.nav_news:
-                            selectedFragment = new NewsFragment();
-                            break;
-                        case R.id.nav_profile:
-                            selectedFragment = new ProfileFragment();
-                            break;
-                    }
-                    if(selectedFragment!=null) {
-                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                                selectedFragment).commit();
-                    }
-
-                    return true;
+                switch (item.getItemId()) {
+                    case R.id.nav_cart:
+                        selectedFragment = new RealCardFragment();
+                        break;
+                    case R.id.nav_map:
+                        selectedFragment = new ParksFragment();
+                        break;
+                    case R.id.nav_camera:
+                        selectedFragment = new CameraFragment();
+                        break;
+                    case R.id.nav_news:
+                        selectedFragment = new NewsFragment();
+                        break;
+                    case R.id.nav_profile:
+                        selectedFragment = new ProfileFragment();
+                        break;
                 }
+                if(selectedFragment!=null) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).commit();
+                }
+
+                return true;
             };
 
     public void replaceFragments(Class fragmentClass) {
@@ -164,29 +157,17 @@ public class MainActivity extends AppCompatActivity {
         return gson.fromJson(json, type);
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
+    public static boolean isValidEmail(CharSequence target) {
         return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
     }
 
-    protected static boolean isOnline(Context c) {
+    static boolean isOnline(Context c) {
         ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnected()) {
-            return true;
-        } else {
-            return false;
-        }
+        return netInfo != null && netInfo.isConnected();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        bottomNav.setSelectedItemId(R.id.nav_cart);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                new CardFragment()).commit();
-    }
-
-    public void doPostRequestRefresh(String url){
+    private void doPostRequestRefresh(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -216,14 +197,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 

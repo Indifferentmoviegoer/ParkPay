@@ -1,38 +1,23 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.SimpleExpandableListAdapter;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -40,7 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -48,28 +32,27 @@ import java.util.Objects;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ParksFragment extends Fragment {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
     public static final String APP_PREFERENCES_PARK_IDS ="parkIDs";
     public static final String APP_PREFERENCES_PARK_NAMES ="names";
     public static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
-    RecyclerView rv;
-    ProgressBar progressBarParks;
+    private RecyclerView rv;
+    private ProgressBar progressBarParks;
+    private SwipeRefreshLayout sRL;
 
     private List<Park> parks;
 
-    SharedPreferences settings;
-    Context c;
+    private SharedPreferences settings;
+    private Context c;
 
     @Nullable
     @Override
@@ -77,8 +60,11 @@ public class ParksFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_parks,container,false);
 
-        progressBarParks=(ProgressBar) view.findViewById(R.id.progressBarParks);
-        rv = (RecyclerView)view.findViewById(R.id.rvParks);
+        progressBarParks= view.findViewById(R.id.progressBarParks);
+        rv = view.findViewById(R.id.rvParks);
+        sRL = view.findViewById(R.id.sRL);
+
+        sRL.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -87,80 +73,38 @@ public class ParksFragment extends Fragment {
 
         c=getContext();
 
-
         LinearLayoutManager llm = new LinearLayoutManager(c);
         rv.setLayoutManager(llm);
 
-        parks = new ArrayList<>();
-
-        parks.add(new Park(
-                "1",
-                "1",
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                "https://farikqwerty.000webhostapp.com/pic/Samira.jpg"
-        ));
-
-        parks.add(new Park(
-                "2",
-                "2",
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                "https://farikqwerty.000webhostapp.com/pic/sima.jpg"
-        ));
-
-        parks.add(new Park(
-                "3",
-                "3",
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                "https://farikqwerty.000webhostapp.com/pic/sima.jpg"
-        ));
-
-        parks.add(new Park(
-                "4",
-                "4",
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
-        ));
 
 
-        parks.add(new Park(
-                "5",
-                "5",
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                0.1f,
-                "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
-        ));
+        sRL.setOnRefreshListener(() -> {
 
-        ParksAdapter adapter = new ParksAdapter(c,parks);
-        rv.setAdapter(adapter);
+            new Handler().postDelayed(() -> {
 
-        rv.setVisibility(View.VISIBLE);
-        progressBarParks.setVisibility(View.INVISIBLE);
+                sRL.setRefreshing(false);
 
-        //getParks();
+                parks = new ArrayList<>();
+
+                rv.setVisibility(View.INVISIBLE);
+
+                getParks();
+
+                ParksAdapter adapter = new ParksAdapter(c,parks);
+                rv.setAdapter(adapter);
+
+                rv.setVisibility(View.VISIBLE);
+                progressBarParks.setVisibility(View.INVISIBLE);
+            }, 5000);
+        });
+
+//        ParksAdapter adapter = new ParksAdapter(c,parks);
+//        rv.setAdapter(adapter);
+//
+//        rv.setVisibility(View.VISIBLE);
+//        progressBarParks.setVisibility(View.INVISIBLE);
+
+        getParks();
 
 
 
@@ -173,8 +117,8 @@ public class ParksFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
-                .host("192.168.252.199")
+                .scheme("https")
+                .host("api.mobile.goldinnfish.com")
                 .addPathSegment("attr")
                 .addPathSegment("parks")
                 .build();
@@ -199,15 +143,12 @@ public class ParksFragment extends Fragment {
                 }
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -220,7 +161,7 @@ public class ParksFragment extends Fragment {
 
                             JSONArray jsonArray = new JSONArray(jsonData);
 
-
+                            parks = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
 
@@ -235,15 +176,24 @@ public class ParksFragment extends Fragment {
                                 Log.d(TAG, Jobject.getString("lat_center"));
                                 Log.d(TAG, Jobject.getString("lng_center"));
 
+                                String lat=Jobject.getString("lat_center");
+                                String lng=Jobject.getString("lng_center");
+
+                                if(lat.contains("null")){
+                                    lat="0.0";
+                                }
+                                if(lng.contains("null")){
+                                    lng="0.0";
+                                }
                                 parks.add(new Park(
                                         Jobject.getString("park_id"),
                                         Jobject.getString("name"),
-                                        Float.parseFloat(Jobject.getString("lat_top")),
-                                        Float.parseFloat(Jobject.getString("lng_top")),
-                                        Float.parseFloat(Jobject.getString("lat_bottom")),
-                                        Float.parseFloat(Jobject.getString("lng_bottom")),
-                                        Float.parseFloat(Jobject.getString("lat_center")),
-                                        Float.parseFloat(Jobject.getString("lng_center")),
+//                                        Float.parseFloat(Jobject.getString("lat_top")),
+//                                        Float.parseFloat(Jobject.getString("lng_top")),
+//                                        Float.parseFloat(Jobject.getString("lat_bottom")),
+//                                        Float.parseFloat(Jobject.getString("lng_bottom")),
+                                        Float.parseFloat(lat),
+                                        Float.parseFloat(lng),
                                         "https://cms-assets.tutsplus.com/uploads/users/1499/posts/28207/image/ty.JPG"
                                 ));
 

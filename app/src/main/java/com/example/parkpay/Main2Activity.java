@@ -1,13 +1,12 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
@@ -40,19 +39,19 @@ import okhttp3.Response;
 
 public class Main2Activity extends AppCompatActivity implements OnMapReadyCallback {
 
-    MapView mapView;
-    GoogleMap gmap;
-    Context c;
+    private MapView mapView;
+    private GoogleMap gmap;
+    private Context c;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyAkEPoaujC2ZE7bNYANSH4J7XV-UgzVfSY";
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PARK_ID ="parkID";
-    public static final String APP_PREFERENCES_LAT ="lat";
-    public static final String APP_PREFERENCES_LNG ="lng";
-    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
-    SharedPreferences settings;
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_PARK_ID ="parkID";
+    private static final String APP_PREFERENCES_LAT ="lat";
+    private static final String APP_PREFERENCES_LNG ="lng";
+    private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
+    private SharedPreferences settings;
 
     private static final String TAG = "myLogs";
 
@@ -79,7 +78,7 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);
@@ -193,14 +192,11 @@ public class Main2Activity extends AppCompatActivity implements OnMapReadyCallba
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 

@@ -7,16 +7,20 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.design.widget.TextInputLayout;
-import android.support.v7.app.AppCompatActivity;
+
+import com.google.android.material.textfield.TextInputEditText;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,45 +46,51 @@ import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
-//import static com.example.parkpay.QRActivity.ACTION_SCAN;
-
 public class SignUpActivity extends AppCompatActivity {
 
-    Button signUp;
-    EditText login;
-    EditText name;
-    EditText email;
-    EditText pass;
-    EditText confirmPassword;
-    EditText phone;
-    EditText dateBirthday;
-    String loginUser;
-    String nameUser;
-    String emailUser;
-    String passUser;
-    String confirmPasswordUser;
-    String phoneUser;
-    String dateBirthdayUser;
-    TextInputLayout mailLayout;
-    Context c;
+    private AppCompatButton signUp;
+    private TextInputEditText login;
+    private TextInputEditText name;
+    private TextInputEditText email;
+    private TextInputEditText pass;
+    private TextInputEditText confirmPassword;
+    private TextInputEditText phone;
+    private TextInputEditText dateBirthday;
+    private TextInputEditText inviteCode;
+    private ImageButton back;
+    private AppCompatTextView signIn;
 
-    final Calendar myCalendar = Calendar.getInstance();
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_LOGIN ="Login";
-    public static final String APP_PREFERENCES_NAME ="Name";
-    public static final String APP_PREFERENCES_MAIL ="Email";
-    public static final String APP_PREFERENCES_PASS ="Password";
-    public static final String APP_PREFERENCES_NUMBER ="Number";
-    public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_MSG ="Message";
+    private String loginUser;
+    private String nameUser;
+    private String emailUser;
+    private String passUser;
+    private String confirmPasswordUser;
+    private String phoneUser;
+    private String dateBirthdayUser;
+    private String inviteCodeUser;
+    private Context c;
+
+    private final Calendar myCalendar = Calendar.getInstance();
+
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_LOGIN ="Login";
+    private static final String APP_PREFERENCES_NAME ="Name";
+    private static final String APP_PREFERENCES_MAIL ="Email";
+    private static final String APP_PREFERENCES_PASS ="Password";
+    private static final String APP_PREFERENCES_NUMBER ="Number";
+    private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
+    private static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String APP_PREFERENCES_MSG ="Message";
     private static final String TAG = "myLogs";
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        setTheme(R.style.MaterialTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
@@ -91,10 +101,14 @@ public class SignUpActivity extends AppCompatActivity {
         confirmPassword= findViewById(R.id.confirmPassword);
         phone= findViewById(R.id.number);
         dateBirthday= findViewById(R.id.dateBirthday);
+        inviteCode= findViewById(R.id.inviteCode);
         signUp= findViewById(R.id.signUp);
-//        mailLayout=(TextInputLayout) findViewById(R.id.mailLayout);
-//        mailLayout.setHintEnabled(false);
+        back= findViewById(R.id.back);
+        signIn= findViewById(R.id.signIn);
+
+
         c=this;
+
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("___________");
@@ -102,6 +116,22 @@ public class SignUpActivity extends AppCompatActivity {
         mask.setForbidInputWhenFilled(true);
         FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(phone);
+
+        back.setOnClickListener(view -> {
+
+            Intent intent = new Intent(c,
+                    SignInActivity.class);
+            startActivity(intent);
+
+        });
+
+        signIn.setOnClickListener(view -> {
+
+            Intent intent = new Intent(c,
+                    SignInActivity.class);
+            startActivity(intent);
+
+        });
 
         email.addTextChangedListener(new TextWatcher() {
             @Override
@@ -136,83 +166,79 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener date = (view, year, monthOfYear, dayOfMonth) -> {
 
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
         };
 
-        dateBirthday.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+        dateBirthday.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_LEFT = 0;
+            final int DRAWABLE_TOP = 1;
+            final int DRAWABLE_RIGHT = 2;
+            final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                        new DatePickerDialog(c, date, myCalendar
-                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    new DatePickerDialog(
+                            c,
+                            R.style.MyDatePickerDialogTheme,
+                            date,
+                            myCalendar.get(Calendar.YEAR),
+                            myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)
+                    ).show();
 
-                        return true;
-                    }
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
-        signUp.setOnClickListener(new View.OnClickListener() {
+        signUp.setOnClickListener(v -> {
 
-            @Override
-            public void onClick(View v) {
+            loginUser=login.getText().toString();
+            nameUser=name.getText().toString();
+            emailUser=email.getText().toString();
+            passUser=pass.getText().toString();
+            confirmPasswordUser=confirmPassword.getText().toString();
+            phoneUser=phone.getText().toString();
+            dateBirthdayUser=dateBirthday.getText().toString();
+            inviteCodeUser=inviteCode.getText().toString();
 
-                loginUser=login.getText().toString();
-                nameUser=name.getText().toString();
-                emailUser=email.getText().toString();
-                passUser=pass.getText().toString();
-                confirmPasswordUser=confirmPassword.getText().toString();
-                phoneUser=phone.getText().toString();
-                dateBirthdayUser=dateBirthday.getText().toString();
+            if (
+                    loginUser.equals("")||loginUser.length() == 0||
+                    nameUser.equals("")||nameUser.length() == 0||
+                    emailUser.equals("")||emailUser.length() == 0||
+                    passUser.equals("")||passUser.length() == 0||
+                    confirmPasswordUser.equals("")||confirmPasswordUser.length()==0||
+                    inviteCodeUser.equals("")||inviteCodeUser.length()==0
+            )
+            {
+                Toast.makeText(getApplicationContext(),"Заполните все поля ввода!",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
+                if (passUser.equals(confirmPasswordUser)){
 
-                if (loginUser.equals("")||loginUser.length() == 0||
-                        nameUser.equals("")||nameUser.length() == 0||
-                        emailUser.equals("")||emailUser.length() == 0||
-                        passUser.equals("")||passUser.length() == 0||
-                        confirmPasswordUser.equals("")||confirmPasswordUser.length()==0)
-                {
-                    Toast.makeText(getApplicationContext(),"Заполните все поля ввода!",
-                            Toast.LENGTH_SHORT).show();
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+                        if(checkConnection) {
+
+                        doPostRequest("https://api.mobile.goldinnfish.com/register");
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
                 }
-                else
-                {
-                    if (passUser.equals(confirmPasswordUser)){
-
-                        boolean checkConnection=MainActivity.isOnline(c);
-
-//                        if(checkConnection) {
-
-                            doPostRequest("http://192.168.252.199/register");
-//                        }
-//                        else {
-//                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-                    }
-                    else {
-                        Toast.makeText(getApplicationContext(),"Пароли не совпадают",
-                                Toast.LENGTH_SHORT).show();
-                    }
+                else {
+                    Toast.makeText(getApplicationContext(),"Пароли не совпадают",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -238,7 +264,7 @@ public class SignUpActivity extends AppCompatActivity {
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -252,6 +278,7 @@ public class SignUpActivity extends AppCompatActivity {
             json.put("password_confirmation",confirmPasswordUser);
             json.put("phone",phoneUser);
             json.put("birthday",dateBirthdayUser);
+            json.put("invite_code",inviteCodeUser);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -273,14 +300,11 @@ public class SignUpActivity extends AppCompatActivity {
                 {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 

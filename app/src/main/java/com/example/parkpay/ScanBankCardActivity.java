@@ -3,7 +3,7 @@ package com.example.parkpay;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import cards.pay.paycardsrecognizer.sdk.Card;
 import cards.pay.paycardsrecognizer.sdk.ScanCardIntent;
@@ -11,7 +11,7 @@ import ru.yandex.money.android.sdk.Checkout;
 
 public class ScanBankCardActivity extends Activity {
 
-    public static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -72,49 +72,53 @@
         />
 
     <TextView
-        android:id="@+id/moneyTitleCard"
+        android:id="@+id/moneyCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="160dp"
-        android:text="@string/titleMoneyCard"
+        android:layout_marginStart="30dp"
+        android:textSize="18sp"
+        android:text="100 000"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/imageCard"
-        app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintTop_toBottomOf="@id/subitem"/>
 
 
     <TextView
-        android:id="@+id/moneyCard"
+        android:id="@+id/moneyTitleCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="5dp"
+        android:text="Р"
+        android:textSize="18sp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="30dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
+        app:layout_constraintStart_toEndOf="@id/moneyCard"
         app:layout_constraintTop_toBottomOf="@id/subitem" />
-
-    <TextView
-        android:id="@+id/bonusTitleCard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="160dp"
-        android:text="@string/titleBonusCard"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="@id/imageCard"
-        app:layout_constraintEnd_toEndOf="@id/imageCard"
-        app:layout_constraintTop_toBottomOf="@id/moneyTitleCard"/>
 
     <TextView
         android:id="@+id/bonusCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="30dp"
+        android:text="10"
+        android:textSize="18sp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="@id/imageCard"
+        app:layout_constraintTop_toBottomOf="@id/moneyCard"/>
+
+    <TextView
+        android:id="@+id/bonusTitleCard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Б"
+        android:textSize="18sp"
+        android:layout_marginStart="5dp"
         android:layout_marginEnd="20dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
-        app:layout_constraintTop_toBottomOf="@id/moneyCard" />
+        app:layout_constraintStart_toEndOf="@id/bonusCard"
+        app:layout_constraintTop_toBottomOf="@id/moneyTitleCard" />
 
     <ImageView
         android:id="@+id/addMoney"
@@ -125,11 +129,9 @@
         android:text="Пополнить"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="17dp"
-        android:textSize="15sp"
-        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintBottom_toBottomOf="@id/bonusTitleCard"
         app:layout_constraintTop_toTopOf="@id/moneyTitleCard"
         />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

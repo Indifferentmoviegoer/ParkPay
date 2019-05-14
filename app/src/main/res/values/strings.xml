@@ -9,22 +9,15 @@
     <string name="firstParam">Логин</string>
     <string name="secondParam">Пароль</string>
     <string name="remMe">Запомнить меня </string>
-    <string name="reg">Еще не зарегистрированы? Нажмите здесь…</string>
     <string name="signIn">Войти</string>
 
     <string name="name">Имя</string>
     <string name="number">Номер телефона </string>
     <string name="email">Email</string>
-    <string name="mailLayout">Неверный адрес почты</string>
     <string name="password">Пароль</string>
     <string name="confirm">Подтвердите пароль</string>
     <string name="dateBirthday">Дата рождения</string>
-    <string name="signUp">Зарегистрироваться</string>
 
-
-    <string name="scan_process_label">Scanning…</string>
-    <string name="scan_label">Scan</string>
-    <string name="scan_result_label">Last scan result: </string>
 
     <string name="servicedesc">Services desc: </string>
     <string name="aiddescription">Aid description: </string>
@@ -32,23 +25,19 @@
     <string name="nameProfile">Имя Фамилия</string>
     <string name="editProfile">Редактировать профиль</string>
     <string name="turnNotification">Отключить уведомления</string>
+    <string name="invite">Пригласить друзей</string>
     <string name="signOut">Выйти</string>
 
     <string name="editInfo">Сохранить изменения</string>
     <string name="editProfileInfo">Редактирование</string>
 
-    <string name="more">Подробнее</string>
     <string name="pay">Пополнить карту</string>
-    <string name="paySum">Сумма пополнения</string>
-    <string name="edit">Редактировать карту</string>
-    <string name="add">Добавить</string>
-    <string name="deleteCard">Удалить карту</string>
+    <string name="paySum">Сумма</string>
+    <string name="add">Добавить карту</string>
 
     <string name="nC">Номер карты</string>
     <string name="nameEditCard">Название карты</string>
 
-    <string name="titleNameCard">Название карты:</string>
-    <string name="titleNumberCard">Номер карты:</string>
     <string name="titleMoneyCard">Денежный баланс:</string>
     <string name="titleBonusCard">Количество бонусов:</string>
 
@@ -57,17 +46,15 @@
     <string name="payCardInfo">Пополнение карты</string>
     <string name="addCardTitle">Добавление карты</string>
     <string name="registration">Регистрация</string>
-    <string name="signInTitle">Авторизация</string>
 
     <string name="real">Реальные</string>
     <string name="noReal">Виртуальные</string>
 
     <string name="parks">Парки</string>
+    <string name="attractions">Аттракционы</string>
+    <string name="onMap">На карте</string>
+    <string name="more">Подробнее…</string>
 
     <string name="result">ca-app-pub-9760468716956149/2317568936</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
 
 </resources>

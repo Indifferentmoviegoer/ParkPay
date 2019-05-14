@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,39 +31,33 @@ import okhttp3.Response;
 
 public class VirtualCardFragment extends Fragment {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CARDS ="Cards";
+    private static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_NAME ="Name";
-    public static final String APP_PREFERENCES_NUMBER ="Number";
-    public static final String APP_PREFERENCES_MAIL ="Email";
-    public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_NAME ="Name";
+    private static final String APP_PREFERENCES_NUMBER ="Number";
+    private static final String APP_PREFERENCES_MAIL ="Email";
+    private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
-    public static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
-    public static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
-    public static final String APP_PREFERENCES_CARD_ID ="cardId";
+    private static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
+    private static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
+    private static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
+    private static final String APP_PREFERENCES_CARD_ID ="cardId";
     private static final String TAG = "myLogs";
 
-    ArrayList<String> child;
-    ArrayList<String> children2;
-    ArrayList<String> moneyChild;
-    ArrayList<String> bonusChild;
-    ArrayList<String> idCard;
+    private ArrayList<String> children1;
+    private ArrayList<String> codes;
+    private ArrayList<String> money;
+    private ArrayList<String> bonus;
+    private ArrayList<String> cardId;
 
-    ArrayList<String> children1;
-    ArrayList<String> codes;
-    ArrayList<String> money;
-    ArrayList<String> bonus;
-    ArrayList<String> cardId;
+    private ListView simpleList;
+    private CardAdapter cardAdapter;
 
-    ListView simpleList;
-    CardAdapter cardAdapter;
-
-    SharedPreferences settings;
-    Context c;
+    private SharedPreferences settings;
+    private Context c;
 
     @Nullable
     @Override
@@ -75,24 +69,24 @@ public class VirtualCardFragment extends Fragment {
             c = container.getContext();
         }
 
-        simpleList = (ListView)view.findViewById(R.id.virtualCard);
+        simpleList = view.findViewById(R.id.virtualCard);
 
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //Создаем набор данных для адаптера
-        child = new ArrayList<String>();
-        children2 = new ArrayList<String>();
-        moneyChild = new ArrayList<String>();
-        bonusChild = new ArrayList<String>();
-        idCard = new ArrayList<String>();
+        ArrayList<String> child = new ArrayList<>();
+        ArrayList<String> children2 = new ArrayList<>();
+        ArrayList<String> moneyChild = new ArrayList<>();
+        ArrayList<String> bonusChild = new ArrayList<>();
+        ArrayList<String> idCard = new ArrayList<>();
 
-        children1 = new ArrayList<String>();
-        codes = new ArrayList<String>();
-        money = new ArrayList<String>();
-        bonus = new ArrayList<String>();
-        cardId = new ArrayList<String>();
+        children1 = new ArrayList<>();
+        codes = new ArrayList<>();
+        money = new ArrayList<>();
+        bonus = new ArrayList<>();
+        cardId = new ArrayList<>();
 
 
         simpleList.invalidateViews();
@@ -118,27 +112,27 @@ public class VirtualCardFragment extends Fragment {
 
         if(settings.contains(APP_PREFERENCES_NAMES_CARDS)){
 
-            child=MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
+            child =MainActivity.getArrayList(APP_PREFERENCES_NAMES_CARDS,settings);
         }
 
         if(settings.contains(APP_PREFERENCES_CARDS)){
 
-            children2=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+            children2 =MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
         }
 
         if(settings.contains(APP_PREFERENCES_MONEY_CHILD)){
 
-            moneyChild=MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
+            moneyChild =MainActivity.getArrayList(APP_PREFERENCES_MONEY_CHILD,settings);
         }
 
         if(settings.contains(APP_PREFERENCES_BONUS_CHILD)){
 
-            bonusChild=MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
+            bonusChild =MainActivity.getArrayList(APP_PREFERENCES_BONUS_CHILD,settings);
         }
 
         if(settings.contains(APP_PREFERENCES_CARD_ID)){
 
-            idCard=MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
+            idCard =MainActivity.getArrayList(APP_PREFERENCES_CARD_ID,settings);
         }
 
 //        child.add("Новая карта");
@@ -148,7 +142,7 @@ public class VirtualCardFragment extends Fragment {
 //        idCard.add("Новая карта");
 
         //if(child) {
-        cardAdapter = new CardAdapter(c, child, children2,moneyChild,bonusChild,idCard);
+        cardAdapter = new CardAdapter(c, child, children2, moneyChild, bonusChild, idCard);
         simpleList.setAdapter(cardAdapter);
         //}
         //else{
@@ -158,7 +152,7 @@ public class VirtualCardFragment extends Fragment {
         return view;
     }
 
-    public void doGetRequest(){
+    private void doGetRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
@@ -189,15 +183,12 @@ public class VirtualCardFragment extends Fragment {
                 }
 
                 if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -282,7 +273,7 @@ public class VirtualCardFragment extends Fragment {
         });
     }
 
-    public void doGetProfileRequest(){
+    private void doGetProfileRequest(){
 
         OkHttpClient client = new OkHttpClient();
 
@@ -315,15 +306,12 @@ public class VirtualCardFragment extends Fragment {
 
                 if (getActivity() != null) {
 
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    getActivity().runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
@@ -358,7 +346,7 @@ public class VirtualCardFragment extends Fragment {
         });
     }
 
-    public void getVisits(){
+    private void getVisits(){
 
         OkHttpClient client = new OkHttpClient();
 
@@ -393,7 +381,7 @@ public class VirtualCardFragment extends Fragment {
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {

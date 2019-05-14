@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.google.android.material.tabs.TabItem;
+import com.google.android.material.tabs.TabLayout;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +19,7 @@ import java.util.Objects;
 
 public class CardFragment extends Fragment {
 
-    public static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_CARDS ="Cards";
     public static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
     public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
@@ -33,17 +32,17 @@ public class CardFragment extends Fragment {
     private static final String TAG = "myLogs";
 
     //    ImageView updateCard;
-    ImageView addCard;
+    private ImageView addCard;
 
-    TabLayout tabLayout;
-    TabItem tabChats;
-    TabItem tabStatus;
-    ViewPager viewPager;
-    PageAdapter pageAdapter;
+    private TabLayout tabLayout;
+    private TabItem tabChats;
+    private TabItem tabStatus;
+    private ViewPager viewPager;
+    private PageAdapter pageAdapter;
     //FloatingActionButton addCard;
 
-    SharedPreferences settings;
-    Context c;
+    private SharedPreferences settings;
+    private Context c;
 
     @Nullable
     @Override
@@ -60,7 +59,9 @@ public class CardFragment extends Fragment {
         tabStatus = view.findViewById(R.id.virtualCardFragment);
         viewPager = view.findViewById(R.id.viewPager);
         //addCard=(ImageView)view.findViewById(R.id.addCard);
-        addCard = (ImageView)view.findViewById(R.id.addCard);
+        addCard = view.findViewById(R.id.addCard);
+
+        //Objects.requireNonNull(getActivity()).getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         pageAdapter = new PageAdapter(getChildFragmentManager(),
                 tabLayout.getTabCount());
@@ -76,13 +77,10 @@ public class CardFragment extends Fragment {
 
         //tabLayout.setupWithViewPager(viewPager);
 
-        addCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        addCard.setOnClickListener(v -> {
 
-                    Intent intent = new Intent(c, AddCardActivity.class);
-                    c.startActivity(intent);
-            }
+                Intent intent = new Intent(c, AddCardActivity.class);
+                c.startActivity(intent);
         });
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -91,19 +89,16 @@ public class CardFragment extends Fragment {
 
                     viewPager.setCurrentItem(tab.getPosition());
 
-                    addCard.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            if (tab.getPosition() == 0) {
-                                Intent intent = new Intent(c, AddCardActivity.class);
-                                c.startActivity(intent);
-                            }
-                            else if (tab.getPosition() == 1) {
-                                Intent intent = new Intent(c, AddVirtualCardActivity.class);
-                                c.startActivity(intent);
-                            }
-
+                    addCard.setOnClickListener(v -> {
+                        if (tab.getPosition() == 0) {
+                            Intent intent = new Intent(c, AddCardActivity.class);
+                            c.startActivity(intent);
                         }
+                        else if (tab.getPosition() == 1) {
+                            Intent intent = new Intent(c, AddVirtualCardActivity.class);
+                            c.startActivity(intent);
+                        }
+
                     });
             }
 

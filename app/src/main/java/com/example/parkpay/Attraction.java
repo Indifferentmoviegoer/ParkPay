@@ -3,19 +3,19 @@ package com.example.parkpay;
 class Attraction {
 
 
-    String id;
-    String name;
-    String photo;
-    String price;
-    String bonus;
-    String text;
-    String weight;
-    String growth;
-    String ageMin;
-    String ageMax;
-    String levelFear;
-    Float lat;
-    Float lng;
+    final String id;
+    final String name;
+    private String photo;
+    final String price;
+    final String bonus;
+    final String text;
+    final String weight;
+    final String growth;
+    final String ageMin;
+    final String ageMax;
+    final String levelFear;
+    final Float lat;
+    final Float lng;
 
     Attraction(
                String id,

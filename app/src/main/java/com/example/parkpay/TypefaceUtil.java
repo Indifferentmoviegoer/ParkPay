@@ -5,7 +5,7 @@ import android.graphics.Typeface;
 import android.util.Log;
 import java.lang.reflect.Field;
 
-public class TypefaceUtil {
+class TypefaceUtil {
 
     private static final String TAG = "myLogs";
 

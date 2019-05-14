@@ -1,18 +1,18 @@
 package com.example.parkpay;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
+
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -30,33 +30,37 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SignInActivity extends AppCompatActivity {
-    Button signIn;
-    EditText login;
-    EditText pass;
-    TextView help;
-    CheckBox remember;
-    String loginUser;
-    String passwordUser;
-    Context c;
-    SharedPreferences settings;
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
+    private AppCompatButton signIn;
+    private TextInputEditText login;
+    private TextInputEditText pass;
+    private AppCompatButton help;
+    private CheckBox remember;
+    private String loginUser;
+    private String passwordUser;
+    private Context c;
+    private SharedPreferences settings;
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
     public static final String APP_PREFERENCES_EMAIL ="Email";
-    public static final String APP_PREFERENCES_PASSWORD ="Password";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_LOGIN ="Login";
+    private static final String APP_PREFERENCES_PASSWORD ="Password";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        setTheme(R.style.MaterialTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        signIn = (Button) findViewById(R.id.signIn);
-        login = (EditText) findViewById(R.id.email);
-        pass = (EditText) findViewById(R.id.password);
-        help = (TextView) findViewById(R.id.helper);
-        remember = (CheckBox) findViewById(R.id.remember);
+        signIn = findViewById(R.id.signIn);
+        login = findViewById(R.id.email);
+        pass =findViewById(R.id.password);
+        help = findViewById(R.id.helper);
+        remember =findViewById(R.id.remember);
+
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
 
@@ -65,35 +69,32 @@ public class SignInActivity extends AppCompatActivity {
                 "SERIF",
                 "font/roboto_regular.ttf");
 
-        signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginUser=login.getText().toString();
-                passwordUser=pass.getText().toString();
-                if (loginUser.equals("") || loginUser.length() == 0 ||
-                        passwordUser.equals("") || passwordUser.length() == 0) {
-                    Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {
+        signIn.setOnClickListener(v -> {
+            loginUser=login.getText().toString();
+            passwordUser=pass.getText().toString();
+            if (loginUser.equals("") || loginUser.length() == 0 ||
+                    passwordUser.equals("") || passwordUser.length() == 0) {
+                Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
+                        Toast.LENGTH_SHORT).show();
+            }
+            else {
 
-                    boolean checkConnection=MainActivity.isOnline(c);
+                boolean checkConnection=MainActivity.isOnline(c);
 
-//                    if(checkConnection){
+                    if(checkConnection){
 
-                        doPostRequest("http://192.168.252.199/login");
-//                    }
-//                    else {
-//                        Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
-                }
+                    doPostRequest("https://api.mobile.goldinnfish.com/login");
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                                Toast.LENGTH_SHORT).show();
+                    }
             }
         });
 
         if(settings.contains(APP_PREFERENCES_TOKEN)){
 
-            doPostRequestRefresh("http://192.168.252.199/login");
+            doPostRequestRefresh("https://api.mobile.goldinnfish.com/login");
 
             Intent intent = new Intent(SignInActivity.this,
                     MainActivity.class);
@@ -101,13 +102,9 @@ public class SignInActivity extends AppCompatActivity {
             overridePendingTransition(0, 0);
 
         }
-        help.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
+        help.setOnClickListener(v -> {
+            Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
+            startActivity(intent);
         });
         if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_LOGIN)
                 &&settings.contains(APP_PREFERENCES_PASSWORD)) {
@@ -131,7 +128,7 @@ public class SignInActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -161,14 +158,11 @@ public class SignInActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -204,7 +198,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    public void doPostRequestRefresh(String url){
+    private void doPostRequestRefresh(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -234,14 +228,11 @@ public class SignInActivity extends AppCompatActivity {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 runOnUiThread(() -> {
                     try {
 
@@ -255,14 +246,6 @@ public class SignInActivity extends AppCompatActivity {
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
                         editor.apply();
-
-                        if(settings.contains(APP_PREFERENCES_TOKEN)) {
-
-//                            Intent intent = new Intent(SignInActivity.this,
-//                                    MainActivity.class);
-//                            startActivity(intent);
-//                            overridePendingTransition(0, 0);
-                        }
 
                     } catch (IOException | JSONException e) {
 

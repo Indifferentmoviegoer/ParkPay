@@ -7,7 +7,7 @@ import com.yandex.metrica.YandexMetricaConfig;
 import com.yandex.metrica.push.YandexMetricaPush;
 
 public class ParkPay extends Application {
-    public static final String API_key="196f035d-dc5f-4d26-a1e4-61c1bb63e0a0";
+    private static final String API_key="196f035d-dc5f-4d26-a1e4-61c1bb63e0a0";
     @Override
     public void onCreate() {
         super.onCreate();

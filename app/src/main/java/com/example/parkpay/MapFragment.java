@@ -1,19 +1,15 @@
 package com.example.parkpay;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,9 +26,10 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
@@ -48,22 +45,22 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     PublisherAdRequest adRequest;
 
-    Context c;
-    public static final String APP_PREFERENCES = "mysettings";
+    private Context c;
+    private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_NOTIFICATION = "TURN_NOTIFICATION";
     public static final String APP_PREFERENCES_NAME = "Name";
     public static final String APP_PREFERENCES_TOKEN = "Token";
     public static final String APP_PREFERENCES_PHOTO = "Photo";
     public static final String APP_PREFERENCES_QUANTITY_VISITS = "quantityVisits";
-    public static final String APP_PREFERENCES_LAT ="lat";
-    public static final String APP_PREFERENCES_LNG ="lng";
-    public static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
+    private static final String APP_PREFERENCES_LAT ="lat";
+    private static final String APP_PREFERENCES_LNG ="lng";
+    private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
     Switch notification;
 
-    MapView mapView;
-    GoogleMap gmap;
+    private MapView mapView;
+    private GoogleMap gmap;
 
     private static final String MAP_VIEW_BUNDLE_KEY = "AIzaSyAkEPoaujC2ZE7bNYANSH4J7XV-UgzVfSY";
 
@@ -103,7 +100,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
         Bundle mapViewBundle = outState.getBundle(MAP_VIEW_BUNDLE_KEY);

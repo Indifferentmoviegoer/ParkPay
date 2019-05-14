@@ -1,10 +1,10 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHolder>{
 
-    List<Sale> sales;
-    private Context context;
+    private final List<Sale> sales;
+    private final Context context;
 
     SalesAdapter(Context context, List<Sale> persons){
         this.sales = persons;
@@ -29,8 +31,7 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
     @Override
     public SaleViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.sales_item, viewGroup, false);
-        SaleViewHolder pvh = new SaleViewHolder(v);
-        return pvh;
+        return new SaleViewHolder(v);
     }
 
     @Override
@@ -49,27 +50,27 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+    public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     public static class SaleViewHolder extends RecyclerView.ViewHolder {
 
-        CardView cv;
-        TextView saleName;
-        TextView personAge;
-        TextView dateStart;
-        TextView dateEnd;
-        ImageView photo;
+        final CardView cv;
+        final TextView saleName;
+        final TextView personAge;
+        final TextView dateStart;
+        final TextView dateEnd;
+        final ImageView photo;
 
         SaleViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            saleName = (TextView)itemView.findViewById(R.id.sale_name);
-            personAge = (TextView)itemView.findViewById(R.id.sale_text);
-            dateStart = (TextView)itemView.findViewById(R.id.dateStart);
-            dateEnd = (TextView)itemView.findViewById(R.id.dateEnd);
-            photo = (ImageView)itemView.findViewById(R.id.sale_photo);
+            cv = itemView.findViewById(R.id.cv);
+            saleName = itemView.findViewById(R.id.sale_name);
+            personAge = itemView.findViewById(R.id.sale_text);
+            dateStart = itemView.findViewById(R.id.dateStart);
+            dateEnd = itemView.findViewById(R.id.dateEnd);
+            photo = itemView.findViewById(R.id.sale_photo);
 
         }
 

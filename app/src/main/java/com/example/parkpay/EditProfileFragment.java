@@ -11,11 +11,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Base64;
@@ -24,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,7 +30,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,7 +42,6 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -53,46 +49,45 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 import ru.tinkoff.decoro.MaskImpl;
 import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
-import ru.tinkoff.decoro.slots.PredefinedSlots;
 import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
-import static android.support.constraint.Constraints.TAG;
-import static android.support.v4.content.PermissionChecker.checkSelfPermission;
+//import static androidx.constraintlayout.Constraints.TAG;
+import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 public class EditProfileFragment extends Fragment {
 
 //    Button save;
-    EditText name;
-    EditText email;
-    EditText phone;
-    EditText dateBirthday;
-    String nameUser;
-    String emailUser;
-    String phoneUser;
-    String dateBirthdayUser;
+private EditText name;
+    private EditText email;
+    private EditText phone;
+    private EditText dateBirthday;
+    private String nameUser;
+    private String emailUser;
+    private String phoneUser;
+    private String dateBirthdayUser;
 //    TextInputLayout mailLayout;
-    ImageView backProfile;
-    ImageView acceptSave;
-    TextView changePhotoText;
+private ImageView backProfile;
+    private ImageView acceptSave;
+    private TextView changePhotoText;
 
-    Context c;
+    private Context c;
 
-    final Calendar myCalendar = Calendar.getInstance();
+    private final Calendar myCalendar = Calendar.getInstance();
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_NAME ="Name";
-    public static final String APP_PREFERENCES_NUMBER ="Number";
-    public static final String APP_PREFERENCES_MAIL ="Email";
-    public static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PHOTO ="Photo";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_NAME ="Name";
+    private static final String APP_PREFERENCES_NUMBER ="Number";
+    private static final String APP_PREFERENCES_MAIL ="Email";
+    private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
+    private static final String APP_PREFERENCES_STATUS ="Status";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES_PHOTO ="Photo";
     private static final String TAG = "myLogs";
     private static final int MY_CAMERA_REQUEST_CODE = 100;
 
-    SharedPreferences settings;
+    private SharedPreferences settings;
 
 
     private static final int TAKE_PICTURE_REQUEST_CODE = 1;
@@ -127,10 +122,9 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    public static String encodeToBase64(Bitmap image) {
-        Bitmap immage = image;
+    private static String encodeToBase64(Bitmap image) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        immage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        image.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] b = baos.toByteArray();
         String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
 
@@ -138,7 +132,7 @@ public class EditProfileFragment extends Fragment {
         return imageEncoded;
     }
 
-    public static Bitmap decodeToBase64(String input) {
+    private static Bitmap decodeToBase64(String input) {
         byte[] decodedByte = Base64.decode(input, 0);
         return BitmapFactory.decodeByteArray(decodedByte, 0, decodedByte.length);
     }
@@ -150,16 +144,15 @@ public class EditProfileFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_edit_profile,container,false);
 
-//        save=(Button) view.findViewById(R.id.save);
-        name=(EditText) view.findViewById(R.id.name);
-        email=(EditText) view.findViewById(R.id.mail);
-        phone=(EditText) view.findViewById(R.id.number);
-        dateBirthday=(EditText) view.findViewById(R.id.dateBirthday);
+        name= view.findViewById(R.id.name);
+        email= view.findViewById(R.id.mail);
+        phone= view.findViewById(R.id.number);
+        dateBirthday= view.findViewById(R.id.dateBirthday);
 //        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
-        backProfile=(ImageView) view.findViewById(R.id.backProfile);
-        acceptSave=(ImageView) view.findViewById(R.id.acceptSave);
-        changePhotoText=(TextView) view.findViewById(R.id.changePhotoText);
-        photoProfile=(ImageView) view.findViewById(R.id.photoProfile);
+        backProfile= view.findViewById(R.id.backProfile);
+        acceptSave= view.findViewById(R.id.acceptSave);
+        changePhotoText= view.findViewById(R.id.changePhotoText);
+        photoProfile= view.findViewById(R.id.photoProfile);
 
 //        mailLayout.setHintEnabled(false);
         c=getContext();
@@ -210,82 +203,31 @@ public class EditProfileFragment extends Fragment {
                 }
             }
         });
+        DatePickerDialog.OnDateSetListener date = (view1, year, monthOfYear, dayOfMonth) -> {
 
-//        save.setOnClickListener(new View.OnClickListener() {
-//
-//            @Override
-//            public void onClick(View v) {
-//
-//                nameUser=name.getText().toString();
-//                emailUser=email.getText().toString();
-//                phoneUser=phone.getText().toString();
-//                dateBirthdayUser=dateBirthday.getText().toString();
-//
-//                SharedPreferences.Editor editor = settings.edit();
-//                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
-//                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
-//                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
-//                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
-//                editor.apply();
-//
-//                if (nameUser.equals("")||nameUser.length() == 0||
-//                        emailUser.equals("")||emailUser.length() == 0)
-//                {
-//                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
-//                            Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//
-//                    boolean checkConnection=MainActivity.isOnline(c);
-//
-////                    if(checkConnection) {
-//
-//                        doPostRequest("http://192.168.252.199/user/edit");
-////                    }
-////                    else {
-////                        Toast.makeText(c, "Отсутствует интернет соединение!",
-////                                Toast.LENGTH_SHORT).show();
-////                    }
-//
-//
-//                }
-//            }
-//        });
-
-        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker view, int year, int monthOfYear,
-                                  int dayOfMonth) {
-
-                myCalendar.set(Calendar.YEAR, year);
-                myCalendar.set(Calendar.MONTH, monthOfYear);
-                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                updateLabel();
-            }
-
+            myCalendar.set(Calendar.YEAR, year);
+            myCalendar.set(Calendar.MONTH, monthOfYear);
+            myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            updateLabel();
         };
 
-        dateBirthday.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                final int DRAWABLE_LEFT = 0;
-                final int DRAWABLE_TOP = 1;
-                final int DRAWABLE_RIGHT = 2;
-                final int DRAWABLE_BOTTOM = 3;
+        dateBirthday.setOnTouchListener((v, event) -> {
+            final int DRAWABLE_LEFT = 0;
+            final int DRAWABLE_TOP = 1;
+            final int DRAWABLE_RIGHT = 2;
+            final int DRAWABLE_BOTTOM = 3;
 
-                if(event.getAction() == MotionEvent.ACTION_UP) {
-                    if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+            if(event.getAction() == MotionEvent.ACTION_UP) {
+                if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
 
-                        new DatePickerDialog(c, date, myCalendar
-                                .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                                myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+                    new DatePickerDialog(c, date, myCalendar
+                            .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                            myCalendar.get(Calendar.DAY_OF_MONTH)).show();
 
-                        return true;
-                    }
+                    return true;
                 }
-                return false;
             }
+            return false;
         });
 
         if(settings.contains(APP_PREFERENCES_NUMBER)&&settings.contains(APP_PREFERENCES_DATE_BIRTHDAY)
@@ -299,47 +241,36 @@ public class EditProfileFragment extends Fragment {
             dateBirthday.setText(settings.getString(APP_PREFERENCES_DATE_BIRTHDAY, ""));
         }
 
-        backProfile.setOnClickListener(new View.OnClickListener() {
+        backProfile.setOnClickListener(v -> ((MainActivity) Objects.requireNonNull(getActivity()))
+                .replaceFragments(ProfileFragment.class));
 
-            @Override
-            public void onClick(View v) {
+        acceptSave.setOnClickListener(v -> {
 
-                ((MainActivity) Objects.requireNonNull(getActivity()))
-                        .replaceFragments(ProfileFragment.class);
+            nameUser=name.getText().toString();
+            emailUser=email.getText().toString();
+            phoneUser=phone.getText().toString();
+            dateBirthdayUser=dateBirthday.getText().toString();
 
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
+            editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
+            editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
+            editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
+            editor.apply();
+
+            if (nameUser.equals("")||nameUser.length() == 0||
+                    emailUser.equals("")||emailUser.length() == 0)
+            {
+                Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
+                        Toast.LENGTH_SHORT).show();
             }
-        });
+            else {
 
-        acceptSave.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-                nameUser=name.getText().toString();
-                emailUser=email.getText().toString();
-                phoneUser=phone.getText().toString();
-                dateBirthdayUser=dateBirthday.getText().toString();
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_NAME,name.getText().toString());
-                editor.putString(APP_PREFERENCES_MAIL,email.getText().toString());
-                editor.putString(APP_PREFERENCES_NUMBER,phone.getText().toString());
-                editor.putString(APP_PREFERENCES_DATE_BIRTHDAY,dateBirthday.getText().toString());
-                editor.apply();
-
-                if (nameUser.equals("")||nameUser.length() == 0||
-                        emailUser.equals("")||emailUser.length() == 0)
-                {
-                    Toast.makeText(c,"Поля: 'Имя' и 'Email' не должны быть пустыми!",
-                            Toast.LENGTH_SHORT).show();
-                }
-                else {
-
-                    boolean checkConnection=MainActivity.isOnline(c);
-
+//                boolean checkConnection=MainActivity.isOnline(c);
+//
 //                    if(checkConnection) {
 
-                    doPostRequest("http://192.168.252.199/user/edit");
+                doPostRequest("https://api.mobile.goldinnfish.com/user/edit");
 //                    }
 //                    else {
 //                        Toast.makeText(c, "Отсутствует интернет соединение!",
@@ -347,7 +278,6 @@ public class EditProfileFragment extends Fragment {
 //                    }
 
 
-                }
             }
         });
 
@@ -376,10 +306,6 @@ public class EditProfileFragment extends Fragment {
 
                 startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
 
-            } else {
-
-                //Toast.makeText(c, "", Toast.LENGTH_LONG).show();
-
             }
 
         }
@@ -392,7 +318,7 @@ public class EditProfileFragment extends Fragment {
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -429,15 +355,12 @@ public class EditProfileFragment extends Fragment {
                 }
 
                 if (getActivity() != null) {
-                    Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
+                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                     });
                 }
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
 
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,13 +13,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,7 +27,6 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -39,29 +35,29 @@ import okhttp3.Response;
 
 public class CardAdapter extends BaseAdapter {
 
-    public static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_POSITION_CARD ="position";
-    public static final String APP_PREFERENCES_POSITION_GROUP ="group";
-    public static final String APP_PREFERENCES_TOKEN ="Token";
+    private static final String APP_PREFERENCES = "mysettings";
+    private static final String APP_PREFERENCES_CARDS ="Cards";
+    private static final String APP_PREFERENCES_POSITION_CARD ="position";
+    private static final String APP_PREFERENCES_POSITION_GROUP ="group";
+    private static final String APP_PREFERENCES_TOKEN ="Token";
 
-    public static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
-    public static final String APP_PREFERENCES_CARD_NAME ="cardName";
-    public static final String APP_PREFERENCES_CARD_CODE ="cardCode";
+    private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
+    private static final String APP_PREFERENCES_CARD_NAME ="cardName";
+    private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
     private static final String TAG = "myLogs";
 
-    SharedPreferences settings;
+    private final SharedPreferences settings;
 
     private ArrayList<String> child;
 
-    Context context;
-    ArrayList<String> Item;
-    ArrayList<String> SubItem;
-    ArrayList<String> MoneyCard;
-    ArrayList<String> BonusCard;
-    ArrayList<String> CardId;
-    int flags[];
-    LayoutInflater inflter;
+    private final Context context;
+    private final ArrayList<String> Item;
+    private final ArrayList<String> SubItem;
+    private final ArrayList<String> MoneyCard;
+    private final ArrayList<String> BonusCard;
+    private final ArrayList<String> CardId;
+    int[] flags;
+    private final LayoutInflater inflter;
 
     public CardAdapter(Context applicationContext, ArrayList<String> Item,
                        ArrayList<String> SubItem, ArrayList<String> MoneyCard, ArrayList<String> BonusCard,
@@ -96,25 +92,25 @@ public class CardAdapter extends BaseAdapter {
         return 0;
     }
 
-    @SuppressLint("ViewHolder")
+    @SuppressLint({"ViewHolder", "InflateParams"})
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
 
-        view = inflter.inflate(R.layout.list_real_item, null);
+        view = inflter.inflate(R.layout.list_card_item, null);
 
 //        LayoutInflater li = LayoutInflater.from(context);
 //        View promptsView = li.inflate(R.layout.alert_dialog, null);
 
-        TextView item = (TextView) view.findViewById(R.id.item);
-        TextView subitem = (TextView) view.findViewById(R.id.subitem);
+        TextView item = view.findViewById(R.id.item);
+        TextView subitem = view.findViewById(R.id.subitem);
 
-        TextView moneyCard = (TextView) view.findViewById(R.id.moneyCard);
-        TextView bonusCard = (TextView) view.findViewById(R.id.bonusCard);
+        TextView moneyCard = view.findViewById(R.id.moneyCard);
+        TextView bonusCard = view.findViewById(R.id.bonusCard);
 
-        ImageView imageDelete=(ImageView) view.findViewById(R.id.imageDelete);
-        ImageView imageEdit=(ImageView) view.findViewById(R.id.imageEdit);
+        ImageView imageDelete= view.findViewById(R.id.imageDelete);
+        ImageView imageEdit= view.findViewById(R.id.imageEdit);
 
-        ImageView addMoney=(ImageView) view.findViewById(R.id.addMoney);
+        ImageView addMoney= view.findViewById(R.id.addMoney);
 
         item.setText(Item.get(i));
         subitem.setText(SubItem.get(i));
@@ -124,9 +120,7 @@ public class CardAdapter extends BaseAdapter {
 
         //image.setImageResource(flags[i]);
 
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        view.setOnClickListener(v -> {
 
 //                if (SubItem.get(i).contains("Номер карты")) {
 //
@@ -136,102 +130,93 @@ public class CardAdapter extends BaseAdapter {
 //                } else {
 
 
-                    if (settings.contains(APP_PREFERENCES_CARDS)) {
-                        child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
-                    }
-                    Intent intent = new Intent(context, DetailCardActivity.class);
-
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString(APP_PREFERENCES_POSITION_CARD, child.get(i));
-                    editor.putInt(APP_PREFERENCES_POSITION_GROUP, i);
-                    editor.apply();
-
-                    context.startActivity(intent);
-
-//                }
-            }
-        });
-
-        imageDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-//                    builder.setView();
-                    builder.setTitle("Удаление карты");
-                    builder.setMessage(Html
-                            .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
-                    builder.setCancelable(false);
-                    builder.setPositiveButton("Да",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-
-                                    SharedPreferences.Editor editor = settings.edit();
-                                    editor.putString(APP_PREFERENCES_CARD_DELETE,CardId.get(i));
-                                    editor.putString(APP_PREFERENCES_CARD_NAME,Item.get(i));
-                                    editor.putString(APP_PREFERENCES_CARD_CODE,SubItem.get(i));
-                                    editor.apply();
-
-                                    Intent i = new Intent(context, MainActivity.class);
-
-                                    boolean checkConnection=MainActivity.isOnline(context);
-
-//                                        if(checkConnection) {
-
-                                    doPostRequest("http://192.168.252.199/card/delete");
-
-//                                        }
-//                                        else {
-//                                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                                                    Toast.LENGTH_SHORT).show();
-//                                        }
-//                                    }
-                                }
-                            });
-                    builder.setNegativeButton("Нет",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertDialog = builder.create();
-                    alertDialog.show();
-                    alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
-                    alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
+                if (settings.contains(APP_PREFERENCES_CARDS)) {
+                    child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
                 }
-        });
-
-        imageEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                Intent intent = new Intent(context, DetailCardActivity.class);
 
                 SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_CARD_DELETE,CardId.get(i));
-                editor.putString(APP_PREFERENCES_CARD_NAME,Item.get(i));
-                editor.putString(APP_PREFERENCES_CARD_CODE,SubItem.get(i));
+                editor.putString(APP_PREFERENCES_POSITION_CARD, child.get(i));
+                editor.putInt(APP_PREFERENCES_POSITION_GROUP, i);
                 editor.apply();
 
-                Intent intent = new Intent(context,
-                        EditCardActivity.class);
                 context.startActivity(intent);
-            }
+
+//                }
         });
 
-        addMoney.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        imageDelete.setOnClickListener(v -> {
 
-                Intent intent = new Intent(context,
-                        PayActivity.class);
-                context.startActivity(intent);
-            }
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+//                    builder.setView();
+                builder.setTitle("Удаление карты");
+                builder.setMessage(Html
+                        .fromHtml("<font color='#000000'>Вы действительно хотите удалить данную карту?</font>"));
+                builder.setCancelable(false);
+                builder.setPositiveButton("Да",
+                        (dialog, id) -> {
+
+                            SharedPreferences.Editor editor = settings.edit();
+                            editor.putString(APP_PREFERENCES_CARD_DELETE, CardId.get(i));
+                            editor.putString(APP_PREFERENCES_CARD_NAME, Item.get(i));
+                            editor.putString(APP_PREFERENCES_CARD_CODE, SubItem.get(i));
+                            editor.apply();
+
+                            Intent i1 = new Intent(context, MainActivity.class);
+
+                            boolean checkConnection = MainActivity.isOnline(context);
+
+                                        if(checkConnection) {
+
+                            doPostRequest("https://api.mobile.goldinnfish.com/card/delete");
+
+                                        }
+                                        else {
+                                            Toast.makeText(context, "Отсутствует интернет соединение!",
+                                                    Toast.LENGTH_SHORT).show();
+                                        }
+                        });
+                builder.setNegativeButton("Нет",
+                        (dialog, id) -> dialog.cancel());
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+                alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
+            });
+
+
+
+        imageEdit.setOnClickListener(v -> {
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_CARD_DELETE,CardId.get(i));
+            editor.putString(APP_PREFERENCES_CARD_NAME,Item.get(i));
+            editor.putString(APP_PREFERENCES_CARD_CODE,SubItem.get(i));
+            editor.apply();
+
+            Intent intent = new Intent(context,
+                    EditCardActivity.class);
+            context.startActivity(intent);
+        });
+
+        addMoney.setOnClickListener(v -> {
+
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString(APP_PREFERENCES_CARD_DELETE,CardId.get(i));
+            editor.putString(APP_PREFERENCES_CARD_NAME,Item.get(i));
+            editor.putString(APP_PREFERENCES_CARD_CODE,SubItem.get(i));
+            editor.apply();
+
+            Intent intent = new Intent(context,
+                    PayActivity.class);
+            context.startActivity(intent);
         });
 
         return view;
     }
 
-    public void doPostRequest(String url){
+    private void doPostRequest(String url){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -264,14 +249,11 @@ public class CardAdapter extends BaseAdapter {
                     Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
                 }
 
-                ((Activity) context).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                    }
+                ((Activity) context).runOnUiThread(() -> {
                 });
             }
             @Override
-            public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
                 ((Activity) context).runOnUiThread(() -> {
                     try {
 

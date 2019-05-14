@@ -89,7 +89,7 @@ public class MyHostApduService extends HostApduService {
      * @return APDU for SELECT AID command
      */
 
-    public static byte[] BuildSelectApdu(String aid) {
+    private static byte[] BuildSelectApdu(String aid) {
         // Format: [CLASS | INSTRUCTION | PARAMETER 1 | PARAMETER 2 | LENGTH | DATA]
         return HexStringToByteArray(SELECT_APDU_HEADER + String.format("%02X",
                 aid.length() / 2) + aid);
@@ -120,9 +120,8 @@ public class MyHostApduService extends HostApduService {
      *
      * @param s String containing hexadecimal characters to convert
      * @return Byte array generated from input
-     * @throws java.lang.IllegalArgumentException if input length is incorrect
      */
-    public static byte[] HexStringToByteArray(String s) throws IllegalArgumentException {
+    private static byte[] HexStringToByteArray(String s) throws IllegalArgumentException {
         int len = s.length();
         if (len % 2 == 1) {
             throw new IllegalArgumentException("Hex string must have even number of characters");
