@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import android.util.Log;
 import android.view.View;
@@ -34,7 +35,7 @@ public class SignInActivity extends AppCompatActivity {
     private TextInputEditText login;
     private TextInputEditText pass;
     private AppCompatButton help;
-    private CheckBox remember;
+    private AppCompatTextView remember;
     private String loginUser;
     private String passwordUser;
     private Context c;
@@ -63,6 +64,13 @@ public class SignInActivity extends AppCompatActivity {
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
+
+        remember.setOnClickListener(view -> {
+
+            Intent intent = new Intent(c,
+                    ResetPasswordActivity.class);
+            startActivity(intent);
+        });
 
         TypefaceUtil
                 .overrideFont(getApplicationContext(),
@@ -106,25 +114,25 @@ public class SignInActivity extends AppCompatActivity {
             Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
-        if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_LOGIN)
-                &&settings.contains(APP_PREFERENCES_PASSWORD)) {
-            remember.setChecked(settings.getBoolean(APP_PREFERENCES_CHECK, false));
-
-            if(settings.getBoolean(APP_PREFERENCES_CHECK, false)){
+//        if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_LOGIN)
+//                &&settings.contains(APP_PREFERENCES_PASSWORD)) {
+//            remember.setChecked(settings.getBoolean(APP_PREFERENCES_CHECK, false));
+//
+//            if(settings.getBoolean(APP_PREFERENCES_CHECK, false)){
                 login.setText(settings.getString(APP_PREFERENCES_LOGIN, ""));
                 pass.setText(settings.getString(APP_PREFERENCES_PASSWORD, ""));
-            }
-
-        }
+//            }
+//
+//        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SharedPreferences.Editor editor = settings.edit();
-        editor.putBoolean(APP_PREFERENCES_CHECK,remember.isChecked() );
-        editor.putString(APP_PREFERENCES_LOGIN,login.getText().toString());
-        editor.putString(APP_PREFERENCES_PASSWORD,pass.getText().toString());
+//        editor.putBoolean(APP_PREFERENCES_CHECK,remember.isChecked() );
+        editor.putString(APP_PREFERENCES_LOGIN, Objects.requireNonNull(login.getText()).toString());
+        editor.putString(APP_PREFERENCES_PASSWORD, Objects.requireNonNull(pass.getText()).toString());
         editor.apply();
     }
 

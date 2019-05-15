@@ -120,30 +120,30 @@ public class CardAdapter extends BaseAdapter {
 
         //image.setImageResource(flags[i]);
 
-        view.setOnClickListener(v -> {
-
-//                if (SubItem.get(i).contains("Номер карты")) {
+//        view.setOnClickListener(v -> {
 //
-//                    Intent intent = new Intent(context, AddCardActivity.class);
-//                    context.startActivity(intent);
+////                if (SubItem.get(i).contains("Номер карты")) {
+////
+////                    Intent intent = new Intent(context, AddCardActivity.class);
+////                    context.startActivity(intent);
+////
+////                } else {
 //
-//                } else {
-
-
-                if (settings.contains(APP_PREFERENCES_CARDS)) {
-                    child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
-                }
-                Intent intent = new Intent(context, DetailCardActivity.class);
-
-                SharedPreferences.Editor editor = settings.edit();
-                editor.putString(APP_PREFERENCES_POSITION_CARD, child.get(i));
-                editor.putInt(APP_PREFERENCES_POSITION_GROUP, i);
-                editor.apply();
-
-                context.startActivity(intent);
-
+//
+//                if (settings.contains(APP_PREFERENCES_CARDS)) {
+//                    child = MainActivity.getArrayList(APP_PREFERENCES_CARDS, settings);
 //                }
-        });
+//                Intent intent = new Intent(context, DetailCardActivity.class);
+//
+//                SharedPreferences.Editor editor = settings.edit();
+//                editor.putString(APP_PREFERENCES_POSITION_CARD, child.get(i));
+//                editor.putInt(APP_PREFERENCES_POSITION_GROUP, i);
+//                editor.apply();
+//
+//                context.startActivity(intent);
+//
+////                }
+//        });
 
         imageDelete.setOnClickListener(v -> {
 

@@ -45,82 +45,43 @@
 
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/imPay"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/switchFragment"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:scaleType="centerCrop"
-        android:adjustViewBounds="true"
-        android:src="@drawable/placeholder"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:elevation="5dp"
         app:layout_constraintTop_toBottomOf="@id/toolbar"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:tabIndicatorColor="@color/white"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/grey">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/titlePay"
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/realCardFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/money">
+
+        </com.google.android.material.tabs.TabItem>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/virtualCardFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bonus" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Название карты"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="20dp"
-        android:textSize="22sp"
-        android:textColor="@color/black"
-        app:layout_constraintTop_toBottomOf="@id/imPay"
+        android:layout_height="0dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintStart_toStartOf="parent"
-        />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/numberPay"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:text="Номер карты"
-        app:layout_constraintTop_toBottomOf="@id/titlePay"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/titleSumPay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/paySum"
-        android:textSize="20sp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/amountPay"
-        app:layout_constraintStart_toStartOf="parent"
-        />
-
-
-
-    <EditText
-        android:id="@+id/amountPay"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="30dp"
-        android:hint="0 Р"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/numberPay"
-        android:importantForAutofill="no" />
+        app:layout_constraintTop_toBottomOf="@id/switchFragment"
+        app:layout_constraintBottom_toBottomOf="parent"
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/buttonPay"
-        android:layout_width="match_parent"
-        style="@style/Widget.MaterialComponents.Button"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="10dp"
-        android:layout_height="60dp"
-        android:text="@string/pay"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

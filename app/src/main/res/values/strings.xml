@@ -18,11 +18,14 @@
     <string name="confirm">Подтвердите пароль</string>
     <string name="dateBirthday">Дата рождения</string>
 
+    <string name="reset">Сбросить пароль</string>
+    <string name="cancel">Отмена</string>
+
 
     <string name="servicedesc">Services desc: </string>
     <string name="aiddescription">Aid description: </string>
 
-    <string name="nameProfile">Имя Фамилия</string>
+    <string name="nameProfile">Имя пользователя</string>
     <string name="editProfile">Редактировать профиль</string>
     <string name="turnNotification">Отключить уведомления</string>
     <string name="invite">Пригласить друзей</string>
@@ -34,6 +37,8 @@
     <string name="pay">Пополнить карту</string>
     <string name="paySum">Сумма</string>
     <string name="add">Добавить карту</string>
+    <string name="money">Деньги</string>
+    <string name="bonus">Бонусы</string>
 
     <string name="nC">Номер карты</string>
     <string name="nameEditCard">Название карты</string>

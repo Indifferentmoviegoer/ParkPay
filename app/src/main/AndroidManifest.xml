@@ -34,18 +34,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:fullBackupContent="@xml/backup_descriptor"
+        >
 
         <activity
             android:name=".Main2Activity"
             >
-
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-            <!--</intent-filter>-->
         </activity>
+
+        <activity android:name=".ResetPasswordActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

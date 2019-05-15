@@ -3,17 +3,23 @@ package com.example.parkpay;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,6 +49,8 @@ public class RealCardFragment extends Fragment {
     private static final String APP_PREFERENCES_NUMBER ="Number";
     private static final String APP_PREFERENCES_MAIL ="Email";
     private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
+    private static final String APP_PREFERENCES_BONUS ="bonus";
+    private static final String APP_PREFERENCES_QUANTITY_CARD ="quantityCard";
     public static final String APP_PREFERENCES_STATUS ="Status";
     private static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
     private static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
@@ -58,6 +66,8 @@ public class RealCardFragment extends Fragment {
 
     private ListView simpleList;
     private CardAdapter cardAdapter;
+    private ContentLoadingProgressBar progressBarCard;
+    private SwipeRefreshLayout swipeCard;
 
     ImageView addCard;
 
@@ -76,15 +86,27 @@ public class RealCardFragment extends Fragment {
 
         simpleList = view.findViewById(R.id.realCard);
         addCard = (ImageView)view.findViewById(R.id.addCard);
+        progressBarCard= view.findViewById(R.id.progressBarCard);
+        swipeCard = view.findViewById(R.id.swipeCard);
 
+        swipeCard.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        simpleList.setVisibility(View.INVISIBLE);
+        progressBarCard.setVisibility(View.VISIBLE);
 
+        swipeCard.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
+
+            swipeCard.setRefreshing(false);
+            doGetRequest();
+
+        }, 5000));
 
 
         simpleList.invalidateViews();
+
 
         StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(mypolicy);
@@ -180,6 +202,9 @@ public class RealCardFragment extends Fragment {
                             cardAdapter = new CardAdapter(c, children1,codes,money,bonus,cardId);
                             simpleList.setAdapter(cardAdapter);
 
+                            simpleList.setVisibility(View.VISIBLE);
+                            progressBarCard.setVisibility(View.INVISIBLE);
+
 
                         } catch (IOException | JSONException e) {
 
@@ -196,7 +221,7 @@ public class RealCardFragment extends Fragment {
         OkHttpClient client = new OkHttpClient();
 
         HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("http")
+                .scheme("https")
                 .host("api.mobile.goldinnfish.com")
                 .addPathSegment("user")
                 .addPathSegment("get_info")
@@ -247,12 +272,16 @@ public class RealCardFragment extends Fragment {
                             Log.d(TAG, Jobject.getString("email"));
                             Log.d(TAG, Jobject.getString("phone"));
                             Log.d(TAG, Jobject.getString("birthday"));
+                            Log.d(TAG, Jobject.getString("bonus"));
+                            Log.d(TAG, Jobject.getString("quant_card"));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_NAME, Jobject.getString("name"));
                             editor.putString(APP_PREFERENCES_MAIL, Jobject.getString("email"));
                             editor.putString(APP_PREFERENCES_NUMBER, Jobject.getString("phone"));
                             editor.putString(APP_PREFERENCES_DATE_BIRTHDAY, Jobject.getString("birthday"));
+                            editor.putString(APP_PREFERENCES_BONUS, Jobject.getString("bonus"));
+                            editor.putString(APP_PREFERENCES_QUANTITY_CARD, Jobject.getString("quant_card"));
                             editor.apply();
 
                         } catch (IOException | JSONException e) {

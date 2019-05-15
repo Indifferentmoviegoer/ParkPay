@@ -31,7 +31,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:contentDescription="TODO"
-                android:scaleType="centerCrop"
+                android:scaleType="fitXY"
                 android:src="@drawable/placeholder"
                 />
 

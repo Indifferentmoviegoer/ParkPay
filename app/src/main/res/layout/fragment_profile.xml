@@ -17,58 +17,53 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/bgP"
+                android:layout_width="match_parent"
+                android:layout_height="375dp"
+                android:background="@color/colorPrimary"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+
+
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/editProfile"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:foregroundGravity="center"
+                android:src="@drawable/ic_settings"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                style="@style/Toolbar">
+                />
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/profile"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <TextView
-                        android:id="@+id/signOut"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/signOut"
-                        android:textColor="@color/white"
-                        android:textSize="20sp"
-                        android:layout_marginEnd="10dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </androidx.appcompat.widget.Toolbar>
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imageProfile"
-                android:layout_width="80dp"
-                android:layout_height="59dp"
-                android:layout_marginEnd="15dp"
-                android:layout_marginStart="15dp"
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/signOut"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_exit"
+                android:layout_marginEnd="10dp"
                 android:layout_marginTop="10dp"
-                android:src="@drawable/person"
-                app:civ_border_color="@color/grey"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+
+                />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="170dp"
+                android:layout_height="170dp"
+                android:layout_marginTop="50dp"
+                android:src="@drawable/ic_person_profile"
                 app:civ_border_width="1dp"
-                app:layout_constraintDimensionRatio="1:1"
-                app:layout_constraintEnd_toStartOf="@id/nameProfile"
-                app:layout_constraintHorizontal_weight="2"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolbar" />
+                app:layout_constraintEnd_toEndOf="@id/bgP"
+                app:layout_constraintStart_toStartOf="@id/bgP"
+                app:layout_constraintTop_toTopOf="@id/bgP"
+                />
 
 
             <TextView
@@ -77,118 +72,216 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
-                app:layout_constraintStart_toEndOf="@id/imageProfile"
-                app:layout_constraintTop_toBottomOf="@id/toolbar"
-                android:text="@string/nameProfile"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/editProfile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/nameProfile"
-                app:layout_constraintStart_toEndOf="@id/imageProfile"
-                app:layout_constraintTop_toBottomOf="@id/nameProfile"
-                android:text="@string/editProfile" />
-
-            <View
-                android:id="@+id/topNot"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/grey"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/imageProfile"
                 app:layout_constraintTop_toBottomOf="@id/imageProfile"
-                />
-
-            <Switch
-                android:id="@+id/turnNotification"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/imageProfile"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topNot"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginTop="10dp"
-                android:text="@string/turnNotification" />
-
-            <View
-                android:id="@+id/topFriend"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/grey"
-                app:layout_constraintTop_toBottomOf="@id/turnNotification"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-
-            <TextView
-                android:id="@+id/inviteFriend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginStart="10dp"
-                android:textColor="@color/black"
-                android:text="@string/invite"
-                app:layout_constraintTop_toBottomOf="@id/topFriend"
-                app:layout_constraintStart_toStartOf="parent"
-                />
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/share"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
-                android:foregroundGravity="center_vertical"
-                app:layout_constraintBottom_toTopOf="@id/bottomFriend"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/topFriend"
-                android:src="@drawable/ic_share"
+                app:layout_constraintEnd_toEndOf="@id/imageProfile"
+                android:text="@string/nameProfile"
+                android:textColor="@color/white"
+                android:textSize="25sp"
                 />
 
             <View
-                android:id="@+id/bottomFriend"
+                android:id="@+id/nameView"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
-                android:background="@color/grey"
-                app:layout_constraintTop_toBottomOf="@id/inviteFriend"
+                android:layout_marginTop="15dp"
+                app:layout_constraintTop_toBottomOf="@id/nameProfile"
+                app:layout_constraintStart_toStartOf="parent"/>
+
+            <!--<Switch-->
+                <!--android:id="@+id/turnNotification"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_below="@+id/imageProfile"-->
+                <!--android:gravity="center_horizontal"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintTop_toBottomOf="@id/bgP"-->
+                <!--android:layout_marginEnd="10dp"-->
+                <!--android:visibility="invisible"-->
+                <!--android:text="@string/turnNotification" />-->
+
+
+            <TextView
+                android:id="@+id/bonus"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="1000"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@id/bonusTitle"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/bonusView"
                 />
 
             <TextView
-                android:id="@+id/quantityVisitsTitle"
+                android:id="@+id/bonusTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                app:layout_constraintBottom_toTopOf="@id/result"
+                android:text="Бонусы"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
                 app:layout_constraintStart_toStartOf="parent"
-                android:textColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@id/bonusView"
                 />
+
+            <View
+                android:id="@+id/bonusView"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toBottomOf="@id/nameView"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toEndOf="@id/bonus"
+                />
+
+
+            <TextView
+                android:id="@+id/card"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="10"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@id/cardTitle"
+                app:layout_constraintStart_toEndOf="@id/bonusView"
+                app:layout_constraintEnd_toStartOf="@id/cardView"
+                />
+
+            <TextView
+                android:id="@+id/cardTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Карты"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toStartOf="@id/bonusView"
+                app:layout_constraintEnd_toStartOf="@id/cardView"
+                />
+
+            <View
+                android:id="@+id/cardView"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toBottomOf="@id/nameView"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toEndOf="@id/card"/>
 
             <TextView
                 android:id="@+id/quantityVisits"
+                android:layout_width="70dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="10dp"
+                android:text="10"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toTopOf="@id/quantityTitle"
+                app:layout_constraintStart_toEndOf="@id/cardView"
+                />
+
+            <TextView
+                android:id="@+id/quantityTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@id/result"
-                app:layout_constraintStart_toEndOf="@id/quantityVisitsTitle" />
-
-            <com.google.android.gms.ads.doubleclick.PublisherAdView
-
-                android:id="@+id/result"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                ads:adSize="BANNER"
-                ads:adUnitId="@string/result"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="10dp"
+                android:text="Визиты"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toEndOf="@id/cardView"
+                app:layout_constraintEnd_toStartOf="@id/quantityView"
                 />
+
+            <View
+                android:id="@+id/quantityView"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="10dp"
+                app:layout_constraintTop_toBottomOf="@id/nameView"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toEndOf="@id/quantityVisits"/>
+
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/share"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:layout_constraintBottom_toTopOf="@id/shareTitle"
+                app:layout_constraintStart_toEndOf="@id/quantityView"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:src="@drawable/ic_share"
+                />
+
+            <TextView
+                android:id="@+id/shareTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:text="Пригласить"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toEndOf="@id/quantityView"
+                app:layout_constraintEnd_toEndOf="parent"
+                />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:background="@drawable/shadow_profile"
+                app:layout_constraintTop_toBottomOf="@id/bgP"
+
+                />
+
+            <ListView
+                android:id="@+id/operationList"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toBottomOf="@id/bgP"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                tools:ignore="NestedScrolling" />
+
+            <ProgressBar
+                android:id="@+id/progressBarProfile"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@id/operationList"
+                app:layout_constraintEnd_toEndOf="@id/operationList"
+                app:layout_constraintStart_toStartOf="@id/operationList"
+                app:layout_constraintTop_toTopOf="@id/operationList" />
+
+
+
+            <!--<com.google.android.gms.ads.doubleclick.PublisherAdView-->
+
+                <!--android:id="@+id/result"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--ads:adSize="BANNER"-->
+                <!--ads:adUnitId="@string/result"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--/>-->
 
 
 
