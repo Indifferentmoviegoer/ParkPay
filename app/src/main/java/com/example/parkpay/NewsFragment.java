@@ -90,44 +90,22 @@ public class NewsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
 
-//                    boolean checkConnection=MainActivity.isOnline(c);
-//
-//                    if(checkConnection){
                     getNews();
-//                    }
-//                    else {
-//                        Toast.makeText(c, "Отсутствует интернет соединение!",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
 
-                    swipeNews.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-
-                        swipeNews.setRefreshing(false);
-
-
-//                        if(checkConnection){
+                    swipeNews.setOnRefreshListener(() -> {
 
                         getNews();
-
-//                        }
-//                        else {
-//                            Toast.makeText(c, "Отсутствует интернет соединение!",
-//                                    Toast.LENGTH_SHORT).show();
-//                        }
-
-                    }, 5000));
+                    });
                 }
                 if(position==1){
 
                     getSales();
 
-                    swipeNews.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-
-                        swipeNews.setRefreshing(false);
+                    swipeNews.setOnRefreshListener(() -> {
 
                         getSales();
 
-                    }, 5000));
+                    });
                 }
             }
 
@@ -234,6 +212,8 @@ public class NewsFragment extends Fragment {
                             rv.setVisibility(View.VISIBLE);
                             progressBarNews.setVisibility(View.INVISIBLE);
 
+                            swipeNews.setRefreshing(false);
+
                         } catch (IOException| JSONException e) {
                             Log.d(TAG, "Ошибка " + e);
                         }
@@ -320,6 +300,7 @@ public class NewsFragment extends Fragment {
                             rv.setVisibility(View.VISIBLE);
                             progressBarNews.setVisibility(View.INVISIBLE);
 
+                            swipeNews.setRefreshing(false);
 
                         } catch (IOException|JSONException e) {
                             Log.d(TAG, "Ошибка " + e);

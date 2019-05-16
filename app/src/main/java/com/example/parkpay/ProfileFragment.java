@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.fragment.app.Fragment;
 
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -141,7 +143,9 @@ public class ProfileFragment extends Fragment {
 
         signOut.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(c);
-            builder.setMessage("Вы действительно хотите выйти?");
+            builder.setTitle("Выйти");
+            builder.setMessage(Html
+                    .fromHtml("<font color='#000000'>Вы действительно хотите выйти?</font>"));
             builder.setCancelable(false);
             builder.setPositiveButton("Да",
                     (dialog, id) -> {
@@ -161,6 +165,9 @@ public class ProfileFragment extends Fragment {
                     (dialog, id) -> dialog.cancel());
             AlertDialog alertDialog = builder.create();
             alertDialog.show();
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
         });
 
 //        if(settings.contains(APP_PREFERENCES_NOTIFICATION)) {

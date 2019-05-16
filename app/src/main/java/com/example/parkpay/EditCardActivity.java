@@ -91,7 +91,7 @@ public class EditCardActivity extends AppCompatActivity {
         backEdit.setOnClickListener(v -> {
 
             Intent intent = new Intent(c,
-                    DetailCardActivity.class);
+                    MainActivity.class);
             startActivity(intent);
 
         });

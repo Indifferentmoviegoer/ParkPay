@@ -38,6 +38,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
+import ru.tinkoff.decoro.slots.Slot;
+import ru.tinkoff.decoro.watchers.FormatWatcher;
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 import ru.yandex.money.android.sdk.Amount;
 import ru.yandex.money.android.sdk.Checkout;
 import ru.yandex.money.android.sdk.ColorScheme;
@@ -103,11 +108,11 @@ public class PayBonusFragment extends Fragment {
         String name = settings.getString(APP_PREFERENCES_CARD_NAME, "") + "";
         String number = settings.getString(APP_PREFERENCES_CARD_CODE, "") + "";
 
-//        Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("____.__");
-//        MaskImpl mask = MaskImpl.createTerminated(slots);
-//        mask.setForbidInputWhenFilled(true);
-//        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
-//        formatWatcher.installOn(amountPay);
+        Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("____");
+        MaskImpl mask = MaskImpl.createTerminated(slots);
+        mask.setForbidInputWhenFilled(true);
+        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
+        formatWatcher.installOn(amountPay);
 
         titlePay.setText(name);
         numberPay.setText(number);
@@ -115,7 +120,7 @@ public class PayBonusFragment extends Fragment {
         buttonPay.setOnClickListener(v -> {
 
             if (amountPay.getText().toString().equals("") || amountPay.getText().length() == 0) {
-                Toast.makeText(c, "Заполните все поля ввода!",
+                Toast.makeText(c, "Введите сумму",
                         Toast.LENGTH_SHORT).show();
             } else {
                 sum = amountPay.getText().toString();

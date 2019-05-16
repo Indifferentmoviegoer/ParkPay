@@ -15,6 +15,9 @@ import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHolder>{
@@ -38,8 +41,27 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
     public void onBindViewHolder(@NonNull SaleViewHolder saleViewHolder, int i) {
         saleViewHolder.saleName.setText(sales.get(i).name);
         saleViewHolder.personAge.setText(sales.get(i).text);
-        saleViewHolder.dateStart.setText(sales.get(i).dateStart);
-        saleViewHolder.dateEnd.setText(sales.get(i).dateEnd);
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat formatterOut = new SimpleDateFormat("dd MMMM");
+
+
+        try {
+
+            Date dateStart = formatter.parse(sales.get(i).dateStart);
+            Date dateEnd = formatter.parse(sales.get(i).dateEnd);
+            //Date timeValues = formatter.parse(SubItem.get(i));
+
+            saleViewHolder.dateStart.setText(formatterOut.format(dateStart));
+            saleViewHolder.dateEnd.setText(formatterOut.format(dateEnd));
+
+            //time.setText(timeValue.format(timeValues));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         Glide.with(context).load(sales.get(i).getImageUrl()).into(saleViewHolder.photo);
     }

@@ -9,11 +9,13 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -59,6 +61,9 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText inviteCode;
     private ImageButton back;
     private AppCompatTextView signIn;
+    TextInputLayout mailLabel;
+    TextInputLayout passwLabel;
+    TextInputLayout confirmPasswordLabel;
 
 
     private String loginUser;
@@ -94,6 +99,9 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
+        StrictMode.ThreadPolicy mypolicy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(mypolicy);
+
         login=findViewById(R.id.login);
         name= findViewById(R.id.name);
         email= findViewById(R.id.mail);
@@ -105,7 +113,9 @@ public class SignUpActivity extends AppCompatActivity {
         signUp= findViewById(R.id.signUp);
         back= findViewById(R.id.back);
         signIn= findViewById(R.id.signIn);
-
+        mailLabel= findViewById(R.id.mail_label);
+        passwLabel= findViewById(R.id.passw_label);
+        confirmPasswordLabel= findViewById(R.id.confirmPassword_label);
 
         c=this;
 
@@ -149,18 +159,92 @@ public class SignUpActivity extends AppCompatActivity {
             {
                 if(!MainActivity.isValidEmail(email.getText().toString())){
 
-                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
-//                    mailLayout.setErrorEnabled(true);
-//                    mailLayout.setHintEnabled(false);
-//                    mailLayout.setError(getResources().getString(R.string.mailLayout));
+                    mailLabel.setErrorEnabled(true);
+                    //mailLabel.setHintEnabled(false);
+                    mailLabel.setError(getResources().getString(R.string.error));
                 }
 
                 if(MainActivity.isValidEmail(email.getText().toString())){
 
                     email.getBackground().clearColorFilter();
 
-//                    mailLayout.setErrorEnabled(false);
+                    mailLabel.setErrorEnabled(false);
+                }
+
+            }
+        });
+
+        pass.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+
+                passUser=pass.getText().toString();
+
+                if(passUser.length()<6){
+
+//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+
+                    passwLabel.setErrorEnabled(true);
+                    //mailLabel.setHintEnabled(false);
+                    passwLabel.setError(getResources().getString(R.string.passError));
+                }
+
+                else{
+
+                    pass.getBackground().clearColorFilter();
+
+                    passwLabel.setErrorEnabled(false);
+                }
+
+            }
+        });
+
+        confirmPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+
+                confirmPasswordUser=confirmPassword.getText().toString();
+                passUser=pass.getText().toString();
+
+                if(!passUser.equals(confirmPasswordUser)){
+
+
+//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+
+                    confirmPasswordLabel.setErrorEnabled(true);
+                    //mailLabel.setHintEnabled(false);
+                    confirmPasswordLabel.setError(getResources().getString(R.string.confirmError));
+                }
+
+                else{
+
+                    confirmPassword.getBackground().clearColorFilter();
+
+                    confirmPasswordLabel.setErrorEnabled(false);
                 }
 
             }
@@ -214,8 +298,8 @@ public class SignUpActivity extends AppCompatActivity {
                     nameUser.equals("")||nameUser.length() == 0||
                     emailUser.equals("")||emailUser.length() == 0||
                     passUser.equals("")||passUser.length() == 0||
-                    confirmPasswordUser.equals("")||confirmPasswordUser.length()==0||
-                    inviteCodeUser.equals("")||inviteCodeUser.length()==0
+                    confirmPasswordUser.equals("")||confirmPasswordUser.length()==0
+//                    inviteCodeUser.equals("")||inviteCodeUser.length()==0
             )
             {
                 Toast.makeText(getApplicationContext(),"Заполните все поля ввода!",
@@ -225,16 +309,28 @@ public class SignUpActivity extends AppCompatActivity {
             {
                 if (passUser.equals(confirmPasswordUser)){
 
-                    boolean checkConnection=MainActivity.isOnline(c);
+                    if(passUser.length()>=6) {
 
-                        if(checkConnection) {
+                        if (MainActivity.isValidEmail(email.getText().toString())) {
 
-                        doPostRequest("https://api.mobile.goldinnfish.com/register");
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                            boolean checkConnection = MainActivity.isOnline(c);
+
+                            if (checkConnection) {
+
+                                doPostRequest("https://api.mobile.goldinnfish.com/register");
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Неправильный адрес почты",
                                     Toast.LENGTH_SHORT).show();
                         }
+                    }
+                    else {
+                        Toast.makeText(getApplicationContext(), "Пароль должен быть не менее 6 символов!",
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 else {
                     Toast.makeText(getApplicationContext(),"Пароли не совпадают",
@@ -326,14 +422,14 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
-                                Toast.makeText(c,"Вход",Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(c,"Вход",Toast.LENGTH_SHORT).show();
 
                                 Intent intent = new Intent(c,
-                                        MainActivity.class);
+                                        SignInActivity.class);
                                 startActivity(intent);
                             }
-                            else {
-                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, ""),
+                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "0")) {
+                                Toast.makeText(c,Jobject.getString("msg"),
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -341,6 +437,9 @@ public class SignUpActivity extends AppCompatActivity {
                     } catch (IOException | JSONException e) {
 
                         Log.d(TAG,"Ошибка: "+e);
+
+//                        Toast.makeText(c,e+"",
+//                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }

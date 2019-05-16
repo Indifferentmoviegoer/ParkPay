@@ -10,8 +10,11 @@
                 android:angle="45.0"/>
             <corners
                 android:radius="10.0dip" />
-            <stroke android:width="2px"
-                android:color="#000" />
+            <!--<stroke android:width="2px"-->
+                <!--android:color="#000" />-->
+
+            <!--android:startColor="#de6161"-->
+            <!--android:endColor="#2657eb"-->
         </shape>
     </item>
 </selector>

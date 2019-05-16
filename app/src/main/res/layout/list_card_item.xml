@@ -72,52 +72,50 @@
         />
 
     <TextView
-        android:id="@+id/moneyCard"
+        android:id="@+id/moneyTitleCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
         android:layout_marginStart="30dp"
         android:textSize="18sp"
-        android:text="100 000"
+        android:text="₽"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/imageCard"
         app:layout_constraintTop_toBottomOf="@id/subitem"/>
 
 
     <TextView
-        android:id="@+id/moneyTitleCard"
+        android:id="@+id/moneyCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="5dp"
-        android:text="Р"
+        android:layout_marginStart="10dp"
+        android:text="100 000"
         android:textSize="18sp"
-        android:layout_marginEnd="20dp"
         android:layout_marginTop="30dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/moneyCard"
+        app:layout_constraintStart_toEndOf="@id/moneyTitleCard"
         app:layout_constraintTop_toBottomOf="@id/subitem" />
 
     <TextView
-        android:id="@+id/bonusCard"
+        android:id="@+id/bonusTitleCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
-        android:text="10"
+        android:text="Б"
         android:textSize="18sp"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="@id/imageCard"
         app:layout_constraintTop_toBottomOf="@id/moneyCard"/>
 
     <TextView
-        android:id="@+id/bonusTitleCard"
+        android:id="@+id/bonusCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Б"
+        android:text="10"
         android:textSize="18sp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginStart="10dp"
         android:textColor="@color/white"
-        app:layout_constraintStart_toEndOf="@id/bonusCard"
+        app:layout_constraintStart_toEndOf="@id/bonusTitleCard"
         app:layout_constraintTop_toBottomOf="@id/moneyTitleCard" />
 
     <ImageView
@@ -126,7 +124,6 @@
         android:src="@drawable/ic_money"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:text="Пополнить"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="17dp"
         app:layout_constraintEnd_toEndOf="@id/imageCard"

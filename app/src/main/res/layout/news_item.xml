@@ -66,7 +66,7 @@ xmlns:card="http://schemas.android.com/tools">
             android:linksClickable="true"
             android:layout_marginTop="20dp"
             android:layout_below="@+id/news_text"
-            android:textColor="@color/blue"
+            android:textColor="@color/betterBlue"
             />
 
         <TextView
@@ -75,9 +75,8 @@ xmlns:card="http://schemas.android.com/tools">
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Текст"
-            android:textStyle="bold"
             android:layout_below="@+id/news_link"
-            android:textColor="@color/black"
+            android:textColor="@color/grey"
             />
     </RelativeLayout>
 

@@ -78,6 +78,7 @@ public class AttractionsFragment extends Fragment {
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         rv.setVisibility(View.INVISIBLE);
+        progressBarAttractions.setVisibility(View.VISIBLE);
 
         c=getContext();
 
@@ -89,29 +90,10 @@ public class AttractionsFragment extends Fragment {
 
         swipeAttr.setOnRefreshListener(() -> {
 
-            new Handler().postDelayed(() -> {
-
-                swipeAttr.setRefreshing(false);
-
                 attr = new ArrayList<>();
 
-                rv.setVisibility(View.INVISIBLE);
-
                 getAttr("https://api.mobile.goldinnfish.com/attr/list");
-
-                AttractionsAdapter adapter = new AttractionsAdapter(c,attr);
-                rv.setAdapter(adapter);
-
-                rv.setVisibility(View.VISIBLE);
-                progressBarAttractions.setVisibility(View.INVISIBLE);
-            }, 5000);
         });
-
-//        AttractionsAdapter adapter = new AttractionsAdapter(c,attr);
-//        rv.setAdapter(adapter);
-//
-//        rv.setVisibility(View.VISIBLE);
-//        progressBarAttractions.setVisibility(View.INVISIBLE);
 
         getAttr("https://api.mobile.goldinnfish.com/attr/list");
 
@@ -225,6 +207,8 @@ public class AttractionsFragment extends Fragment {
 
                             rv.setVisibility(View.VISIBLE);
                             progressBarAttractions.setVisibility(View.INVISIBLE);
+
+                            swipeAttr.setRefreshing(false);
 
                         } catch (IOException | JSONException e) {
                             Toast.makeText(c, "Ошибка " + e, Toast.LENGTH_SHORT).show();

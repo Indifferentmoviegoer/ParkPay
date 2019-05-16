@@ -43,6 +43,11 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import ru.tinkoff.decoro.MaskImpl;
+import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
+import ru.tinkoff.decoro.slots.Slot;
+import ru.tinkoff.decoro.watchers.FormatWatcher;
+import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 import ru.yandex.money.android.sdk.Amount;
 import ru.yandex.money.android.sdk.Checkout;
 import ru.yandex.money.android.sdk.ColorScheme;
@@ -108,11 +113,11 @@ public class PayFragment extends Fragment {
         String name = settings.getString(APP_PREFERENCES_CARD_NAME, "") + "";
         String number = settings.getString(APP_PREFERENCES_CARD_CODE, "") + "";
 
-//        Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("____.__");
-//        MaskImpl mask = MaskImpl.createTerminated(slots);
-//        mask.setForbidInputWhenFilled(true);
-//        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
-//        formatWatcher.installOn(amountPay);
+        Slot[] slots = new UnderscoreDigitSlotsParser().parseSlots("____");
+        MaskImpl mask = MaskImpl.createTerminated(slots);
+        mask.setForbidInputWhenFilled(true);
+        FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
+        formatWatcher.installOn(amountPay);
 
         titlePay.setText(name);
         numberPay.setText(number);
@@ -120,7 +125,7 @@ public class PayFragment extends Fragment {
         buttonPay.setOnClickListener(v -> {
 
             if (amountPay.getText().toString().equals("") || amountPay.getText().length() == 0) {
-                Toast.makeText(c, "Заполните все поля ввода!",
+                Toast.makeText(c, "Введите сумму",
                         Toast.LENGTH_SHORT).show();
             } else {
                 sum = new BigDecimal(amountPay.getText().toString());
@@ -152,7 +157,7 @@ public class PayFragment extends Fragment {
                     doPostRequest("https://api.mobile.goldinnfish.com/card/create_payment");
 
                 case RESULT_CANCELED:
-                    Toast.makeText(c,"Отмена",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c,"Отменено",Toast.LENGTH_SHORT).show();
 //                    doPostRequest("http://192.168.252.199/card/add_money");
                     // user canceled tokenization
                     break;
@@ -255,7 +260,7 @@ public class PayFragment extends Fragment {
 //                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, "")
 //                                                ,Toast.LENGTH_SHORT).show();
 
-                            Toast.makeText(c, "Успешно"
+                            Toast.makeText(c, "Успешно!"
                                     , Toast.LENGTH_SHORT).show();
 
                             Intent intent = new Intent(c,

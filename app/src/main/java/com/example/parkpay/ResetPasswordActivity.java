@@ -124,6 +124,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                 Jobject.getString("msg"),
                                 Toast.LENGTH_SHORT).show();
 
+                        Intent intent = new Intent(c,
+                                SignInActivity.class);
+                        startActivity(intent);
+
 
                     } catch (IOException | JSONException e) {
 

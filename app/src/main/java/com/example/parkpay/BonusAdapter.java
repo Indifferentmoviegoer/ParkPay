@@ -10,7 +10,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Objects;
 
 class BonusAdapter extends BaseAdapter {
@@ -65,11 +68,39 @@ class BonusAdapter extends BaseAdapter {
 
         TextView item = view.findViewById(R.id.item);
         TextView subitem = view.findViewById(R.id.subitem);
+        TextView time = view.findViewById(R.id.time);
 
         TextView moneyCard = view.findViewById(R.id.value);
 
         item.setText(Item.get(i));
-        subitem.setText(SubItem.get(i));
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat formatterOut = new SimpleDateFormat("dd MMM");
+        SimpleDateFormat timeValue = new SimpleDateFormat("HH:mm:ss");
+
+
+        try {
+
+
+
+            Date date = formatter.parse(SubItem.get(i));
+            Date timeValues = formatter.parse(SubItem.get(i));
+
+//            if(date.isEqual(historyDate) && todayDate.before(futureDate)) {
+//                // In between
+//            }
+
+            subitem.setText(formatterOut.format(date));
+
+            time.setText(timeValue.format(timeValues));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
 
         String plus="+"+MoneyCard.get(i);
         moneyCard.setText(plus);

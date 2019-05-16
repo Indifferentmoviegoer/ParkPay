@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.StrictMode;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -68,8 +69,9 @@ public class RealCardFragment extends Fragment {
     private CardAdapter cardAdapter;
     private ContentLoadingProgressBar progressBarCard;
     private SwipeRefreshLayout swipeCard;
-
     ImageView addCard;
+    AppCompatTextView noCard;
+
 
     private SharedPreferences settings;
     private Context c;
@@ -85,9 +87,10 @@ public class RealCardFragment extends Fragment {
         }
 
         simpleList = view.findViewById(R.id.realCard);
-        addCard = (ImageView)view.findViewById(R.id.addCard);
+        addCard = view.findViewById(R.id.addCard);
         progressBarCard= view.findViewById(R.id.progressBarCard);
         swipeCard = view.findViewById(R.id.swipeCard);
+        noCard = view.findViewById(R.id.noCard);
 
         swipeCard.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
@@ -96,14 +99,9 @@ public class RealCardFragment extends Fragment {
 
         simpleList.setVisibility(View.INVISIBLE);
         progressBarCard.setVisibility(View.VISIBLE);
+        noCard.setVisibility(View.INVISIBLE);
 
-        swipeCard.setOnRefreshListener(() -> new Handler().postDelayed(() -> {
-
-            swipeCard.setRefreshing(false);
-            doGetRequest();
-
-        }, 5000));
-
+        swipeCard.setOnRefreshListener(this::doGetRequest);
 
         simpleList.invalidateViews();
 
@@ -204,11 +202,20 @@ public class RealCardFragment extends Fragment {
 
                             simpleList.setVisibility(View.VISIBLE);
                             progressBarCard.setVisibility(View.INVISIBLE);
+                            noCard.setVisibility(View.INVISIBLE);
+
+                            swipeCard.setRefreshing(false);
 
 
                         } catch (IOException | JSONException e) {
 
                             Log.d(TAG, "Ошибка " + e);
+
+                            noCard.setVisibility(View.VISIBLE);
+                            simpleList.setVisibility(View.VISIBLE);
+                            progressBarCard.setVisibility(View.INVISIBLE);
+
+                            swipeCard.setRefreshing(false);
                         }
                     });
                 }

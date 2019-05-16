@@ -17,6 +17,9 @@
     <string name="password">Пароль</string>
     <string name="confirm">Подтвердите пароль</string>
     <string name="dateBirthday">Дата рождения</string>
+    <string name="error">Неправильный адрес почты</string>
+    <string name="passError">Не менее 6 символов</string>
+    <string name="confirmError">Пароли не совпадают</string>
 
     <string name="reset">Сбросить пароль</string>
     <string name="cancel">Отмена</string>

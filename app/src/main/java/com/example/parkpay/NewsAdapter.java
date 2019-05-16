@@ -16,6 +16,9 @@ import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
@@ -38,7 +41,29 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
     @Override
     public void onBindViewHolder(@NonNull NewsViewHolder newsViewHolder, int i) {
         newsViewHolder.newsName.setText(news.get(i).name);
-        newsViewHolder.dateNews.setText(news.get(i).date);
+
+
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        SimpleDateFormat formatterOut = new SimpleDateFormat("dd MMMM");
+
+
+        try {
+
+            Date date = formatter.parse(news.get(i).date);
+            //Date timeValues = formatter.parse(SubItem.get(i));
+
+            newsViewHolder.dateNews.setText(formatterOut.format(date));
+
+            //time.setText(timeValue.format(timeValues));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
         newsViewHolder.text.setText(news.get(i).text);
         newsViewHolder.link.setText(news.get(i).link);
 
