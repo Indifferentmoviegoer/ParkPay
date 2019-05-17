@@ -71,7 +71,7 @@
         android:layout_height="wrap_content"
         android:textColor="@color/grey"
         android:textSize="25sp"
-        android:text="У вас пока нет карт"
+        android:text="@string/noCard"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"

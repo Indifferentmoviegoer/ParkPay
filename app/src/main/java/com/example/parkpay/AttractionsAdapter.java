@@ -57,18 +57,40 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
         attractionViewHolder.attrName.setText(attractions.get(i).name);
         attractionViewHolder.price.setText(attractions.get(i).price);
         attractionViewHolder.bonus.setText(attractions.get(i).bonus);
-        attractionViewHolder.text.setText(attractions.get(i).text);
+
+        if(attractions.get(i).text.contains("null")){
+            attractionViewHolder.text.setText("");
+        }
+        else {
+            attractionViewHolder.text.setText(attractions.get(i).text);
+        }
+
 
         String weight=attractions.get(i).weight+" кг";
         String growth=attractions.get(i).growth+" см";
         String ageMin=attractions.get(i).ageMin+"+ лет";
 
 
+        if(attractions.get(i).ageMin.contains("null"))
+        {
+            ageMin="4+ лет";
+        }
+        if(attractions.get(i).weight.contains("null")){
+
+            weight="100 кг";
+        }
+        if(attractions.get(i).growth.contains("null")){
+
+            growth="130 см";
+        }
+
         attractionViewHolder.weight.setText(weight);
         attractionViewHolder.growth.setText(growth);
         attractionViewHolder.ageMin.setText(ageMin);
 
         String levelFear=attractions.get(i).levelFear;
+
+
 
         if(levelFear.contains("низкий")){
 
@@ -89,8 +111,16 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
         }
 //        attractionViewHolder.ageMax.setText(attractions.get(i).ageMax);
 
-        Glide.with(context).load(attractions.get(i).getImageUrl()).into(attractionViewHolder.attrPhoto);
 
+
+
+        if(attractions.get(i).getImageUrl().contains("null")){
+
+            Glide.with(context).load(R.drawable.placeholder).into(attractionViewHolder.attrPhoto);
+        }
+        else {
+            Glide.with(context).load(attractions.get(i).getImageUrl()).into(attractionViewHolder.attrPhoto);
+        }
         attractionViewHolder.mapAttr.setOnClickListener(v -> {
 
             SharedPreferences.Editor editor = settings.edit();
@@ -143,7 +173,7 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
         final TextView weight;
         final TextView growth;
         final TextView ageMin;
-//        final TextView ageMax;
+        //        final TextView ageMax;
         final TextView mapAttr;
         final ImageView attrPhoto;
         final ImageView map;

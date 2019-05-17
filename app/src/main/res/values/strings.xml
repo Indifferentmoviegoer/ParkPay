@@ -60,8 +60,17 @@
 
     <string name="parks">Парки</string>
     <string name="attractions">Аттракционы</string>
+    <string name="filters">Фильтры</string>
+    <string name="minAge">Мин. возраст</string>
+    <string name="maxAge">Макс. возраст</string>
+    <string name="maxWeight">Макс. вес</string>
+    <string name="minGrowth">Мин. рост</string>
+    <string name="nameAttraction">Название</string>
     <string name="onMap">На карте</string>
     <string name="more">Подробнее…</string>
+
+    <string name="noCard">У вас пока нет карт</string>
+    <string name="noSearch">Ничего не найдено</string>
 
     <string name="result">ca-app-pub-9760468716956149/2317568936</string>
 

@@ -50,9 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/bottomGrey"
-                android:layout_marginTop="10dp"
                 android:text="Ощутите дух захватывающего гоночного соревнования всей семьей! Стремительное движение состава по кольцевому треку создает ощущение скоростной поездки на автомобиле с заносом.  "
-                android:layout_below="@id/year"
+                android:layout_below="@+id/attraction_name"
                 />
 
 
@@ -60,22 +59,24 @@
                 android:id="@+id/year"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/shape_year"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 />
 
             <TextView
                 android:id="@+id/age_min"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:textSize="17sp"
                 android:paddingTop="3dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:textFontWeight="bold"
                 android:text="10+ лет"
                 android:lineHeight="13dp"
@@ -89,7 +90,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@id/year"
                 android:background="@drawable/shape_weight"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 />
 
             <TextView
@@ -104,7 +105,7 @@
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
                 android:layout_toEndOf="@id/year"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:textFontWeight="bold"
                 android:text="100 кг"
                 android:lineHeight="13dp"
@@ -118,7 +119,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@id/weightView"
                 android:background="@drawable/shape_growth"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 />
 
             <TextView
@@ -133,7 +134,7 @@
                 android:paddingTop="3dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:textFontWeight="bold"
                 android:text="130 см"
                 android:lineHeight="13dp"
@@ -148,7 +149,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_toEndOf="@id/growthView"
                 android:background="@drawable/shape_level"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 />
 
             <ImageView
@@ -162,7 +163,7 @@
                 android:paddingTop="3dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:src="@drawable/ic_family"
                 />
 
@@ -174,7 +175,7 @@
                 android:layout_marginTop="15dp"
                 android:text="1000"
                 android:textSize="17sp"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:layout_toStartOf="@id/priceTitle"
                 android:textColor="@color/red"
                 />
@@ -189,7 +190,7 @@
                 android:text="Р"
                 android:layout_alignParentEnd="true"
                 android:textSize="17sp"
-                android:layout_below="@+id/attraction_name"
+                android:layout_below="@+id/text"
                 android:textColor="@color/red"
                 />
 
@@ -249,7 +250,7 @@
                 android:layout_marginEnd="5dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/onMap"
-                android:layout_below="@id/text"
+                android:layout_below="@+id/year"
                 android:layout_toStartOf="@id/attraction_id"
                 android:layout_alignBottom="@id/attraction_id"
                 android:textColor="@color/black"
@@ -260,7 +261,7 @@
                 android:layout_width="36dp"
                 android:layout_height="36dp"
                 android:layout_alignParentEnd="true"
-                android:layout_below="@id/text"
+                android:layout_below="@+id/year"
                 android:src="@drawable/ic_marker"
                 android:contentDescription="TODO" />
         </RelativeLayout>

@@ -172,6 +172,14 @@ private ImageView backProfile;
         FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(phone);
 
+//        Slot[] slotD = new UnderscoreDigitSlotsParser().parseSlots("____.__.__");
+//        MaskImpl maskD = MaskImpl.createTerminated(slotD);
+//        maskD.setForbidInputWhenFilled(true);
+//        FormatWatcher formatWatcherD = new MaskFormatWatcher(maskD);
+//        formatWatcherD.installOn(dateBirthday);
+
+        dateBirthday.setKeyListener(null);
+
         email.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
