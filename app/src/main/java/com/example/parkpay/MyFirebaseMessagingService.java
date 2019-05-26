@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.yandex.metrica.push.firebase.MetricaMessagingService;
 
 import java.util.Objects;
 
@@ -22,7 +21,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         Log.d(TAG, "1");
-        new MetricaMessagingService().processPush(this, remoteMessage);
         if(remoteMessage.getNotification()!=null){
             sendNotification(Objects.requireNonNull(remoteMessage.getNotification()).getBody());
         }
@@ -48,5 +46,19 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         notificationManager.notify(0, notificationBuilder.build());
         Log.d(TAG, "4");
+    }
+
+    @Override
+    public void onNewToken(String token) {
+        Log.d(TAG, "Refreshed token: " + token);
+
+        // If you want to send messages to this application instance or
+        // manage this apps subscriptions on the server side, send the
+        // Instance ID token to your app server.
+        sendRegistrationToServer(token);
+    }
+
+    private void sendRegistrationToServer(String token) {
+        // TODO: Send any registration to your app's servers.
     }
 }

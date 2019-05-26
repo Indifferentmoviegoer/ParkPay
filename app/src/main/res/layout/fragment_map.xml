@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:apiKey="AIzaSyAkEPoaujC2ZE7bNYANSH4J7XV-UgzVfSY"
+        android:apiKey="AIzaSyDO_gTtD5QyjdpjkPLDFNoB9kMLZsEzEI4"
         android:clickable="true"
         android:enabled="true"
         android:focusable="true"

@@ -8,9 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import android.os.StrictMode;
 import android.util.Log;
-import android.view.View;
-import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -72,10 +71,10 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        TypefaceUtil
-                .overrideFont(getApplicationContext(),
-                "SERIF",
-                "font/roboto_regular.ttf");
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+//        TypefaceUtil.overrideFont(getApplicationContext(), "serif", "font/roboto_regular.ttf");
 
         signIn.setOnClickListener(v -> {
             loginUser=login.getText().toString();
@@ -91,10 +90,11 @@ public class SignInActivity extends AppCompatActivity {
 
                     if(checkConnection){
 
-                    doPostRequest("https://api.mobile.goldinnfish.com/login");
+                        signIn();
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                        Toast.makeText(getApplicationContext(),
+                                "Отсутствует интернет соединение!",
                                 Toast.LENGTH_SHORT).show();
                     }
             }
@@ -102,7 +102,8 @@ public class SignInActivity extends AppCompatActivity {
 
         if(settings.contains(APP_PREFERENCES_TOKEN)){
 
-            doPostRequestRefresh("https://api.mobile.goldinnfish.com/login");
+            refreshToken();
+
 
             Intent intent = new Intent(SignInActivity.this,
                     MainActivity.class);
@@ -136,7 +137,7 @@ public class SignInActivity extends AppCompatActivity {
         editor.apply();
     }
 
-    private void doPostRequest(String url){
+    private void signIn(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -153,7 +154,7 @@ public class SignInActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/login")
                 .build();
 
         Call call = client.newCall(request);
@@ -206,7 +207,7 @@ public class SignInActivity extends AppCompatActivity {
         });
     }
 
-    private void doPostRequestRefresh(String url){
+    private void refreshToken(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -223,7 +224,7 @@ public class SignInActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/login")
                 .build();
 
         Call call = client.newCall(request);

@@ -10,9 +10,6 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -103,15 +100,15 @@ public class EditCardActivity extends AppCompatActivity {
 
             boolean checkConnection=MainActivity.isOnline(c);
 
-                if(checkConnection) {
+            if(checkConnection) {
 
-            doPostRequest("https://api.mobile.goldinnfish.com/card/edit");
+                editCard();
 
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-                            Toast.LENGTH_SHORT).show();
-                }
+            }
+            else {
+                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -149,7 +146,7 @@ public class EditCardActivity extends AppCompatActivity {
         }
     }
 
-    private void doPostRequest(String url){
+    private void editCard(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -171,7 +168,7 @@ public class EditCardActivity extends AppCompatActivity {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/card/edit")
                 .build();
 
         Call call = client.newCall(request);
@@ -198,8 +195,6 @@ public class EditCardActivity extends AppCompatActivity {
                         }
                         JSONObject Jobject = new JSONObject(jsonData);
 
-                        Log.d(TAG,Jobject.getString("status"));
-                        Log.d(TAG,Jobject.getString("msg"));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));

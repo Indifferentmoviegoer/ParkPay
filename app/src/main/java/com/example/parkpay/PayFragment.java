@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,22 +19,22 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
+
 import com.bumptech.glide.Glide;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Currency;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -52,6 +49,7 @@ import ru.yandex.money.android.sdk.Amount;
 import ru.yandex.money.android.sdk.Checkout;
 import ru.yandex.money.android.sdk.ColorScheme;
 import ru.yandex.money.android.sdk.MockConfiguration;
+import ru.yandex.money.android.sdk.PaymentMethodType;
 import ru.yandex.money.android.sdk.PaymentParameters;
 import ru.yandex.money.android.sdk.TestParameters;
 import ru.yandex.money.android.sdk.TokenizationResult;
@@ -74,13 +72,13 @@ public class PayFragment extends Fragment {
 
     private SharedPreferences settings;
 
+
     private static final String APP_PREFERENCES = "mysettings";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
     private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
     private static final String APP_PREFERENCES_CARD_NAME ="cardName";
-    private static final String APP_PREFERENCES_STATUS ="Status";
-    private static final String APP_PREFERENCES_MSG ="Message";
+    public static final String CONFIRM = "confirm";
 
     private TokenizationResult result;
 
@@ -149,29 +147,58 @@ public class PayFragment extends Fragment {
         if (requestCode == REQUEST_CODE_TOKENIZE) {
             switch (resultCode) {
                 case RESULT_OK:
-                    // successful tokenization
+
                     result = Checkout.createTokenizationResult(data);
-                    Toast.makeText(c,"Успешно",Toast.LENGTH_LONG).show();
-                    Log.d(TAG, "Результат "+result);
-                    //doPostRequest("http://192.168.252.199/card/add_money");
-                    doPostRequest("https://api.mobile.goldinnfish.com/card/create_payment");
+
+                    if(result.getPaymentMethodType()== PaymentMethodType.BANK_CARD){
+
+
+                        boolean checkConnection=MainActivity.isOnline(c);
+
+                        if(checkConnection) {
+
+
+                        Toast.makeText(c, "Пожалуйста, подождите!", Toast.LENGTH_LONG).show();
+                        createPayment();
+
+                        } else {
+                            Toast.makeText(c, "Отсутствует интернет соединение!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    else {
+
+                        boolean checkConnection=MainActivity.isOnline(c);
+
+                        if(checkConnection) {
+
+                        Toast.makeText(c, "Успешно", Toast.LENGTH_LONG).show();
+                        createPayment();
+
+                        } else {
+                            Toast.makeText(c, "Отсутствует интернет соединение!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
                 case RESULT_CANCELED:
-                    Toast.makeText(c,"Отменено",Toast.LENGTH_SHORT).show();
-//                    doPostRequest("http://192.168.252.199/card/add_money");
-                    // user canceled tokenization
                     break;
             }
         }
     }
 
     private void timeToStartCheckout() {
+
+        final Set<PaymentMethodType> paymentMethodTypes = new HashSet<>();
+        paymentMethodTypes.add(PaymentMethodType.BANK_CARD);
+
         PaymentParameters paymentParameters = new PaymentParameters(
                 new Amount(sum, Currency.getInstance("RUB")),
                 "Пополнение карты",
                 settings.getString(APP_PREFERENCES_CARD_CODE,"")+"",
                 "test_NTg4ODU2lc-4GywPaPNTcTbZG4ELvXgjk27aSrhbJ4U",
-                "588856"
+                "588856",
+                paymentMethodTypes
         );
 
         UiParameters uiParameters = new UiParameters(false, new ColorScheme(Color.parseColor("#3F51B5")));
@@ -181,12 +208,17 @@ public class PayFragment extends Fragment {
         startActivityForResult(intent, REQUEST_CODE_TOKENIZE);
     }
     void timeToStartCheckoutTest() {
+
+        final Set<PaymentMethodType> paymentMethodTypes = new HashSet<>();
+        paymentMethodTypes.add(PaymentMethodType.BANK_CARD);
+
         PaymentParameters paymentParameters = new PaymentParameters(
                 new Amount(sum, Currency.getInstance("RUB")),
                 "Пополнение карты",
                 settings.getString(APP_PREFERENCES_CARD_CODE,"")+"",
                 "test_NTg4ODU2lc-4GywPaPNTcTbZG4ELvXgjk27aSrhbJ4U",
-                "588856"
+                "588856",
+                paymentMethodTypes
         );
         UiParameters uiParameters = new UiParameters(false, new ColorScheme(Color.parseColor("#3F51B5")));
 
@@ -195,7 +227,7 @@ public class PayFragment extends Fragment {
         startActivityForResult(intent, REQUEST_CODE_TOKENIZE);
     }
 
-    private void doPostRequest(String url){
+    private void createPayment(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -204,7 +236,7 @@ public class PayFragment extends Fragment {
 //            json.put("token",settings.getString(APP_PREFERENCES_TOKEN,""));
             json.put("card_id",settings.getString(APP_PREFERENCES_CARD_DELETE,""));
             json.put("value",sum);
-            json.put("token",result);
+            json.put("token",result.getPaymentToken());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -216,7 +248,7 @@ public class PayFragment extends Fragment {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/card/create_payment")
                 .build();
 
         Call call = client.newCall(request);
@@ -246,28 +278,18 @@ public class PayFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject Jobject = new JSONObject(jsonData);
+                            JSONObject parentObject = new JSONObject(jsonData);
+                            JSONObject Jobject = parentObject.getJSONObject("confirmation");
+
 
                             SharedPreferences.Editor editor = settings.edit();
-                            editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));
-                            editor.putString(APP_PREFERENCES_MSG, Jobject.getString("msg"));
+                            editor.putString(CONFIRM, Jobject.getString("confirmation_url"));
                             editor.apply();
 
-//                        if(settings.contains(APP_PREFERENCES_STATUS)) {
-//
-//                            if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
-
-//                                Toast.makeText(c,settings.getString(APP_PREFERENCES_MSG, "")
-//                                                ,Toast.LENGTH_SHORT).show();
-
-                            Toast.makeText(c, "Успешно!"
-                                    , Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(c,
-                                    MainActivity.class);
+                            Intent intent = new Intent(getContext(),
+                                    ConfirmActivity.class);
                             startActivity(intent);
-//                            }
-//                        }
+                            Objects.requireNonNull(getActivity()).overridePendingTransition(0, 0);
 
                         } catch (IOException | JSONException e) {
 

@@ -3,14 +3,12 @@ package com.example.parkpay;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,8 +25,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Currency;
 import java.util.Objects;
 
 import okhttp3.Call;
@@ -43,17 +39,7 @@ import ru.tinkoff.decoro.parser.UnderscoreDigitSlotsParser;
 import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
-import ru.yandex.money.android.sdk.Amount;
-import ru.yandex.money.android.sdk.Checkout;
-import ru.yandex.money.android.sdk.ColorScheme;
-import ru.yandex.money.android.sdk.MockConfiguration;
-import ru.yandex.money.android.sdk.PaymentParameters;
-import ru.yandex.money.android.sdk.TestParameters;
 import ru.yandex.money.android.sdk.TokenizationResult;
-import ru.yandex.money.android.sdk.UiParameters;
-
-import static android.app.Activity.RESULT_CANCELED;
-import static android.app.Activity.RESULT_OK;
 
 public class PayBonusFragment extends Fragment {
 
@@ -100,7 +86,7 @@ public class PayBonusFragment extends Fragment {
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         Glide.with(c)
-                .load(R.drawable.pay)
+                .load(R.drawable.bonusim)
                 .thumbnail(0.5f)
                 .dontAnimate()
                 .into(imPay);
@@ -125,7 +111,16 @@ public class PayBonusFragment extends Fragment {
             } else {
                 sum = amountPay.getText().toString();
 
-                payBonus("https://api.mobile.goldinnfish.com/card/add_bonus");
+                boolean checkConnection=MainActivity.isOnline(c);
+
+                if(checkConnection) {
+
+                payBonus();
+
+                } else {
+                    Toast.makeText(c, "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -133,7 +128,7 @@ public class PayBonusFragment extends Fragment {
     }
 
 
-    private void payBonus(String url){
+    private void payBonus(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -154,7 +149,7 @@ public class PayBonusFragment extends Fragment {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/card/add_bonus")
                 .build();
         Log.d(TAG,request.toString());
         Call call = client.newCall(request);
@@ -185,9 +180,6 @@ public class PayBonusFragment extends Fragment {
                             }
 
                             JSONObject Jobject = new JSONObject(jsonData);
-
-                            Log.d(TAG, Jobject.getString("status"));
-                            Log.d(TAG, Jobject.getString("msg"));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));

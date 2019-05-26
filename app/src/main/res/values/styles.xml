@@ -10,6 +10,10 @@
         <item name="toolbarStyle">@style/custom_toolbar</item>
         <item name="android:typeface">serif</item>
 
+        <!--<item name="android:typeface">serif</item>-->
+
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+
         <!--<item name="android:windowTranslucentStatus">true</item>-->
         <!--<item name="android:fitsSystemWindows">true</item>-->
     </style>
@@ -19,7 +23,7 @@
         <item name="colorPrimary">@color/white</item>
         <item name="colorAccent">@color/white</item>
         <item name="toolbarStyle">@style/custom_toolbar</item>
-        <item name="android:typeface">serif</item>
+        <!--<item name="android:typeface">serif</item>-->
         <item name="android:textColor">#fff</item>
         <item name="colorControlNormal">#fff</item>
         <item name="colorControlActivated">#fff</item>
@@ -29,18 +33,23 @@
         <item name="android:textColorPrimary">#fff</item>
         <item name="colorOnSurface">@color/white</item>
 
-
+        <!--<item name="android:fontFamily">@font/roboto_regular</item>-->
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+        <item name="android:typeface">serif</item>
 
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:fitsSystemWindows">true</item>
     </style>
-
 
     <style name="MyDatePickerDialogTheme" parent="android:Theme.Material.Light.Dialog">
         <item name="android:colorAccent">@color/colorAccent</item>
 
         <item name="android:buttonBarNegativeButtonStyle">@style/text</item>
         <item name="android:buttonBarPositiveButtonStyle">@style/text</item>
+
+        <!--<item name="android:fontFamily">@font/roboto_regular</item>-->
+        <!--<item name="android:windowAnimationStyle">@null</item>-->
+        <item name="android:typeface">serif</item>
 
 
         <!-- No need to override 'datePickerStyle' -->

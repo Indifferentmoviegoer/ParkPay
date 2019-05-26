@@ -1,7 +1,6 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,10 +51,14 @@ public class AttractionsFragment extends Fragment {
     private static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
+    int i;
+
     private RecyclerView rv;
     private ProgressBar progressBarAttractions;
     private SwipeRefreshLayout swipeAttr;
     AppCompatImageView searchFilter;
+    AppCompatImageView second;
+    AppCompatImageView close;
 
     private List<Attraction> attr;
 
@@ -71,6 +73,8 @@ public class AttractionsFragment extends Fragment {
     AppCompatButton acceptButton;
     ConstraintLayout searchLayout;
     AppCompatTextView searchResult;
+    AppCompatTextView titleAttr;
+    AppCompatTextView titleSearch;
 
     String attrName;
     String minAge;
@@ -94,7 +98,9 @@ public class AttractionsFragment extends Fragment {
         rv = view.findViewById(R.id.attrs);
         swipeAttr = view.findViewById(R.id.swipeAttr);
         searchFilter = view.findViewById(R.id.searchFilter);
-
+        second = view.findViewById(R.id.second);
+        close = view.findViewById(R.id.close);
+        titleAttr = view.findViewById(R.id.titleAttr);
         nameAttr=view.findViewById(R.id.nameAttr);
         ageMin=view.findViewById(R.id.ageMin);
         ageMax=view.findViewById(R.id.ageMax);
@@ -103,42 +109,81 @@ public class AttractionsFragment extends Fragment {
         acceptButton=view.findViewById(R.id.acceptButton);
         searchLayout=view.findViewById(R.id.searchLayout);
         searchResult=view.findViewById(R.id.searchResult);
+        titleSearch=view.findViewById(R.id.titleSearch);
 
         searchLayout.setVisibility(View.INVISIBLE);
         searchResult.setVisibility(View.INVISIBLE);
+        titleSearch.setVisibility(View.INVISIBLE);
+
+        settings= Objects.requireNonNull(this.getActivity())
+                .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        c=getContext();
+
+        second.setVisibility(View.INVISIBLE);
+
 
         searchFilter.setOnClickListener(view1 -> {
 
             rv.setVisibility(View.INVISIBLE);
             searchLayout.setVisibility(View.VISIBLE);
             searchResult.setVisibility(View.INVISIBLE);
+
+            searchFilter.setVisibility(View.INVISIBLE);
+            second.setVisibility(View.VISIBLE);
+            close.setVisibility(View.INVISIBLE);
+            titleAttr.setVisibility(View.INVISIBLE);
+            titleSearch.setVisibility(View.VISIBLE);
+        });
+
+        second.setOnClickListener(view1 -> {
+
+            rv.setVisibility(View.VISIBLE);
+            searchLayout.setVisibility(View.INVISIBLE);
+            searchResult.setVisibility(View.INVISIBLE);
+
+            second.setVisibility(View.INVISIBLE);
+            searchFilter.setVisibility(View.VISIBLE);
+            close.setVisibility(View.VISIBLE);
+            titleAttr.setVisibility(View.VISIBLE);
+            titleSearch.setVisibility(View.INVISIBLE);
         });
 
         acceptButton.setOnClickListener(v -> {
 
 //            rv.setVisibility(View.INVISIBLE);
 //            searchLayout.setVisibility(View.VISIBLE);
-            progressBarAttractions.setVisibility(View.VISIBLE);
-            searchLayout.setVisibility(View.INVISIBLE);
+            boolean checkConnection=MainActivity.isOnline(c);
 
-            attrName=nameAttr.getText().toString();
-            minAge=ageMin.getText().toString();
-            maxAge=ageMax.getText().toString();
-            weightMax=maxWeight.getText().toString();
-            growthMax=minGrowth.getText().toString();
+            if(checkConnection) {
 
-            getAttrSearch("https://api.mobile.goldinnfish.com/attr/list");
+                progressBarAttractions.setVisibility(View.VISIBLE);
+                searchLayout.setVisibility(View.INVISIBLE);
+
+                attrName=nameAttr.getText().toString();
+                minAge=ageMin.getText().toString();
+                maxAge=ageMax.getText().toString();
+                weightMax=maxWeight.getText().toString();
+                growthMax=minGrowth.getText().toString();
+
+                getAttrSearch();
+
+            }
+            else {
+                Toast.makeText(c, "Отсутствует интернет соединение!",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
+
+        close.setOnClickListener(view1 -> ((MainActivity) Objects.requireNonNull(c))
+                .replaceFragments(ParksFragment.class));
 
         swipeAttr.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
-        settings= Objects.requireNonNull(this.getActivity())
-                .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
 
         rv.setVisibility(View.INVISIBLE);
         progressBarAttractions.setVisibility(View.VISIBLE);
-
-        c=getContext();
 
 
         LinearLayoutManager llm = new LinearLayoutManager(c);
@@ -148,18 +193,50 @@ public class AttractionsFragment extends Fragment {
 
         swipeAttr.setOnRefreshListener(() -> {
 
-                attr = new ArrayList<>();
+            attr = new ArrayList<>();
 
-                getAttr("https://api.mobile.goldinnfish.com/attr/list");
+            boolean checkConnection=MainActivity.isOnline(c);
+
+            if(checkConnection) {
+
+                getAttr();
+
+            }
+            else {
+
+                progressBarAttractions.setVisibility(View.INVISIBLE);
+
+                swipeAttr.setRefreshing(false);
+
+                Toast.makeText(c, "Отсутствует интернет соединение!",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
 
-        getAttr("https://api.mobile.goldinnfish.com/attr/list");
+        boolean checkConnection=MainActivity.isOnline(c);
 
+        if(checkConnection) {
+            getAttr();
+        }
+        else {
+
+            swipeAttr.setRefreshing(false);
+
+            rv.setVisibility(View.VISIBLE);
+            progressBarAttractions.setVisibility(View.INVISIBLE);
+
+            searchResult.setText("Отсутствует интернет соединение!");
+
+            searchResult.setVisibility(View.VISIBLE);
+
+
+
+        }
 
         return view;
     }
 
-    public void getAttr(String url){
+    private void getAttr(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -179,7 +256,7 @@ public class AttractionsFragment extends Fragment {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/attr/list")
                 .build();
 
         Call call = client.newCall(request);
@@ -203,8 +280,6 @@ public class AttractionsFragment extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         try {
 
-                            BitmapDescriptor markerIcon;
-
                             String jsonData = null;
                             if (response.body() != null) {
                                 jsonData = response.body().string();
@@ -217,20 +292,6 @@ public class AttractionsFragment extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
-
-                                Log.d(TAG, Jobject.getString("atr_id"));
-                                Log.d(TAG, Jobject.getString("rep_name"));
-                                Log.d(TAG, Jobject.getString("image"));
-                                Log.d(TAG, Jobject.getString("price"));
-                                Log.d(TAG, Jobject.getString("bonus"));
-                                Log.d(TAG, Jobject.getString("text"));
-                                Log.d(TAG, Jobject.getString("weight"));
-                                Log.d(TAG, Jobject.getString("growth"));
-                                Log.d(TAG, Jobject.getString("age_min"));
-                                Log.d(TAG, Jobject.getString("age_max"));
-                                Log.d(TAG, Jobject.getString("level_fear"));
-                                Log.d(TAG, Jobject.getString("lat"));
-                                Log.d(TAG, Jobject.getString("lng"));
 
                                 String lat=Jobject.getString("lat");
                                 String lng=Jobject.getString("lng");
@@ -272,8 +333,11 @@ public class AttractionsFragment extends Fragment {
 
                         } catch (IOException | JSONException e) {
 
-                            Log.d("Ошибка " + e,TAG);
 //                            Toast.makeText(c, "Ошибка " + e, Toast.LENGTH_SHORT).show();
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarAttractions.setVisibility(View.INVISIBLE);
+
+                            swipeAttr.setRefreshing(false);
 
                             searchResult.setVisibility(View.VISIBLE);
                         }
@@ -284,7 +348,7 @@ public class AttractionsFragment extends Fragment {
     }
 
 
-    public void getAttrSearch(String url){
+    private void getAttrSearch(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -304,7 +368,7 @@ public class AttractionsFragment extends Fragment {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/attr/list")
                 .build();
 
         Call call = client.newCall(request);
@@ -328,7 +392,6 @@ public class AttractionsFragment extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         try {
 
-                            BitmapDescriptor markerIcon;
 
                             String jsonData = null;
                             if (response.body() != null) {
@@ -342,20 +405,6 @@ public class AttractionsFragment extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
-
-                                Log.d(TAG, Jobject.getString("atr_id"));
-                                Log.d(TAG, Jobject.getString("rep_name"));
-                                Log.d(TAG, Jobject.getString("image"));
-                                Log.d(TAG, Jobject.getString("price"));
-                                Log.d(TAG, Jobject.getString("bonus"));
-                                Log.d(TAG, Jobject.getString("text"));
-                                Log.d(TAG, Jobject.getString("weight"));
-                                Log.d(TAG, Jobject.getString("growth"));
-                                Log.d(TAG, Jobject.getString("age_min"));
-                                Log.d(TAG, Jobject.getString("age_max"));
-                                Log.d(TAG, Jobject.getString("level_fear"));
-                                Log.d(TAG, Jobject.getString("lat"));
-                                Log.d(TAG, Jobject.getString("lng"));
 
                                 String lat=Jobject.getString("lat");
                                 String lng=Jobject.getString("lng");
@@ -410,10 +459,10 @@ public class AttractionsFragment extends Fragment {
 
                                 if(
                                         Jobject.getString("rep_name").contains(attrName)&&
-                                        min>=minE&&
-                                        max<=maxE&&
-                                        weight>=weightE&&
-                                        growth<=growthE
+                                                min>=minE&&
+                                                max<=maxE&&
+                                                weight>=weightE&&
+                                                growth<=growthE
                                 ) {
 
                                     attr.add(new Attraction(
@@ -445,6 +494,9 @@ public class AttractionsFragment extends Fragment {
                             searchLayout.setVisibility(View.INVISIBLE);
                             rv.setVisibility(View.VISIBLE);
                             progressBarAttractions.setVisibility(View.INVISIBLE);
+                            close.setVisibility(View.VISIBLE);
+                            titleAttr.setVisibility(View.VISIBLE);
+                            titleSearch.setVisibility(View.INVISIBLE);
 
                             swipeAttr.setRefreshing(false);
 
@@ -454,6 +506,10 @@ public class AttractionsFragment extends Fragment {
 //                            Toast.makeText(c, "Ошибка " + e, Toast.LENGTH_SHORT).show();
 
                             searchResult.setVisibility(View.VISIBLE);
+
+                            close.setVisibility(View.VISIBLE);
+                            titleAttr.setVisibility(View.VISIBLE);
+                            titleSearch.setVisibility(View.INVISIBLE);
                         }
                     });
                 }

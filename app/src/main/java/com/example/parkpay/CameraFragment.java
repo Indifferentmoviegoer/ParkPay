@@ -59,6 +59,11 @@ public class CameraFragment extends Fragment {
 
                 Log.d(TAG,"Отменено");
 
+                Intent i = new Intent(c,
+                        MainActivity.class);
+                startActivity(i);
+                Objects.requireNonNull(getActivity()).finish();
+
             } else {
 
                 Log.d(TAG,"Результат: " + result.getContents());
@@ -69,12 +74,14 @@ public class CameraFragment extends Fragment {
                 Intent i = new Intent(c,
                         AddCardActivity.class);
                 startActivity(i);
-
+                Objects.requireNonNull(getActivity()).finish();
             }
         } else {
             super.onActivityResult(requestCode, resultCode, intent);
         }
     }
+
+
 
 //    @Override
 //    public void onBackPressed() {

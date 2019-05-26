@@ -1,52 +1,45 @@
 {
   "project_info": {
-    "project_number": "1061747613431",
-    "firebase_url": "https://parkpay-b6819.firebaseio.com",
-    "project_id": "parkpay-b6819",
-    "storage_bucket": "parkpay-b6819.appspot.com"
+    "project_number": "870669631626",
+    "firebase_url": "https://parkpay-1de9b.firebaseio.com",
+    "project_id": "parkpay-1de9b",
+    "storage_bucket": "parkpay-1de9b.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1061747613431:android:9be6226371a31003",
+        "mobilesdk_app_id": "1:870669631626:android:9be6226371a31003",
         "android_client_info": {
           "package_name": "com.example.parkpay"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1061747613431-ubphpu2ffd3e4bu656lrkrakckp9p52d.apps.googleusercontent.com",
+          "client_id": "870669631626-auljiric55hbuf7fmu7tdt76j4suol58.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.parkpay",
-            "certificate_hash": "9e6cdac596701d1aca36c21433cfd8c2113bf5f7"
+            "certificate_hash": "915b9289f4551c554520b90dc42d00f7dcc7268d"
           }
         },
         {
-          "client_id": "1061747613431-qcfh0f4h80h8850kl7a2uhiciarj9qjv.apps.googleusercontent.com",
+          "client_id": "870669631626-neb01kea0ujgkaqn15hbu4h0949j7ip8.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAu5xgj3U8iBnwReZOz4P-stO5wKZ4M6so"
+          "current_key": "AIzaSyDwwlb9qzXA6eqlx8392nP8f610fRDilpw"
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "1061747613431-qcfh0f4h80h8850kl7a2uhiciarj9qjv.apps.googleusercontent.com",
+              "client_id": "870669631626-neb01kea0ujgkaqn15hbu4h0949j7ip8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
-        },
-        "ads_service": {
-          "status": 2
         }
       }
     }

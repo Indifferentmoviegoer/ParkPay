@@ -10,9 +10,6 @@ import androidx.appcompat.widget.AppCompatButton;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -104,40 +101,40 @@ public class AddCardActivity extends AppCompatActivity {
             numberCard=numberAddCard.getText().toString();
             nameCard=nameAddCard.getText().toString();
 
-                if(settings.contains(APP_PREFERENCES_CARDS)){
+            if(settings.contains(APP_PREFERENCES_CARDS)){
 
-                    child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-                }
+                child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
+            }
 
-                if(numberCard.equals("") || numberCard.length() == 0){
+            if(numberCard.equals("") || numberCard.length() == 0){
 
-                    Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
-                            Toast.LENGTH_SHORT).show();
-                }
+                Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
+                        Toast.LENGTH_SHORT).show();
+            }
 
-                else {
+            else {
 
-                    if(numberCard.length() == 16&&!numberCard.contains(" ")&&
-                            numberCard.matches("^[a-zA-Z0-9]+$"))
-                    {
-                        boolean checkConnection=MainActivity.isOnline(c);
+                if(numberCard.length() == 16&&!numberCard.contains(" ")&&
+                        numberCard.matches("^[a-zA-Z0-9]+$"))
+                {
+                    boolean checkConnection=MainActivity.isOnline(c);
 
-//                            if(checkConnection) {
+                    if(checkConnection) {
 
-                            doPostRequest("https://api.mobile.goldinnfish.com/card/add");
-//                            }
-//                            else {
-//                                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
-//                                        Toast.LENGTH_SHORT).show();
-//                            }
+                        addCard();
                     }
-
                     else {
-                        Toast.makeText(getApplicationContext(),
-                                "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
+                        Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
+
+                else {
+                    Toast.makeText(getApplicationContext(),
+                            "Номер карты должен состоять только из латинских букв и цифр, длиной 16 символов!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
     }
     @Override
@@ -175,7 +172,7 @@ public class AddCardActivity extends AppCompatActivity {
         }
     }
 
-    private void doPostRequest(String url){
+    private void addCard(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -196,7 +193,7 @@ public class AddCardActivity extends AppCompatActivity {
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/card/add")
                 .build();
 
         Call call = client.newCall(request);
@@ -221,8 +218,6 @@ public class AddCardActivity extends AppCompatActivity {
 
                         Intent i = new Intent(c, MainActivity.class);
 
-                        Log.d(TAG,Jobject.getString("status"));
-                        Log.d(TAG,Jobject.getString("msg"));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));

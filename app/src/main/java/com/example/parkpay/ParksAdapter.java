@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -44,7 +45,7 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
     @Override
     public ParkViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.park_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_park, viewGroup, false);
         ParkViewHolder pvh = new ParkViewHolder(v);
 
         settings= Objects.requireNonNull(context)
@@ -81,29 +82,70 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
 
         parkViewHolder.parkId.setOnClickListener(v -> {
 
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
-            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-            editor.apply();
+            if(parks.get(i).latCenter==0.0||parks.get(i).lngCenter==0.0) {
 
-            ((MainActivity) Objects.requireNonNull(context))
-                    .replaceFragments(MapFragment.class);
+                Toast.makeText(context, "Координаты не указаны!", Toast.LENGTH_SHORT).show();
+
+
+
+            }
+            else {
+                boolean checkConnection=MainActivity.isOnline(context);
+
+                if(checkConnection) {
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
+                    editor.putFloat(APP_PREFERENCES_LAT,parks.get(i).latCenter);
+                    editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+                    editor.apply();
+
+                    ((MainActivity) Objects.requireNonNull(context))
+                            .replaceFragments(MapFragment.class);
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
+                }
+                else {
+
+                    Toast.makeText(context, "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
         parkViewHolder.map.setOnClickListener(v -> {
 
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
-            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-            editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
-            editor.apply();
+            if(parks.get(i).latCenter==0.0||parks.get(i).lngCenter==0.0) {
 
-            ((MainActivity) Objects.requireNonNull(context))
-                    .replaceFragments(MapFragment.class);
+                Toast.makeText(context, "Координаты не указаны!", Toast.LENGTH_SHORT).show();
+
+
+
+            }
+            else {
+                boolean checkConnection=MainActivity.isOnline(context);
+
+                if(checkConnection) {
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(APP_PREFERENCES_NAME_OBJECT,parks.get(i).name);
+                    editor.putFloat(APP_PREFERENCES_LAT,parks.get(i).latCenter);
+                    editor.putFloat(APP_PREFERENCES_LNG,parks.get(i).lngCenter);
+                    editor.apply();
+
+                    ((MainActivity) Objects.requireNonNull(context))
+                            .replaceFragments(MapFragment.class);
+
+//                Intent intent = new Intent(context, Main2Activity.class);
+//                context.startActivity(intent);
+                }
+                else {
+
+                    Toast.makeText(context, "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
     }

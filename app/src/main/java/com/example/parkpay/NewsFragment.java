@@ -6,12 +6,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +34,6 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -44,6 +43,8 @@ public class NewsFragment extends Fragment {
     private RecyclerView rv;
     private ProgressBar progressBarNews;
     private SwipeRefreshLayout swipeNews;
+    AppCompatTextView noResult;
+
     private Context c;
 
     private final String[] news = {"Новости", "Акции"};
@@ -67,6 +68,7 @@ public class NewsFragment extends Fragment {
         progressBarNews= view.findViewById(R.id.progressBarNews);
         rv = view.findViewById(R.id.rv);
         swipeNews = view.findViewById(R.id.swipeNews);
+        noResult = view.findViewById(R.id.noResult);
 
         swipeNews.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
@@ -74,12 +76,13 @@ public class NewsFragment extends Fragment {
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         rv.setVisibility(View.INVISIBLE);
+        noResult.setVisibility(View.INVISIBLE);
 
         c=getContext();
 
         Spinner spinner = view.findViewById(R.id.newsTitle);
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-        ArrayAdapter<String> adapterNews = new ArrayAdapter<>(c, R.layout.spinner_item, news);
+        ArrayAdapter<String> adapterNews = new ArrayAdapter<>(c, R.layout.item_spinner, news);
         // Определяем разметку для использования при выборе элемента
         adapterNews.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
@@ -90,20 +93,97 @@ public class NewsFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position==0){
 
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+                    if(checkConnection){
+
                     getNews();
+                    }
+                    else {
+
+                        rv.setVisibility(View.INVISIBLE);
+                        progressBarNews.setVisibility(View.INVISIBLE);
+
+                        noResult.setVisibility(View.INVISIBLE);
+
+                        swipeNews.setRefreshing(false);
+
+                        noResult.setText("Отсутствует интернет соединение!");
+
+                        noResult.setVisibility(View.VISIBLE);
+                    }
+
 
                     swipeNews.setOnRefreshListener(() -> {
 
+                        boolean check=MainActivity.isOnline(c);
+
+                        if(check){
+
                         getNews();
+
+                        }
+                        else {
+
+                            noResult.setVisibility(View.INVISIBLE);
+
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarNews.setVisibility(View.INVISIBLE);
+
+                            swipeNews.setRefreshing(false);
+
+
+                            Toast.makeText(c, "Отсутствует интернет соединение!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+
                     });
                 }
                 if(position==1){
 
+                    boolean checkConnection=MainActivity.isOnline(c);
+
+                    if(checkConnection){
+
                     getSales();
+
+                    }
+                    else {
+
+                        rv.setVisibility(View.INVISIBLE);
+                        progressBarNews.setVisibility(View.INVISIBLE);
+
+                        noResult.setVisibility(View.INVISIBLE);
+
+                        swipeNews.setRefreshing(false);
+
+                        noResult.setText("Отсутствует интернет соединение!");
+
+                        noResult.setVisibility(View.VISIBLE);
+                    }
 
                     swipeNews.setOnRefreshListener(() -> {
 
+                        boolean check=MainActivity.isOnline(c);
+
+                        if(check){
+
                         getSales();
+
+                        }
+                        else {
+
+                            noResult.setVisibility(View.INVISIBLE);
+
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarNews.setVisibility(View.INVISIBLE);
+
+                            swipeNews.setRefreshing(false);
+
+
+                            Toast.makeText(c, "Отсутствует интернет соединение!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
 
                     });
                 }
@@ -122,15 +202,22 @@ public class NewsFragment extends Fragment {
 
         //initializeData();
 
-//        boolean checkConnection=MainActivity.isOnline(c);
-//
-//        if(checkConnection){
+        boolean checkConnection=MainActivity.isOnline(c);
+
+        if(checkConnection){
             getNews();
-//        }
-//        else {
-//            Toast.makeText(c, "Отсутствует интернет соединение!",
-//                    Toast.LENGTH_SHORT).show();
-//        }
+        }
+        else {
+
+            rv.setVisibility(View.VISIBLE);
+            progressBarNews.setVisibility(View.INVISIBLE);
+
+            swipeNews.setRefreshing(false);
+
+            noResult.setText("Отсутствует интернет соединение!");
+
+            noResult.setVisibility(View.VISIBLE);
+        }
 
         return view;
     }
@@ -138,23 +225,15 @@ public class NewsFragment extends Fragment {
     private void getNews(){
 
         OkHttpClient client = new OkHttpClient();
-
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("https")
-                .host("api.mobile.goldinnfish.com")
-                .addPathSegment("news")
-                .addPathSegment("list")
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-
         final Request request = new Request.Builder()
-                .url(mySearchUrl)
+                .addHeader("Authorization","Bearer "+
+                        Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
+                .url("https://api.mobile.goldinnfish.com/news/list")
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, ""))
                 )
-                .method("GET", null)
+                .get()
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -190,12 +269,6 @@ public class NewsFragment extends Fragment {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
 
-                                Log.d(TAG, Jobject.getString("title"));
-                                Log.d(TAG, Jobject.getString("image"));
-                                Log.d(TAG, Jobject.getString("date"));
-                                Log.d(TAG, Jobject.getString("text"));
-                                Log.d(TAG, Jobject.getString("link_source"));
-
                                 persons.add(new News(
                                         Jobject.getString("title"),
                                         Jobject.getString("image"),
@@ -214,8 +287,17 @@ public class NewsFragment extends Fragment {
 
                             swipeNews.setRefreshing(false);
 
+                            noResult.setVisibility(View.INVISIBLE);
+
                         } catch (IOException| JSONException e) {
                             Log.d(TAG, "Ошибка " + e);
+
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarNews.setVisibility(View.INVISIBLE);
+
+                            swipeNews.setRefreshing(false);
+
+                            noResult.setVisibility(View.VISIBLE);
                         }
                     });
                 }
@@ -227,22 +309,12 @@ public class NewsFragment extends Fragment {
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("https")
-                .host("api.mobile.goldinnfish.com")
-                .addPathSegment("stocks")
-                .addPathSegment("list")
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-        Log.d(TAG,Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")));
-
         final Request request = new Request.Builder()
-                .url(mySearchUrl)
+                .url("https://api.mobile.goldinnfish.com/stocks/list")
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .method("GET", null)
+                .get()
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -302,8 +374,17 @@ public class NewsFragment extends Fragment {
 
                             swipeNews.setRefreshing(false);
 
+                            noResult.setVisibility(View.INVISIBLE);
+
                         } catch (IOException|JSONException e) {
                             Log.d(TAG, "Ошибка " + e);
+
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarNews.setVisibility(View.INVISIBLE);
+
+                            swipeNews.setRefreshing(false);
+
+                            noResult.setVisibility(View.VISIBLE);
                         }
                     });
                 }

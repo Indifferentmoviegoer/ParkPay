@@ -1,11 +1,12 @@
 package com.example.parkpay;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.PorterDuff;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import com.google.android.material.textfield.TextInputEditText;
@@ -13,15 +14,16 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import android.os.StrictMode;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.DatePicker;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -64,6 +66,8 @@ public class SignUpActivity extends AppCompatActivity {
     TextInputLayout mailLabel;
     TextInputLayout passwLabel;
     TextInputLayout confirmPasswordLabel;
+    CheckBox agree;
+    AppCompatImageView openAgreeText;
 
 
     private String loginUser;
@@ -116,6 +120,8 @@ public class SignUpActivity extends AppCompatActivity {
         mailLabel= findViewById(R.id.mail_label);
         passwLabel= findViewById(R.id.passw_label);
         confirmPasswordLabel= findViewById(R.id.confirmPassword_label);
+        agree= findViewById(R.id.agree);
+        openAgreeText= findViewById(R.id.openAgreeText);
 
         c=this;
 
@@ -132,6 +138,64 @@ public class SignUpActivity extends AppCompatActivity {
             Intent intent = new Intent(c,
                     SignInActivity.class);
             startActivity(intent);
+
+        });
+
+        openAgreeText.setOnClickListener(view -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(c,android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+//                    builder.setView();
+            builder.setTitle(Html
+                    .fromHtml("<font color='#000000'>Согласие на обработку персональных данных</font>"));
+//            builder.setMessage(Html
+//                    .fromHtml(getString(R.string.agreeText)));
+            builder.setMessage(Html
+                    .fromHtml("<div class=\"blog__hightlight\" color='#000000'>" +
+                            "<p>" +
+                            "Предоставляя свои персональные данные Пользователь даёт согласие на обработку, хранение и использование своих персональных данных на основании ФЗ № <nobr>152-ФЗ</nobr> «О персональных данных» от 27.07.2006 г. в следующих целях:" +
+                            "</p>" +
+                            "<ul" +
+                            "<li>Осуществление клиентской поддержки</li>" +
+                            "<li>Получения Пользователем информации о маркетинговых событиях</li>" +
+                            "<li>Проведения аудита и прочих внутренних исследований с целью повышения качества предоставляемых услуг.</li>" +
+                            "</ul>" +
+                            "<p>" +
+                            "Под персональными данными подразумевается любая информация личного характера, позволяющая установить личность Пользователя такая как:" +
+                            "</p>" +
+                            "<ul>" +
+                            "<li>Фамилия, Имя, Отчество</li>" +
+                            "<li>Дата рождения</li>" +
+                            "<li>Контактный телефон</li>" +
+                            "<li>Адрес электронной почты</li>" +
+                            "<li>Почтовый адрес</li>" +
+                            "</ul>" +
+                            "<p>" +
+                            "Персональные данные Пользователей хранятся исключительно на электронных носителях и обрабатываются с использованием автоматизированных систем, за исключением случаев, когда неавтоматизированная обработка персональных данных необходима в связи с исполнением требований законодательства." +
+                            "</p>" +
+                            "<p>" +
+                            "ООО \"Феникс 48\" обязуется не передавать полученные персональные данные третьим лицам, за исключением следующих случаев:" +
+                            "</p>" +
+                            "<ul>" +
+                            "<li>По запросам уполномоченных органов государственной власти РФ только по основаниям и в порядке, установленным законодательством РФ</li>" +
+                            "<li>Стратегическим партнерам, которые работают с ООО \"Феникс 48\" для предоставления продуктов и услуг, или тем из них, которые помогают ООО \"Феникс 48\" реализовывать продукты и услуги потребителям. Мы предоставляем третьим лицам минимальный объем персональных данных, необходимый только для оказания требуемой услуги или проведения необходимой транзакции.</li>" +
+                            "</ul>" +
+                            "<p>" +
+                            "ООО \"Феникс 48\" оставляет за собой право вносить изменения в одностороннем порядке в настоящие правила, при условии, что изменения не противоречат действующему законодательству РФ. Изменения условий настоящих правил вступают в силу после их публикации." +
+                            "</p>" +
+                            "</div>"
+                    ));
+            builder.setCancelable(false);
+            builder.setPositiveButton("Согласен",
+                    (dialog, id) -> agree.setChecked(true));
+            builder.setNegativeButton("Отмена",
+                    (dialog, id) -> dialog.cancel());
+            AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.parseColor("#3F51B5"));
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
+
 
         });
 
@@ -298,8 +362,8 @@ public class SignUpActivity extends AppCompatActivity {
                     nameUser.equals("")||nameUser.length() == 0||
                     emailUser.equals("")||emailUser.length() == 0||
                     passUser.equals("")||passUser.length() == 0||
-                    confirmPasswordUser.equals("")||confirmPasswordUser.length()==0
-//                    inviteCodeUser.equals("")||inviteCodeUser.length()==0
+                    confirmPasswordUser.equals("")||confirmPasswordUser.length()==0||
+                    !agree.isChecked()
             )
             {
                 Toast.makeText(getApplicationContext(),"Заполните все поля ввода!",
@@ -317,23 +381,27 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if (checkConnection) {
 
-                                doPostRequest("https://api.mobile.goldinnfish.com/register");
+                                signUp();
                             } else {
-                                Toast.makeText(getApplicationContext(), "Отсутствует интернет соединение!",
+                                Toast.makeText(getApplicationContext(),
+                                        "Отсутствует интернет соединение!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Toast.makeText(getApplicationContext(), "Неправильный адрес почты",
+                            Toast.makeText(getApplicationContext(),
+                                    "Неправильный адрес почты",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
                     else {
-                        Toast.makeText(getApplicationContext(), "Пароль должен быть не менее 6 символов!",
+                        Toast.makeText(getApplicationContext(),
+                                "Пароль должен быть не менее 6 символов!",
                                 Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(getApplicationContext(),"Пароли не совпадают",
+                    Toast.makeText(getApplicationContext(),
+                            "Пароли не совпадают",
                             Toast.LENGTH_SHORT).show();
                 }
             }
@@ -360,7 +428,7 @@ public class SignUpActivity extends AppCompatActivity {
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
     }
 
-    private void doPostRequest(String url){
+    private void signUp(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -383,10 +451,12 @@ public class SignUpActivity extends AppCompatActivity {
         String jsonString = json.toString();
         RequestBody body = RequestBody.create(JSON, jsonString);
         OkHttpClient client = new OkHttpClient();
+
         final Request request = new Request.Builder()
                 .post(body)
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/register")
                 .build();
+
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
             @Override
@@ -410,9 +480,6 @@ public class SignUpActivity extends AppCompatActivity {
                         }
                         JSONObject Jobject = new JSONObject(jsonData);
 
-                        Log.d(TAG,Jobject.getString("status"));
-                        Log.d(TAG,Jobject.getString("msg"));
-
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));
                         editor.putString(APP_PREFERENCES_MSG,Jobject.getString("msg"));
@@ -422,7 +489,9 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
-//                                Toast.makeText(c,"Вход",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(c,"Для завершения регистрации," +
+                                        " подтвердите свою электронную почту!",
+                                        Toast.LENGTH_LONG).show();
 
                                 Intent intent = new Intent(c,
                                         SignInActivity.class);

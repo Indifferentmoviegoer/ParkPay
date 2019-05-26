@@ -20,11 +20,11 @@ public class PageAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return new RealCardFragment();
+                return new CardFragment();
             case 1:
-                return new VirtualCardFragment();
+                return new CardFragment();
             default:
-                return new RealCardFragment();
+                return new CardFragment();
         }
     }
 

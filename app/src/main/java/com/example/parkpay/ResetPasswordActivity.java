@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -64,7 +63,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         reset.setOnClickListener(view -> {
 
             mail= Objects.requireNonNull(email.getText()).toString();
-            resetPass("https://api.mobile.goldinnfish.com/reset_pass");
+            resetPass();
         });
 
         cancel.setOnClickListener(view -> {
@@ -75,7 +74,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         });
     }
 
-    private void resetPass(String url){
+    private void resetPass(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -91,7 +90,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/reset_pass")
                 .build();
 
         Call call = client.newCall(request);

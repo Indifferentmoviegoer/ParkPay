@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -274,16 +273,16 @@ private ImageView backProfile;
             }
             else {
 
-//                boolean checkConnection=MainActivity.isOnline(c);
-//
-//                    if(checkConnection) {
+                boolean checkConnection=MainActivity.isOnline(c);
 
-                doPostRequest("https://api.mobile.goldinnfish.com/user/edit");
-//                    }
-//                    else {
-//                        Toast.makeText(c, "Отсутствует интернет соединение!",
-//                                Toast.LENGTH_SHORT).show();
-//                    }
+                    if(checkConnection) {
+
+                editProfile();
+                    }
+                    else {
+                        Toast.makeText(c, "Отсутствует интернет соединение!",
+                                Toast.LENGTH_SHORT).show();
+                    }
 
 
             }
@@ -326,7 +325,7 @@ private ImageView backProfile;
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
     }
 
-    private void doPostRequest(String url){
+    private void editProfile(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -342,14 +341,13 @@ private ImageView backProfile;
         }
 
         String jsonString = json.toString();
-        Log.d(TAG,json.toString());
         RequestBody body = RequestBody.create(JSON, jsonString);
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/user/edit")
                 .build();
         Log.d(TAG,request.toString());
         Call call = client.newCall(request);
@@ -380,9 +378,6 @@ private ImageView backProfile;
                             }
 
                             JSONObject Jobject = new JSONObject(jsonData);
-
-                            Log.d(TAG, Jobject.getString("status"));
-                            Log.d(TAG, Jobject.getString("msg"));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));

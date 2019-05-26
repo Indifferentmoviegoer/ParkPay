@@ -7,17 +7,20 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -31,7 +34,6 @@ import java.util.Objects;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -48,6 +50,7 @@ public class ParksFragment extends Fragment {
     private RecyclerView rv;
     private ProgressBar progressBarParks;
     private SwipeRefreshLayout sRL;
+    AppCompatTextView noResult;
 
     private List<Park> parks;
 
@@ -63,6 +66,7 @@ public class ParksFragment extends Fragment {
         progressBarParks= view.findViewById(R.id.progressBarParks);
         rv = view.findViewById(R.id.rvParks);
         sRL = view.findViewById(R.id.sRL);
+        noResult = view.findViewById(R.id.noResult);
 
         sRL.setColorSchemeColors(Color.parseColor("#3F51B5"));
 
@@ -77,6 +81,8 @@ public class ParksFragment extends Fragment {
         rv.setLayoutManager(llm);
 
         progressBarParks.setVisibility(View.VISIBLE);
+        noResult.setVisibility(View.INVISIBLE);
+
 
         sRL.setOnRefreshListener(() -> {
 
@@ -87,34 +93,60 @@ public class ParksFragment extends Fragment {
 
                 parks = new ArrayList<>();
 
+            boolean checkConnection=MainActivity.isOnline(c);
+
+            if(checkConnection) {
+
                 getParks();
+            }
+            else {
+
+                rv.setVisibility(View.VISIBLE);
+                progressBarParks.setVisibility(View.INVISIBLE);
+
+                sRL.setRefreshing(false);
+
+
+                Toast.makeText(c, "Отсутствует интернет соединение!",
+                        Toast.LENGTH_SHORT).show();
+
+            }
         });
 
+        boolean checkConnection=MainActivity.isOnline(c);
+
+        if(checkConnection) {
+
         getParks();
+
+        }
+        else {
+
+            rv.setVisibility(View.VISIBLE);
+            progressBarParks.setVisibility(View.INVISIBLE);
+
+            sRL.setRefreshing(false);
+
+            noResult.setText("Отсутствует интернет соединение!");
+
+            noResult.setVisibility(View.VISIBLE);
+
+        }
 
         return view;
     }
 
 
-    public void getParks(){
+    private void getParks(){
 
         OkHttpClient client = new OkHttpClient();
 
-        HttpUrl mySearchUrl = new HttpUrl.Builder()
-                .scheme("https")
-                .host("api.mobile.goldinnfish.com")
-                .addPathSegment("attr")
-                .addPathSegment("parks")
-                .build();
-
-        Log.d(TAG,mySearchUrl.toString());
-
         final Request request = new Request.Builder()
-                .url(mySearchUrl)
+                .url("https://api.mobile.goldinnfish.com/attr/parks")
                 .addHeader("Content-Type", "application/json; charset=utf-8")
                 .addHeader("Authorization","Bearer "+
                         Objects.requireNonNull(settings.getString(APP_PREFERENCES_TOKEN, "")))
-                .method("GET", null)
+                .get()
                 .build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -150,15 +182,6 @@ public class ParksFragment extends Fragment {
                             for (int i = 0; i < jsonArray.length(); i++) {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
-
-                                Log.d(TAG, Jobject.getString("park_id"));
-                                Log.d(TAG, Jobject.getString("name"));
-                                Log.d(TAG, Jobject.getString("lat_top"));
-                                Log.d(TAG, Jobject.getString("lng_top"));
-                                Log.d(TAG, Jobject.getString("lat_bottom"));
-                                Log.d(TAG, Jobject.getString("lng_bottom"));
-                                Log.d(TAG, Jobject.getString("lat_center"));
-                                Log.d(TAG, Jobject.getString("lng_center"));
 
                                 String lat=Jobject.getString("lat_center");
                                 String lng=Jobject.getString("lng_center");
@@ -216,7 +239,12 @@ public class ParksFragment extends Fragment {
 
                         } catch (IOException | JSONException e) {
 
-                            Log.d(TAG, "Ошибка " + e);
+                            rv.setVisibility(View.VISIBLE);
+                            progressBarParks.setVisibility(View.INVISIBLE);
+
+                            sRL.setRefreshing(false);
+
+                            noResult.setVisibility(View.VISIBLE);
                         }
                     });
                 }

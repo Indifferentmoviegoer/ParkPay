@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
+//import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+//import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -41,9 +41,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     TextView quantityVisits;
     ImageView imageProfile;
 
-    private PublisherAdView adView;
-
-    PublisherAdRequest adRequest;
+//    private PublisherAdView adView;
+//
+//    PublisherAdRequest adRequest;
 
     private Context c;
     private static final String APP_PREFERENCES = "mysettings";

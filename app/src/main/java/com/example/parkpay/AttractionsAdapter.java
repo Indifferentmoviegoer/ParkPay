@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -43,7 +44,7 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
     @Override
     public AttractionViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
 
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.attraction_item, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_attraction, viewGroup, false);
         AttractionViewHolder pvh = new AttractionViewHolder(v);
 
         settings= Objects.requireNonNull(context)
@@ -121,34 +122,74 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
         else {
             Glide.with(context).load(attractions.get(i).getImageUrl()).into(attractionViewHolder.attrPhoto);
         }
+
+
         attractionViewHolder.mapAttr.setOnClickListener(v -> {
 
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
-            editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
-            editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
-            editor.apply();
+            if(attractions.get(i).lat==0.0||attractions.get(i).lng==0.0) {
+
+                Toast.makeText(context, "Координаты не указаны!", Toast.LENGTH_SHORT).show();
+
+
+
+            }
+            else {
+                boolean checkConnection=MainActivity.isOnline(context);
+
+                if(checkConnection) {
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(APP_PREFERENCES_NAME_OBJECT, attractions.get(i).name);
+                    editor.putFloat(APP_PREFERENCES_LAT, attractions.get(i).lat);
+                    editor.putFloat(APP_PREFERENCES_LNG, attractions.get(i).lng);
+                    editor.apply();
+
+                    ((MainActivity) Objects.requireNonNull(context))
+                            .replaceFragments(MapFragment.class);
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
+                }
+                else {
 
-            ((MainActivity) Objects.requireNonNull(context))
-                    .replaceFragments(MapFragment.class);
+                    Toast.makeText(context, "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
+
         attractionViewHolder.map.setOnClickListener(v -> {
+            if(attractions.get(i).lat==0.0||attractions.get(i).lng==0.0) {
 
-            SharedPreferences.Editor editor = settings.edit();
-            editor.putString(APP_PREFERENCES_NAME_OBJECT,attractions.get(i).name);
-            editor.putFloat(APP_PREFERENCES_LAT,attractions.get(i).lat);
-            editor.putFloat(APP_PREFERENCES_LNG,attractions.get(i).lng);
-            editor.apply();
+                Toast.makeText(context, "Координаты не указаны!", Toast.LENGTH_SHORT).show();
 
-            ((MainActivity) Objects.requireNonNull(context))
-                    .replaceFragments(MapFragment.class);
+
+
+            }
+            else {
+                boolean checkConnection=MainActivity.isOnline(context);
+
+                if(checkConnection) {
+
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString(APP_PREFERENCES_NAME_OBJECT, attractions.get(i).name);
+                    editor.putFloat(APP_PREFERENCES_LAT, attractions.get(i).lat);
+                    editor.putFloat(APP_PREFERENCES_LNG, attractions.get(i).lng);
+                    editor.apply();
+
+                    ((MainActivity) Objects.requireNonNull(context))
+                            .replaceFragments(MapFragment.class);
 
 //                Intent intent = new Intent(context, Main2Activity.class);
 //                context.startActivity(intent);
+                }
+                else {
+
+                    Toast.makeText(context, "Отсутствует интернет соединение!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
         });
 
     }

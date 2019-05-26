@@ -1,18 +1,22 @@
 package com.example.parkpay;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.MenuItem;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,8 +49,16 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences settings;
     private BottomNavigationViewEx bottomNav;
 
+    Context c;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+//        TypefaceUtil
+//                .overrideFont(getApplicationContext(),
+//                        "SERIF",
+//                        "font/roboto_regular.ttf");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //FirebaseApp.initializeApp(this);
@@ -56,23 +68,27 @@ public class MainActivity extends AppCompatActivity {
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         bottomNav = findViewById(R.id.bottom_navigation);
 
+
+
         bottomNav.setIconSize(25,25);
         bottomNav.setTextVisibility(false);
         bottomNav.enableAnimation(false);
         bottomNav.enableShiftingMode(false);
         bottomNav.enableItemShiftingMode(false);
 
+        c=this;
+
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
         //I added this if statement to keep the selected fragment when rotating the device
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    new RealCardFragment()).commit();
+                    new CardFragment()).commit();
         }
 
         if(settings.contains(APP_PREFERENCES_TOKEN)){
 
-            doPostRequestRefresh("http://192.168.252.199/login");
+            refreshToken();
 
         }
     }
@@ -83,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.nav_cart:
-                        selectedFragment = new RealCardFragment();
+                        selectedFragment = new CardFragment();
                         break;
                     case R.id.nav_map:
                         selectedFragment = new ParksFragment();
@@ -167,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
         return netInfo != null && netInfo.isConnected();
     }
 
-    private void doPostRequestRefresh(String url){
+    private void refreshToken(){
 
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
@@ -184,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .post(body)
-                .url(url)
+                .url("https://api.mobile.goldinnfish.com/login")
                 .build();
 
         Call call = client.newCall(request);
@@ -241,5 +257,58 @@ public class MainActivity extends AppCompatActivity {
 //        } else {
 //            super.onBackPressed();
 //        }
+//    }
+
+
+//    @Override
+//    public void onBackPressed() {
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+//        builder.setTitle("Закрыть приложение");
+//        builder.setMessage(Html
+//                .fromHtml("<font color='#000000'>Вы действительно хотите закрыть приложение?</font>"));
+//        builder.setCancelable(false);
+//        builder.setPositiveButton("Да",
+//                (dialog, id) -> {
+//
+//                    //moveTaskToBack(true);
+//                    System.runFinalizersOnExit(true);
+//                    System.exit(0);
+//                    finish();
+//
+//                });
+//        builder.setNegativeButton("Нет",
+//                (dialog, id) -> dialog.cancel());
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
+//        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+//        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+//        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
+//    }
+
+    //    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+//        builder.setTitle("Закрыть приложение");
+//        builder.setMessage(Html
+//                .fromHtml("<font color='#000000'>Вы действительно хотите закрыть приложение?</font>"));
+//        builder.setCancelable(false);
+//        builder.setPositiveButton("Да",
+//                (dialog, id) -> {
+//
+//                    moveTaskToBack(true);
+//                    System.runFinalizersOnExit(true);
+//                    System.exit(0);
+//
+//                });
+//        builder.setNegativeButton("Нет",
+//                (dialog, id) -> dialog.cancel());
+//        AlertDialog alertDialog = builder.create();
+//        alertDialog.show();
+//        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+//        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+//        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
 //    }
 }

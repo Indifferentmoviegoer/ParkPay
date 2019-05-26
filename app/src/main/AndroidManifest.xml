@@ -33,48 +33,46 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".Main2Activity"></activity>
+
+        <activity android:name=".ConfirmActivity"/>
+
         <activity android:name=".ResetPasswordActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAkEPoaujC2ZE7bNYANSH4J7XV-UgzVfSY" />
+            android:value="AIzaSyDO_gTtD5QyjdpjkPLDFNoB9kMLZsEzEI4" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-9760468716956149~8831006393" />
         <meta-data
-            android:name="com.google.android.gms.ads.AD_MANAGER_APP"
-            android:value="true" />
-        <meta-data
             android:name="ymp_firebase_app_id"
-            android:value="1:1061747613431:android:9be6226371a31003" />
+            android:value="1:870669631626:android:9be6226371a31003" />
         <meta-data
             android:name="ymp_gcm_sender_id"
-            android:value="number:1061747613431" />
+            android:value="number:870669631626" />
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".EditCardActivity" />
-        <activity android:name=".AddCardActivity" />
-        <activity
-            android:name=".AddVirtualCardActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.nfc.action.TECH_DISCOVERED" />
-            </intent-filter>
+        <activity android:name=".EditCardActivity"
+            >
 
-            <meta-data
-                android:name="android.nfc.action.TECH_DISCOVERED"
-                android:resource="@xml/nfc_tech_filter" />
         </activity>
+
+        <activity android:name=".AddCardActivity"
+            >
+
+        </activity>
+
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".SplashScreen" />
-        <activity android:name=".DetailCardActivity" />
-        <activity android:name=".PayActivity" />
+
+        <activity android:name=".PayActivity"
+            >
+
+        </activity>
         <activity android:name=".ScanBankCardActivity">
             <intent-filter>
                 <action android:name="ru.yandex.money.android.sdk.action.SCAN_BANK_CARD" />
@@ -89,17 +87,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity"
+            android:noHistory="true"
+            >
+
+        </activity>
+
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+            android:windowSoftInputMode="adjustPan"
+            >
         </activity>
 
         <service
@@ -109,37 +106,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service
-            android:name=".MyFirebaseInstanceIDService"
-            android:permission="">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
-        <service
-            android:name=".MyHostApduService"
-            android:exported="true"
-            android:permission="android.permission.BIND_NFC_SERVICE">
-            <intent-filter>
-                <action android:name="android.nfc.cardemulation.action.HOST_APDU_SERVICE" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.nfc.cardemulation.host_apdu_service"
-                android:resource="@xml/apduservice" />
-        </service>
-        <service
-            android:name="com.yandex.metrica.push.firebase.MetricaMessagingService"
-            tools:node="remove" />
-
-        <receiver
-            android:name=".SilentPushReceiver"
-            android:permission="">
-            <intent-filter>
-                <action android:name="com.example.parkpay.action.ymp.SILENT_PUSH_RECEIVE" />
-                <!-- <action android:name="${applicationId}.action.ymp.SILENT_PUSH_RECEIVE"/> -->
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

@@ -7,7 +7,7 @@ class Park {
 //    private final Float lngTop;
 //    private final Float latBottom;
 //    private final Float lngBottom;
-    private final Float latCenter;
+    final Float latCenter;
     final Float lngCenter;
     private String photo;
 
