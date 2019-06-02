@@ -30,18 +30,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SignInActivity extends AppCompatActivity {
-    private AppCompatButton signIn;
     private TextInputEditText login;
     private TextInputEditText pass;
-    private AppCompatButton help;
-    private AppCompatTextView remember;
     private String loginUser;
     private String passwordUser;
     private Context c;
     private SharedPreferences settings;
     private static final String APP_PREFERENCES = "mysettings";
     private static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
-    public static final String APP_PREFERENCES_EMAIL ="Email";
     private static final String APP_PREFERENCES_PASSWORD ="Password";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_LOGIN ="Login";
@@ -55,11 +51,11 @@ public class SignInActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        signIn = findViewById(R.id.signIn);
+        AppCompatButton signIn = findViewById(R.id.signIn);
         login = findViewById(R.id.email);
         pass =findViewById(R.id.password);
-        help = findViewById(R.id.helper);
-        remember =findViewById(R.id.remember);
+        AppCompatButton help = findViewById(R.id.helper);
+        AppCompatTextView remember = findViewById(R.id.remember);
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c=this;
@@ -77,8 +73,8 @@ public class SignInActivity extends AppCompatActivity {
 //        TypefaceUtil.overrideFont(getApplicationContext(), "serif", "font/roboto_regular.ttf");
 
         signIn.setOnClickListener(v -> {
-            loginUser=login.getText().toString();
-            passwordUser=pass.getText().toString();
+            loginUser= Objects.requireNonNull(login.getText()).toString();
+            passwordUser= Objects.requireNonNull(pass.getText()).toString();
             if (loginUser.equals("") || loginUser.length() == 0 ||
                     passwordUser.equals("") || passwordUser.length() == 0) {
                 Toast.makeText(getApplicationContext(), "Заполните все поля ввода!",
@@ -115,23 +111,21 @@ public class SignInActivity extends AppCompatActivity {
             Intent intent = new Intent(SignInActivity.this, SignUpActivity.class);
             startActivity(intent);
         });
-//        if(settings.contains(APP_PREFERENCES_CHECK)&&settings.contains(APP_PREFERENCES_LOGIN)
-//                &&settings.contains(APP_PREFERENCES_PASSWORD)) {
-//            remember.setChecked(settings.getBoolean(APP_PREFERENCES_CHECK, false));
-//
-//            if(settings.getBoolean(APP_PREFERENCES_CHECK, false)){
+
+
+        if(settings.contains(APP_PREFERENCES_LOGIN)
+                &&settings.contains(APP_PREFERENCES_PASSWORD)) {
+
                 login.setText(settings.getString(APP_PREFERENCES_LOGIN, ""));
                 pass.setText(settings.getString(APP_PREFERENCES_PASSWORD, ""));
-//            }
-//
-//        }
+
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         SharedPreferences.Editor editor = settings.edit();
-//        editor.putBoolean(APP_PREFERENCES_CHECK,remember.isChecked() );
         editor.putString(APP_PREFERENCES_LOGIN, Objects.requireNonNull(login.getText()).toString());
         editor.putString(APP_PREFERENCES_PASSWORD, Objects.requireNonNull(pass.getText()).toString());
         editor.apply();
@@ -180,7 +174,7 @@ public class SignInActivity extends AppCompatActivity {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
@@ -251,7 +245,7 @@ public class SignInActivity extends AppCompatActivity {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));

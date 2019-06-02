@@ -1,9 +1,7 @@
 package com.example.parkpay;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.TransactionsViewHolder>{
 
@@ -62,9 +60,9 @@ public class TransactionAdapter extends RecyclerView.Adapter<TransactionAdapter.
 //                // In between
 //            }
 
-            transactionsViewHolder.dateTransaction.setText(formatterOut.format(date));
+            transactionsViewHolder.dateTransaction.setText(formatterOut.format(Objects.requireNonNull(date)));
 
-            transactionsViewHolder.timeTransaction.setText(timeValue.format(timeValues));
+            transactionsViewHolder.timeTransaction.setText(timeValue.format(Objects.requireNonNull(timeValues)));
 
         } catch (ParseException e) {
             e.printStackTrace();

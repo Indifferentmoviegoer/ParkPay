@@ -35,29 +35,13 @@ import java.util.Objects;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
-    TextView editProfile;
-    TextView name;
-    TextView signOut;
-    TextView quantityVisits;
-    ImageView imageProfile;
-
-//    private PublisherAdView adView;
-//
-//    PublisherAdRequest adRequest;
-
     private Context c;
     private static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_NOTIFICATION = "TURN_NOTIFICATION";
-    public static final String APP_PREFERENCES_NAME = "Name";
-    public static final String APP_PREFERENCES_TOKEN = "Token";
-    public static final String APP_PREFERENCES_PHOTO = "Photo";
-    public static final String APP_PREFERENCES_QUANTITY_VISITS = "quantityVisits";
     private static final String APP_PREFERENCES_LAT ="lat";
     private static final String APP_PREFERENCES_LNG ="lng";
     private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
 
     private SharedPreferences settings;
-    Switch notification;
 
     private MapView mapView;
     private GoogleMap gmap;
@@ -71,21 +55,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-//        MapKitFactory.setApiKey("444d4c32-53aa-42aa-a7c5-2e2c0caac1ac");
-//        MapKitFactory.initialize(Objects.requireNonNull(getContext()));
-
         View view = inflater.inflate(R.layout.fragment_map, container, false);
 
-
-        //imageProfile=(ImageView) view.findViewById(R.id.imageProfile);
 
         c = getContext();
 
         settings = Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-
-        //mapView = (MapView) view.findViewById(R.id.mapView);
 
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
@@ -154,22 +131,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                     ))
                     .title(settings.getString(APP_PREFERENCES_NAME_OBJECT,""))
                     //.snippet("Аттракцион 1")
-                    .icon(markerIcon)
+//                    .icon(markerIcon)
             );
-//
-//            gmap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(45.058189, 38.991636))
-//                    .title("Аттракцион 2")
-//                    .snippet("Аттракцион 2")
-//                    .icon(markerIcon)
-//            );
-//
-//            gmap.addMarker(new MarkerOptions()
-//                    .position(new LatLng(45.057458, 38.991373))
-//                    .title("Аттракцион 3")
-//                    .snippet("Аттракцион 3")
-//                    .icon(markerIcon)
-//            );
         }
     }
 

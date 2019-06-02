@@ -36,8 +36,4 @@ class Park {
     public String getImageUrl() {
         return photo;
     }
-
-    public void setImageUrl(String imageUrl) {
-        this.photo = imageUrl;
-    }
 }

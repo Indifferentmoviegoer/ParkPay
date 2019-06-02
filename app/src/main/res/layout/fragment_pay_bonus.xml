@@ -46,7 +46,6 @@
         />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/titleSumPay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/paySum"
@@ -70,7 +69,8 @@
         android:hint="0 Б"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/numberPay"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/buttonPay"

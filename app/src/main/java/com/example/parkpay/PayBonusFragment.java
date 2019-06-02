@@ -50,9 +50,6 @@ public class PayBonusFragment extends Fragment {
     private Context c;
 
     private static final String TAG = "myLogs";
-
-    private static final int REQUEST_CODE_TOKENIZE = 33;
-
     private SharedPreferences settings;
 
     private static final String APP_PREFERENCES = "mysettings";
@@ -61,9 +58,6 @@ public class PayBonusFragment extends Fragment {
     private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
     private static final String APP_PREFERENCES_CARD_NAME ="cardName";
     private static final String APP_PREFERENCES_STATUS ="Status";
-    private static final String APP_PREFERENCES_MSG ="Message";
-
-    private TokenizationResult result;
 
     @Nullable
     @Override
@@ -179,7 +173,7 @@ public class PayBonusFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject Jobject = new JSONObject(jsonData);
+                            JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));

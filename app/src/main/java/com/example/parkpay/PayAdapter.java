@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import org.jetbrains.annotations.NotNull;
 
-public class PayAdapter extends FragmentPagerAdapter {
+class PayAdapter extends FragmentPagerAdapter {
 
     private final int numOfTabs;
 

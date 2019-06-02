@@ -43,9 +43,6 @@ import okhttp3.Response;
 public class CardFragment extends Fragment {
 
     private static final String APP_PREFERENCES = "mysettings";
-    private static final String APP_PREFERENCES_CARDS ="Cards";
-    private static final String APP_PREFERENCES_NAMES_CARDS ="namesCards";
-    public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_NAME ="Name";
     private static final String APP_PREFERENCES_NUMBER ="Number";
@@ -53,13 +50,9 @@ public class CardFragment extends Fragment {
     private static final String APP_PREFERENCES_DATE_BIRTHDAY ="DateBirthday";
     private static final String APP_PREFERENCES_BONUS ="bonus";
     private static final String APP_PREFERENCES_QUANTITY_CARD ="quantityCard";
-    public static final String APP_PREFERENCES_STATUS ="Status";
-    private static final String APP_PREFERENCES_MONEY_CHILD ="moneyChild";
-    private static final String APP_PREFERENCES_BONUS_CHILD ="bonusChild";
     private static final String APP_PREFERENCES_QUANTITY_VISITS ="quantityVisits";
     private static final String APP_PREFERENCES_PASSWORD ="Password";
     private static final String APP_PREFERENCES_LOGIN ="Login";
-    private static final String APP_PREFERENCES_CARD_ID ="cardId";
     private static final String TAG = "myLogs";
 
 
@@ -69,12 +62,12 @@ public class CardFragment extends Fragment {
     private CardAdapter cardAdapter;
     private ContentLoadingProgressBar progressBarCard;
     private SwipeRefreshLayout swipeCard;
-    ImageView addCard;
-    AppCompatTextView noCard;
+    private ImageView addCard;
+    private AppCompatTextView noCard;
 
 
-    private SharedPreferences settings;
-    private Context c;
+    SharedPreferences settings;
+    Context c;
 
     @Nullable
     @Override
@@ -202,7 +195,7 @@ public class CardFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject Jobject = new JSONObject(jsonData);
+                            JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_TOKEN, Jobject.getString("token"));
@@ -351,7 +344,7 @@ public class CardFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject parentObject = new JSONObject(jsonData);
+                            JSONObject parentObject = new JSONObject(Objects.requireNonNull(jsonData));
                             JSONObject Jobject = parentObject.getJSONObject("user");
 
                             SharedPreferences.Editor editor = settings.edit();

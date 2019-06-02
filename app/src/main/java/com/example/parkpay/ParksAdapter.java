@@ -25,7 +25,7 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
     private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_PARK_ID ="parkID";
-    public static final String APP_PREFERENCES_LAT ="lat";
+    private static final String APP_PREFERENCES_LAT ="lat";
     private static final String APP_PREFERENCES_LNG ="lng";
     private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
     private static final String TAG = "myLogs";
@@ -103,8 +103,6 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
                     ((MainActivity) Objects.requireNonNull(context))
                             .replaceFragments(MapFragment.class);
 
-//                Intent intent = new Intent(context, Main2Activity.class);
-//                context.startActivity(intent);
                 }
                 else {
 
@@ -137,8 +135,6 @@ public class ParksAdapter extends RecyclerView.Adapter<ParksAdapter.ParkViewHold
                     ((MainActivity) Objects.requireNonNull(context))
                             .replaceFragments(MapFragment.class);
 
-//                Intent intent = new Intent(context, Main2Activity.class);
-//                context.startActivity(intent);
                 }
                 else {
 

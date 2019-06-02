@@ -26,7 +26,6 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
 
     private static final String APP_PREFERENCES = "mysettings";
     public static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String APP_PREFERENCES_LAT ="lat";
     private static final String APP_PREFERENCES_LNG ="lng";
     private static final String APP_PREFERENCES_NAME_OBJECT ="nameObject";
@@ -201,6 +200,7 @@ public class AttractionsAdapter extends RecyclerView.Adapter<AttractionsAdapter.
 
     @Override
     public void onAttachedToRecyclerView(@NotNull RecyclerView recyclerView) {
+
         super.onAttachedToRecyclerView(recyclerView);
     }
 

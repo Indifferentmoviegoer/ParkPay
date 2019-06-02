@@ -19,7 +19,7 @@ public class ConfirmActivity extends AppCompatActivity {
     private SharedPreferences settings;
 
     private static final String APP_PREFERENCES = "mysettings";
-    public static final String CONFIRM = "confirm";
+    private static final String CONFIRM = "confirm";
 
     private static final String TAG = "myLogs";
 
@@ -72,7 +72,7 @@ public class ConfirmActivity extends AppCompatActivity {
         }
     }
 
-    void timeToStart3DS() {
+    private void timeToStart3DS() {
 
         Log.d(settings.getString(CONFIRM,""),TAG);
 

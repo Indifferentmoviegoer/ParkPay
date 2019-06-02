@@ -8,8 +8,6 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -42,20 +40,17 @@ public class ParksFragment extends Fragment {
 
     private static final String APP_PREFERENCES = "mysettings";
     private static final String APP_PREFERENCES_TOKEN ="Token";
-    public static final String APP_PREFERENCES_PARK_IDS ="parkIDs";
-    public static final String APP_PREFERENCES_PARK_NAMES ="names";
-    public static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
     private RecyclerView rv;
     private ProgressBar progressBarParks;
     private SwipeRefreshLayout sRL;
-    AppCompatTextView noResult;
+    private AppCompatTextView noResult;
 
     private List<Park> parks;
 
-    private SharedPreferences settings;
-    private Context c;
+    SharedPreferences settings;
+    Context c;
 
     @Nullable
     @Override
@@ -185,7 +180,7 @@ public class ParksFragment extends Fragment {
 
                                 String lat=Jobject.getString("lat_center");
                                 String lng=Jobject.getString("lng_center");
-                                String photo="https://wikiway.com/upload/hl-photo/9dc/391/park_solnechniy_ostrov_53.jpg";
+                                String photo;
 
                                 if(lat.contains("null")){
                                     lat="0.0";
@@ -215,17 +210,35 @@ public class ParksFragment extends Fragment {
                                     photo="https://wikiway.com/upload/hl-photo/9dc/391/park_solnechniy_ostrov_53.jpg";
                                 }
 
+                                if(Jobject.getString("name").contains("Парк 30 лет Победы"))
+                                {
                                 parks.add(new Park(
+
                                         Jobject.getString("park_id"),
                                         Jobject.getString("name"),
 //                                        Float.parseFloat(Jobject.getString("lat_top")),
 //                                        Float.parseFloat(Jobject.getString("lng_top")),
 //                                        Float.parseFloat(Jobject.getString("lat_bottom")),
 //                                        Float.parseFloat(Jobject.getString("lng_bottom")),
-                                        Float.parseFloat(lat),
-                                        Float.parseFloat(lng),
+                                        45.0169693f,
+                                        38.9517842f,
                                         photo
                                 ));
+                                }
+                                else {
+
+                                    parks.add(new Park(
+                                    Jobject.getString("park_id"),
+                                            Jobject.getString("name"),
+//                                        Float.parseFloat(Jobject.getString("lat_top")),
+//                                        Float.parseFloat(Jobject.getString("lng_top")),
+//                                        Float.parseFloat(Jobject.getString("lat_bottom")),
+//                                        Float.parseFloat(Jobject.getString("lng_bottom")),
+                                            Float.parseFloat(lat),
+                                            Float.parseFloat(lng),
+                                            photo
+                                    ));
+                                }
                             }
 
 

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +41,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardsViewHolde
     private final Context context;
 
     private static final String APP_PREFERENCES = "mysettings";
-    private static final String APP_PREFERENCES_CARDS ="Cards";
-    private static final String APP_PREFERENCES_POSITION_CARD ="position";
-    private static final String APP_PREFERENCES_POSITION_GROUP ="group";
     private static final String APP_PREFERENCES_TOKEN ="Token";
 
     private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
@@ -76,9 +72,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardsViewHolde
         cardsViewHolder.moneyCard.setText(cards.get(i).money);
         cardsViewHolder.bonusCard.setText(cards.get(i).bonus);
 
-//        Typeface tf = ResourcesCompat.getFont(context,
-//                R.font.roboto_regular);
-//        cardsViewHolder.nameCard.setTypeface(tf);
 
         cardsViewHolder.imageDelete.setOnClickListener(v -> {
 
@@ -96,8 +89,6 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardsViewHolde
                         editor.putString(APP_PREFERENCES_CARD_NAME, cards.get(i).name);
                         editor.putString(APP_PREFERENCES_CARD_CODE, cards.get(i).code);
                         editor.apply();
-
-                        Intent i1 = new Intent(context, MainActivity.class);
 
                         boolean checkConnection = MainActivity.isOnline(context);
 
@@ -229,7 +220,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardsViewHolde
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         Intent i = new Intent(context, MainActivity.class);
 

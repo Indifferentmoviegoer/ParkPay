@@ -227,7 +227,6 @@
                     android:id="@+id/dateBirthday"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:editable="false"
                     android:maxLength="10"
                     android:inputType="number"
                     android:drawableEnd="@drawable/ic_date_white"

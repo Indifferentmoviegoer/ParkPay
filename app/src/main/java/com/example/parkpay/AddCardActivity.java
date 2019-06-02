@@ -35,11 +35,8 @@ import okhttp3.Response;
 
 public class AddCardActivity extends AppCompatActivity {
 
-    private AppCompatButton buttonAddCard;
     private EditText numberAddCard;
     private EditText nameAddCard;
-    private ImageView backAdd;
-    private ImageView scan;
 
 
     private Context c;
@@ -48,11 +45,8 @@ public class AddCardActivity extends AppCompatActivity {
     private String nameCard;
     private ArrayList<String> child;
 
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private static final String APP_PREFERENCES = "mysettings";
     private static final String APP_PREFERENCES_CARD ="Card";
-    private static final String APP_PREFERENCES_CARDS ="Cards";
-    public static final String APP_PREFERENCES_VIRTUAL_CARDS ="virtualCards";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_STATUS ="Status";
     private static final String APP_PREFERENCES_MSG ="Message";
@@ -65,11 +59,11 @@ public class AddCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_card);
 
         c=this;
-        buttonAddCard=findViewById(R.id.buttonAddCard);
+        AppCompatButton buttonAddCard = findViewById(R.id.buttonAddCard);
         numberAddCard=findViewById(R.id.numberAddCard);
         nameAddCard=findViewById(R.id.nameAddCard);
-        backAdd=findViewById(R.id.backAdd);
-        scan=findViewById(R.id.scan);
+        ImageView backAdd = findViewById(R.id.backAdd);
+        ImageView scan = findViewById(R.id.scan);
 
         settings= Objects.requireNonNull(c)
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -101,10 +95,6 @@ public class AddCardActivity extends AppCompatActivity {
             numberCard=numberAddCard.getText().toString();
             nameCard=nameAddCard.getText().toString();
 
-            if(settings.contains(APP_PREFERENCES_CARDS)){
-
-                child=MainActivity.getArrayList(APP_PREFERENCES_CARDS,settings);
-            }
 
             if(numberCard.equals("") || numberCard.length() == 0){
 
@@ -214,7 +204,7 @@ public class AddCardActivity extends AppCompatActivity {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         Intent i = new Intent(c, MainActivity.class);
 
@@ -233,7 +223,6 @@ public class AddCardActivity extends AppCompatActivity {
                                         Toast.LENGTH_SHORT).show();
 
                                 child.add(numberCard);
-                                MainActivity.saveArrayList(child, APP_PREFERENCES_CARDS,settings);
                                 startActivity(i);
                             }
                             else {

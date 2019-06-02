@@ -29,20 +29,11 @@ import okhttp3.Response;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
-    private AppCompatButton reset;
-    private AppCompatButton cancel;
     private TextInputEditText email;
     private Context c;
 
-    String mail="";
+    private String mail="";
 
-    private SharedPreferences settings;
-    private static final String APP_PREFERENCES = "mysettings";
-    private static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
-    public static final String APP_PREFERENCES_EMAIL ="Email";
-    private static final String APP_PREFERENCES_PASSWORD ="Password";
-    private static final String APP_PREFERENCES_TOKEN ="Token";
-    private static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
 
     @Override
@@ -54,10 +45,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         email = findViewById(R.id.email);
-        reset = findViewById(R.id.reset);
-        cancel = findViewById(R.id.cancel);
+        AppCompatButton reset = findViewById(R.id.reset);
+        AppCompatButton cancel = findViewById(R.id.cancel);
 
-        settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         c = this;
 
         reset.setOnClickListener(view -> {
@@ -117,7 +107,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         Toast.makeText(getApplicationContext(),
                                 Jobject.getString("msg"),

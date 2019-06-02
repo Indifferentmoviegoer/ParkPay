@@ -48,7 +48,6 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 import ru.yandex.money.android.sdk.Amount;
 import ru.yandex.money.android.sdk.Checkout;
 import ru.yandex.money.android.sdk.ColorScheme;
-import ru.yandex.money.android.sdk.MockConfiguration;
 import ru.yandex.money.android.sdk.PaymentMethodType;
 import ru.yandex.money.android.sdk.PaymentParameters;
 import ru.yandex.money.android.sdk.TestParameters;
@@ -78,7 +77,7 @@ public class PayFragment extends Fragment {
     private static final String APP_PREFERENCES_CARD_DELETE ="cardDelete";
     private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
     private static final String APP_PREFERENCES_CARD_NAME ="cardName";
-    public static final String CONFIRM = "confirm";
+    private static final String CONFIRM = "confirm";
 
     private TokenizationResult result;
 
@@ -128,10 +127,6 @@ public class PayFragment extends Fragment {
             } else {
                 sum = new BigDecimal(amountPay.getText().toString());
                 timeToStartCheckout();
-                //timeToStartCheckoutTest();
-//                    Intent intent = new Intent(getApplicationContext(),
-//                            MainActivity.class);
-//                    startActivity(intent);
             }
         });
 
@@ -204,26 +199,6 @@ public class PayFragment extends Fragment {
         UiParameters uiParameters = new UiParameters(false, new ColorScheme(Color.parseColor("#3F51B5")));
 
         Intent intent = Checkout.createTokenizeIntent(c, paymentParameters,new TestParameters(),uiParameters);
-//        Intent intent = Checkout.createTokenizeIntent(this, paymentParameters,new TestParameters(),uiParameters);
-        startActivityForResult(intent, REQUEST_CODE_TOKENIZE);
-    }
-    void timeToStartCheckoutTest() {
-
-        final Set<PaymentMethodType> paymentMethodTypes = new HashSet<>();
-        paymentMethodTypes.add(PaymentMethodType.BANK_CARD);
-
-        PaymentParameters paymentParameters = new PaymentParameters(
-                new Amount(sum, Currency.getInstance("RUB")),
-                "Пополнение карты",
-                settings.getString(APP_PREFERENCES_CARD_CODE,"")+"",
-                "test_NTg4ODU2lc-4GywPaPNTcTbZG4ELvXgjk27aSrhbJ4U",
-                "588856",
-                paymentMethodTypes
-        );
-        UiParameters uiParameters = new UiParameters(false, new ColorScheme(Color.parseColor("#3F51B5")));
-
-        TestParameters testParameters = new TestParameters(true, true, new MockConfiguration(false, true, 5));
-        Intent intent = Checkout.createTokenizeIntent(c, paymentParameters, testParameters, uiParameters);
         startActivityForResult(intent, REQUEST_CODE_TOKENIZE);
     }
 
@@ -278,7 +253,7 @@ public class PayFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject parentObject = new JSONObject(jsonData);
+                            JSONObject parentObject = new JSONObject(Objects.requireNonNull(jsonData));
                             JSONObject Jobject = parentObject.getJSONObject("confirmation");
 
 

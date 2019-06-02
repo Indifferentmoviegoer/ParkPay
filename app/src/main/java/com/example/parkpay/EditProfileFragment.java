@@ -52,12 +52,9 @@ import ru.tinkoff.decoro.slots.Slot;
 import ru.tinkoff.decoro.watchers.FormatWatcher;
 import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
-//import static androidx.constraintlayout.Constraints.TAG;
-import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 public class EditProfileFragment extends Fragment {
 
-//    Button save;
 private EditText name;
     private EditText email;
     private EditText phone;
@@ -66,10 +63,6 @@ private EditText name;
     private String emailUser;
     private String phoneUser;
     private String dateBirthdayUser;
-//    TextInputLayout mailLayout;
-private ImageView backProfile;
-    private ImageView acceptSave;
-    private TextView changePhotoText;
 
     private Context c;
 
@@ -92,28 +85,12 @@ private ImageView backProfile;
     private static final int TAKE_PICTURE_REQUEST_CODE = 1;
     private ImageView photoProfile;
 
-    private void takeCameraPicture() {
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        if (intent.resolveActivity(Objects.requireNonNull(getActivity()).getPackageManager()) != null) {
-
-            if (checkSelfPermission(c,Manifest.permission.CAMERA)
-                    != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA},
-                        MY_CAMERA_REQUEST_CODE);
-            }
-            else {
-                startActivityForResult(intent, TAKE_PICTURE_REQUEST_CODE);
-            }
-
-        }
-    }
-
     public void onActivityResult(int n, int n2, Intent intent) {
         if (n == 1 && n2 == -1) {
             Bitmap bitmap = (Bitmap)((Bundle)Objects.requireNonNull((Object)intent.getExtras())).get("data");
             photoProfile.setImageBitmap(bitmap);
 
-            String img=encodeToBase64(bitmap);
+            String img=encodeToBase64(Objects.requireNonNull(bitmap));
 
             SharedPreferences.Editor editor = settings.edit();
                 editor.putString(APP_PREFERENCES_PHOTO,img);
@@ -147,13 +124,10 @@ private ImageView backProfile;
         email= view.findViewById(R.id.mail);
         phone= view.findViewById(R.id.number);
         dateBirthday= view.findViewById(R.id.dateBirthday);
-//        mailLayout=(TextInputLayout) view.findViewById(R.id.mailLayout);
-        backProfile= view.findViewById(R.id.backProfile);
-        acceptSave= view.findViewById(R.id.acceptSave);
-        changePhotoText= view.findViewById(R.id.changePhotoText);
+        ImageView backProfile = view.findViewById(R.id.backProfile);
+        ImageView acceptSave = view.findViewById(R.id.acceptSave);
+        TextView changePhotoText = view.findViewById(R.id.changePhotoText);
         photoProfile= view.findViewById(R.id.photoProfile);
-
-//        mailLayout.setHintEnabled(false);
         c=getContext();
 
         settings= Objects.requireNonNull(this.getActivity())
@@ -170,12 +144,6 @@ private ImageView backProfile;
         mask.setForbidInputWhenFilled(true);
         FormatWatcher formatWatcher = new MaskFormatWatcher(mask);
         formatWatcher.installOn(phone);
-
-//        Slot[] slotD = new UnderscoreDigitSlotsParser().parseSlots("____.__.__");
-//        MaskImpl maskD = MaskImpl.createTerminated(slotD);
-//        maskD.setForbidInputWhenFilled(true);
-//        FormatWatcher formatWatcherD = new MaskFormatWatcher(maskD);
-//        formatWatcherD.installOn(dateBirthday);
 
         dateBirthday.setKeyListener(null);
 
@@ -219,10 +187,7 @@ private ImageView backProfile;
         };
 
         dateBirthday.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_LEFT = 0;
-            final int DRAWABLE_TOP = 1;
             final int DRAWABLE_RIGHT = 2;
-            final int DRAWABLE_BOTTOM = 3;
 
             if(event.getAction() == MotionEvent.ACTION_UP) {
                 if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -287,13 +252,6 @@ private ImageView backProfile;
 
             }
         });
-
-//        changePhotoText.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                takeCameraPicture();
-//            }
-//        });
 
 
         return view;
@@ -377,7 +335,7 @@ private ImageView backProfile;
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject Jobject = new JSONObject(jsonData);
+                            JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString(APP_PREFERENCES_STATUS, Jobject.getString("status"));

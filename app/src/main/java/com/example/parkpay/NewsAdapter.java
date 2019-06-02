@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder>{
 
@@ -54,7 +55,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
             Date date = formatter.parse(news.get(i).date);
             //Date timeValues = formatter.parse(SubItem.get(i));
 
-            newsViewHolder.dateNews.setText(formatterOut.format(date));
+            newsViewHolder.dateNews.setText(formatterOut.format(Objects.requireNonNull(date)));
 
             //time.setText(timeValue.format(timeValues));
 
@@ -88,7 +89,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
     public static class NewsViewHolder extends RecyclerView.ViewHolder {
 
-        final CardView cv;
         final TextView newsName;
         final ImageView newsPhoto;
         final TextView dateNews;
@@ -97,7 +97,6 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.NewsViewHolder
 
         NewsViewHolder(View itemView) {
             super(itemView);
-            cv = itemView.findViewById(R.id.cvNews);
             newsName = itemView.findViewById(R.id.news_name);
             newsPhoto = itemView.findViewById(R.id.news_photo);
             dateNews = itemView.findViewById(R.id.dateNews);

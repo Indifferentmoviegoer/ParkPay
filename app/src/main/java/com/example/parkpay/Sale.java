@@ -24,7 +24,4 @@ class Sale {
         return photo;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.photo = imageUrl;
-    }
 }

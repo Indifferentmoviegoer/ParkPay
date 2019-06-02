@@ -23,7 +23,6 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
@@ -51,36 +50,35 @@ public class AttractionsFragment extends Fragment {
     private static final String APP_PREFERENCES_PARK_ID ="parkID";
     private static final String TAG = "myLogs";
 
-    int i;
 
     private RecyclerView rv;
     private ProgressBar progressBarAttractions;
     private SwipeRefreshLayout swipeAttr;
-    AppCompatImageView searchFilter;
-    AppCompatImageView second;
-    AppCompatImageView close;
+    private AppCompatImageView searchFilter;
+    private AppCompatImageView second;
+    private AppCompatImageView close;
 
     private List<Attraction> attr;
 
     private SharedPreferences settings;
     private Context c;
 
-    TextInputEditText nameAttr;
-    TextInputEditText ageMin;
-    TextInputEditText ageMax;
-    TextInputEditText maxWeight;
-    TextInputEditText minGrowth;
-    AppCompatButton acceptButton;
-    ConstraintLayout searchLayout;
-    AppCompatTextView searchResult;
-    AppCompatTextView titleAttr;
-    AppCompatTextView titleSearch;
+    private TextInputEditText nameAttr;
+    private TextInputEditText ageMin;
+    private TextInputEditText ageMax;
+    private TextInputEditText maxWeight;
+    private TextInputEditText minGrowth;
+    private AppCompatButton acceptButton;
+    private ConstraintLayout searchLayout;
+    private AppCompatTextView searchResult;
+    private AppCompatTextView titleAttr;
+    private AppCompatTextView titleSearch;
 
-    String attrName;
-    String minAge;
-    String maxAge;
-    String weightMax;
-    String growthMax;
+    private String attrName;
+    private String minAge;
+    private String maxAge;
+    private String weightMax;
+    private String growthMax;
 
     @Nullable
     @Override
@@ -92,7 +90,6 @@ public class AttractionsFragment extends Fragment {
             c = container.getContext();
         }
 
-        //simpleList = (ListView)view.findViewById(R.id.parks);
 
         progressBarAttractions= view.findViewById(R.id.progressBarAttractions);
         rv = view.findViewById(R.id.attrs);
@@ -160,11 +157,11 @@ public class AttractionsFragment extends Fragment {
                 progressBarAttractions.setVisibility(View.VISIBLE);
                 searchLayout.setVisibility(View.INVISIBLE);
 
-                attrName=nameAttr.getText().toString();
-                minAge=ageMin.getText().toString();
-                maxAge=ageMax.getText().toString();
-                weightMax=maxWeight.getText().toString();
-                growthMax=minGrowth.getText().toString();
+                attrName= Objects.requireNonNull(nameAttr.getText()).toString();
+                minAge= Objects.requireNonNull(ageMin.getText()).toString();
+                maxAge= Objects.requireNonNull(ageMax.getText()).toString();
+                weightMax= Objects.requireNonNull(maxWeight.getText()).toString();
+                growthMax= Objects.requireNonNull(minGrowth.getText()).toString();
 
                 getAttrSearch();
 
@@ -303,21 +300,45 @@ public class AttractionsFragment extends Fragment {
                                     lng="0.0";
                                 }
 
-                                attr.add(new Attraction(
+                                if(Jobject.getString("rep_name").contains("Автодром")) {
+                                    attr.add(new Attraction(
+
                                         Jobject.getString("atr_id"),
                                         Jobject.getString("rep_name"),
-                                        Jobject.getString("image"),
+                                        "https://www.sochipark.ru/sites/default/files/styles/restorany_i_bary_465x320/public/007.jpg?itok=L0ejTtnK",
                                         Jobject.getString("price"),
                                         Jobject.getString("bonus"),
-                                        Jobject.getString("text"),
-                                        Jobject.getString("weight"),
-                                        Jobject.getString("growth"),
-                                        Jobject.getString("age_min"),
+                                        "Классический автодром итальянского производства относится к категории семейных аттракционов, принимающих как детей, так и взрослых. Его особенностью является возможность задействовать стилизованные болиды в пяти скоростных режимах.",
+                                        "70",
+                                        "120",
+                                        "5",
                                         Jobject.getString("age_max"),
                                         Jobject.getString("level_fear"),
-                                        Float.parseFloat(lat),
-                                        Float.parseFloat(lng)
+                                        45.017979f,
+                                        38.950721f
+
+
                                 ));
+                                }
+                                else {
+                                    attr.add(new Attraction(
+
+
+                                            Jobject.getString("atr_id"),
+                                            Jobject.getString("rep_name"),
+                                            Jobject.getString("image"),
+                                            Jobject.getString("price"),
+                                            Jobject.getString("bonus"),
+                                            Jobject.getString("text"),
+                                            Jobject.getString("weight"),
+                                            Jobject.getString("growth"),
+                                            Jobject.getString("age_min"),
+                                            Jobject.getString("age_max"),
+                                            Jobject.getString("level_fear"),
+                                            Float.parseFloat(lat),
+                                            Float.parseFloat(lng)
+                                    ));
+                                }
 
                             }
 
@@ -465,21 +486,47 @@ public class AttractionsFragment extends Fragment {
                                                 growth<=growthE
                                 ) {
 
-                                    attr.add(new Attraction(
-                                            Jobject.getString("atr_id"),
-                                            Jobject.getString("rep_name"),
-                                            Jobject.getString("image"),
-                                            Jobject.getString("price"),
-                                            Jobject.getString("bonus"),
-                                            Jobject.getString("text"),
-                                            Jobject.getString("weight"),
-                                            Jobject.getString("growth"),
-                                            Jobject.getString("age_min"),
-                                            Jobject.getString("age_max"),
-                                            Jobject.getString("level_fear"),
-                                            Float.parseFloat(lat),
-                                            Float.parseFloat(lng)
-                                    ));
+                                    if(Jobject.getString("rep_name").contains("Автодром")) {
+                                        attr.add(new Attraction(
+
+
+                                                Jobject.getString("atr_id"),
+                                                Jobject.getString("rep_name"),
+                                                "https://www.sochipark.ru/sites/default/files/styles/restorany_i_bary_465x320/public/007.jpg?itok=L0ejTtnK",
+                                                Jobject.getString("price"),
+                                                Jobject.getString("bonus"),
+                                                "Классический автодром итальянского производства относится к категории семейных аттракционов, принимающих как детей, так и взрослых. Его особенностью является возможность задействовать стилизованные болиды в пяти скоростных режимах.",
+                                                "70",
+                                                "120",
+                                                "5",
+                                                Jobject.getString("age_max"),
+                                                Jobject.getString("level_fear"),
+                                                45.017979f,
+                                                38.950721f
+                                        ));
+                                    }
+                                    else {
+                                        attr.add(new Attraction(
+
+
+                                                Jobject.getString("atr_id"),
+                                                Jobject.getString("rep_name"),
+                                                Jobject.getString("image"),
+                                                Jobject.getString("price"),
+                                                Jobject.getString("bonus"),
+                                                Jobject.getString("text"),
+                                                Jobject.getString("weight"),
+                                                Jobject.getString("growth"),
+                                                Jobject.getString("age_min"),
+                                                Jobject.getString("age_max"),
+                                                Jobject.getString("level_fear"),
+                                                Float.parseFloat(lat),
+                                                Float.parseFloat(lng)
+
+
+
+                                        ));
+                                    }
                                 }
 
                                 else {

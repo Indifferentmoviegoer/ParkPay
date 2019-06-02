@@ -98,7 +98,8 @@
         app:layout_constraintEnd_toEndOf="@id/imageCard"
         app:layout_constraintTop_toTopOf="@id/imageCard"
         app:layout_constraintBottom_toBottomOf="@id/imageCard"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <ImageView
         android:id="@+id/scanEdit"

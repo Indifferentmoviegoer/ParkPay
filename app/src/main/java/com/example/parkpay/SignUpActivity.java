@@ -52,7 +52,6 @@ import ru.tinkoff.decoro.watchers.MaskFormatWatcher;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private AppCompatButton signUp;
     private TextInputEditText login;
     private TextInputEditText name;
     private TextInputEditText email;
@@ -61,13 +60,11 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputEditText phone;
     private TextInputEditText dateBirthday;
     private TextInputEditText inviteCode;
-    private ImageButton back;
-    private AppCompatTextView signIn;
-    TextInputLayout mailLabel;
-    TextInputLayout passwLabel;
-    TextInputLayout confirmPasswordLabel;
-    CheckBox agree;
-    AppCompatImageView openAgreeText;
+    private TextInputLayout mailLabel;
+    private TextInputLayout passwLabel;
+    private TextInputLayout confirmPasswordLabel;
+    private CheckBox agree;
+    private AppCompatImageView openAgreeText;
 
 
     private String loginUser;
@@ -114,9 +111,9 @@ public class SignUpActivity extends AppCompatActivity {
         phone= findViewById(R.id.number);
         dateBirthday= findViewById(R.id.dateBirthday);
         inviteCode= findViewById(R.id.inviteCode);
-        signUp= findViewById(R.id.signUp);
-        back= findViewById(R.id.back);
-        signIn= findViewById(R.id.signIn);
+        AppCompatButton signUp = findViewById(R.id.signUp);
+        ImageButton back = findViewById(R.id.back);
+        AppCompatTextView signIn = findViewById(R.id.signIn);
         mailLabel= findViewById(R.id.mail_label);
         passwLabel= findViewById(R.id.passw_label);
         confirmPasswordLabel= findViewById(R.id.confirmPassword_label);
@@ -221,12 +218,9 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s)
             {
-                if(!MainActivity.isValidEmail(email.getText().toString())){
-
-//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
+                if(!MainActivity.isValidEmail(Objects.requireNonNull(email.getText()).toString())){
 
                     mailLabel.setErrorEnabled(true);
-                    //mailLabel.setHintEnabled(false);
                     mailLabel.setError(getResources().getString(R.string.error));
                 }
 
@@ -255,14 +249,11 @@ public class SignUpActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s)
             {
 
-                passUser=pass.getText().toString();
+                passUser= Objects.requireNonNull(pass.getText()).toString();
 
                 if(passUser.length()<6){
 
-//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
-
                     passwLabel.setErrorEnabled(true);
-                    //mailLabel.setHintEnabled(false);
                     passwLabel.setError(getResources().getString(R.string.passError));
                 }
 
@@ -291,16 +282,14 @@ public class SignUpActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s)
             {
 
-                confirmPasswordUser=confirmPassword.getText().toString();
-                passUser=pass.getText().toString();
+                confirmPasswordUser= Objects.requireNonNull(confirmPassword.getText()).toString();
+                passUser= Objects.requireNonNull(pass.getText()).toString();
 
                 if(!passUser.equals(confirmPasswordUser)){
 
 
-//                    email.getBackground().setColorFilter(getResources().getColor(R.color.red), PorterDuff.Mode.SRC_ATOP);
 
                     confirmPasswordLabel.setErrorEnabled(true);
-                    //mailLabel.setHintEnabled(false);
                     confirmPasswordLabel.setError(getResources().getString(R.string.confirmError));
                 }
 
@@ -323,10 +312,7 @@ public class SignUpActivity extends AppCompatActivity {
         };
 
         dateBirthday.setOnTouchListener((v, event) -> {
-            final int DRAWABLE_LEFT = 0;
-            final int DRAWABLE_TOP = 1;
             final int DRAWABLE_RIGHT = 2;
-            final int DRAWABLE_BOTTOM = 3;
 
             if(event.getAction() == MotionEvent.ACTION_UP) {
                 if(event.getRawX() >= (dateBirthday.getRight() - dateBirthday.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
@@ -348,14 +334,14 @@ public class SignUpActivity extends AppCompatActivity {
 
         signUp.setOnClickListener(v -> {
 
-            loginUser=login.getText().toString();
-            nameUser=name.getText().toString();
-            emailUser=email.getText().toString();
-            passUser=pass.getText().toString();
-            confirmPasswordUser=confirmPassword.getText().toString();
-            phoneUser=phone.getText().toString();
-            dateBirthdayUser=dateBirthday.getText().toString();
-            inviteCodeUser=inviteCode.getText().toString();
+            loginUser= Objects.requireNonNull(login.getText()).toString();
+            nameUser= Objects.requireNonNull(name.getText()).toString();
+            emailUser= Objects.requireNonNull(email.getText()).toString();
+            passUser= Objects.requireNonNull(pass.getText()).toString();
+            confirmPasswordUser= Objects.requireNonNull(confirmPassword.getText()).toString();
+            phoneUser= Objects.requireNonNull(phone.getText()).toString();
+            dateBirthdayUser= Objects.requireNonNull(dateBirthday.getText()).toString();
+            inviteCodeUser= Objects.requireNonNull(inviteCode.getText()).toString();
 
             if (
                     loginUser.equals("")||loginUser.length() == 0||
@@ -478,7 +464,7 @@ public class SignUpActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             jsonData = response.body().string();
                         }
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_STATUS,Jobject.getString("status"));

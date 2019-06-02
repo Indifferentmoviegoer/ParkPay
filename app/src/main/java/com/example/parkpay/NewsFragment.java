@@ -29,6 +29,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,17 +44,17 @@ public class NewsFragment extends Fragment {
     private RecyclerView rv;
     private ProgressBar progressBarNews;
     private SwipeRefreshLayout swipeNews;
-    AppCompatTextView noResult;
+    private AppCompatTextView noResult;
 
     private Context c;
 
-    private final String[] news = {"Новости", "Акции"};
+    private final String[] newsList = {"Новости", "Акции"};
 
-    private List<News> persons;
+    private List<News> news;
     private List<Sale> sales;
 
     private static final String APP_PREFERENCES = "mysettings";
-    public static final String APP_PREFERENCES_CARD ="Card";
+    // --Commented out by Inspection (02.06.2019 2:13):public static final String APP_PREFERENCES_CARD ="Card";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private SharedPreferences settings;
 
@@ -82,7 +83,7 @@ public class NewsFragment extends Fragment {
 
         Spinner spinner = view.findViewById(R.id.newsTitle);
         // Создаем адаптер ArrayAdapter с помощью массива строк и стандартной разметки элемета spinner
-        ArrayAdapter<String> adapterNews = new ArrayAdapter<>(c, R.layout.item_spinner, news);
+        ArrayAdapter<String> adapterNews = new ArrayAdapter<>(c, R.layout.item_spinner, newsList);
         // Определяем разметку для использования при выборе элемента
         adapterNews.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         // Применяем адаптер к элементу spinner
@@ -263,23 +264,33 @@ public class NewsFragment extends Fragment {
 
                             JSONArray jsonArray = new JSONArray(jsonData);
 
-                            persons = new ArrayList<>();
+                            news = new ArrayList<>();
 
                             for (int i = 0; i < jsonArray.length(); i++) {
 
                                 JSONObject Jobject = jsonArray.getJSONObject(i);
 
-                                persons.add(new News(
-                                        Jobject.getString("title"),
-                                        Jobject.getString("image"),
-                                        Jobject.getString("date"),
-                                        Jobject.getString("text"),
-                                        Jobject.getString("link_source")
-                                ));
+
+                                news.add(new News(
+                                            Jobject.getString("title"),
+                                            Jobject.getString("image"),
+                                            Jobject.getString("date"),
+                                            Jobject.getString("text"),
+                                            Jobject.getString("link_source")
+                                    ));
 
                             }
 
-                            NewsAdapter adapter = new NewsAdapter(c,persons);
+                            news.add(new News(
+                                    "1 июня – 5 лет Сочи Парку!",
+                                    "https://www.sochipark.ru/sites/default/files/styles/restorany_i_bary_465x320/public/5-let-afisha.jpg?itok=fs0t2vPb;",
+                                    "2019-05-27 00:00:00",
+                                    "В этот день стартует юбилейная шоу-программа, праздничный парад, состоятся розыгрыш призов, звездный концерт TERNOVOY и DANYMUSE (Black Star Music ) и вечеринка, премьера нового иллюзионного шоу и, конечно, фейерверк!",
+                                    "https://www.sochipark.ru/article/1-iyunya-5-let-sochi-parku"
+                            ));
+
+                            Collections.sort(news, (o1, o2) -> o2.date.compareTo(o1.date));
+                            NewsAdapter adapter = new NewsAdapter(c,news);
                             rv.setAdapter(adapter);
 
                             rv.setVisibility(View.VISIBLE);
@@ -366,6 +377,7 @@ public class NewsFragment extends Fragment {
 
                             }
 
+                            Collections.sort(sales, (o1, o2) -> o2.dateStart.compareTo(o1.dateStart));
                             SalesAdapter adapter = new SalesAdapter(c,sales);
                             rv.setAdapter(adapter);
 

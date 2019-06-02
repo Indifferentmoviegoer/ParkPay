@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHolder>{
 
@@ -54,8 +55,8 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
             Date dateEnd = formatter.parse(sales.get(i).dateEnd);
             //Date timeValues = formatter.parse(SubItem.get(i));
 
-            saleViewHolder.dateStart.setText(formatterOut.format(dateStart));
-            saleViewHolder.dateEnd.setText(formatterOut.format(dateEnd));
+            saleViewHolder.dateStart.setText(formatterOut.format(Objects.requireNonNull(dateStart)));
+            saleViewHolder.dateEnd.setText(formatterOut.format(Objects.requireNonNull(dateEnd)));
 
             //time.setText(timeValue.format(timeValues));
 
@@ -78,7 +79,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
 
     public static class SaleViewHolder extends RecyclerView.ViewHolder {
 
-        final CardView cv;
         final TextView saleName;
         final TextView personAge;
         final TextView dateStart;
@@ -87,7 +87,6 @@ public class SalesAdapter extends RecyclerView.Adapter<SalesAdapter.SaleViewHold
 
         SaleViewHolder(View itemView) {
             super(itemView);
-            cv = itemView.findViewById(R.id.cv);
             saleName = itemView.findViewById(R.id.sale_name);
             personAge = itemView.findViewById(R.id.sale_text);
             dateStart = itemView.findViewById(R.id.dateStart);

@@ -23,7 +23,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +35,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
@@ -50,16 +48,10 @@ import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class ProfileFragment extends Fragment {
 
-    private AppCompatImageView editProfile;
     private TextView name;
-    private AppCompatImageView signOut;
-    private TextView quantityVisits;
-    private TextView bonus;
-    private TextView card;
-    private ImageView imageProfile;
-    AppCompatImageView share;
-    ProgressBar progressBarProfile;
-    AppCompatTextView noResult;
+    private AppCompatImageView share;
+    private ProgressBar progressBarProfile;
+    private AppCompatTextView noResult;
 
     private RecyclerView operationList;
 
@@ -71,7 +63,7 @@ public class ProfileFragment extends Fragment {
 
     private Context c;
     private static final String APP_PREFERENCES = "mysettings";
-    private static final String APP_PREFERENCES_NOTIFICATION ="TURN_NOTIFICATION";
+    //private static final String APP_PREFERENCES_NOTIFICATION ="TURN_NOTIFICATION";
     private static final String APP_PREFERENCES_NAME ="Name";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_PHOTO ="Photo";
@@ -87,15 +79,15 @@ public class ProfileFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile,container,false);
 
-        editProfile= view.findViewById(R.id.editProfile);
+        AppCompatImageView editProfile = view.findViewById(R.id.editProfile);
         name= view.findViewById(R.id.nameProfile);
         //notification = view.findViewById(R.id.turnNotification);
-        signOut= view.findViewById(R.id.signOut);
-        quantityVisits= view.findViewById(R.id.quantityVisits);
-        imageProfile= view.findViewById(R.id.imageProfile);
+        AppCompatImageView signOut = view.findViewById(R.id.signOut);
+        TextView quantityVisits = view.findViewById(R.id.quantityVisits);
+        ImageView imageProfile = view.findViewById(R.id.imageProfile);
         share= view.findViewById(R.id.share);
-        bonus= view.findViewById(R.id.bonus);
-        card= view.findViewById(R.id.card);
+        TextView bonus = view.findViewById(R.id.bonus);
+        TextView card = view.findViewById(R.id.card);
         operationList= view.findViewById(R.id.operationList);
         progressBarProfile= view.findViewById(R.id.progressBarProfile);
         noResult= view.findViewById(R.id.noResult);
@@ -274,7 +266,7 @@ public class ProfileFragment extends Fragment {
                                 jsonData = response.body().string();
                             }
 
-                            JSONObject Jobject = new JSONObject(jsonData);
+                            JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                             Intent sendIntent = new Intent();
                             sendIntent.setAction(Intent.ACTION_SEND);

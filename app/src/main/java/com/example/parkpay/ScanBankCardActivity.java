@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import java.util.Objects;
+
 import cards.pay.paycardsrecognizer.sdk.Card;
 import cards.pay.paycardsrecognizer.sdk.ScanCardIntent;
 import ru.yandex.money.android.sdk.Checkout;
@@ -28,7 +30,7 @@ public class ScanBankCardActivity extends Activity {
         if (requestCode == REQUEST_CODE) {
             if (resultCode == RESULT_OK && data != null) {
                 final Card card = data.getParcelableExtra(ScanCardIntent.RESULT_PAYCARDS_CARD);
-                final String expirationDate = card.getExpirationDate();
+                final String expirationDate = Objects.requireNonNull(card).getExpirationDate();
 
                 if (expirationDate != null) {
                     final String[] expirationDateParts = expirationDate.split("/");

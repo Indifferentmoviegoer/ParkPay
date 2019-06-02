@@ -79,7 +79,8 @@
                 android:textFontWeight="bold"
                 android:text="10+ лет"
                 android:lineHeight="13dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                card:targetApi="p" />
 
             <View
                 android:id="@+id/weightView"
@@ -108,7 +109,8 @@
                 android:textFontWeight="bold"
                 android:text="100 кг"
                 android:lineHeight="13dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                card:targetApi="p" />
 
             <View
                 android:id="@+id/growthView"
@@ -137,11 +139,11 @@
                 android:textFontWeight="bold"
                 android:text="130 см"
                 android:lineHeight="13dp"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                card:targetApi="p" />
 
 
             <View
-                android:id="@+id/levelView"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
@@ -164,7 +166,7 @@
                 android:paddingEnd="10dp"
                 android:layout_below="@+id/attraction_name"
                 android:src="@drawable/ic_family"
-                />
+                android:contentDescription="TODO" />
 
 
             <TextView

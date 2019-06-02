@@ -36,16 +36,12 @@ public class EditCardActivity extends AppCompatActivity {
 
     private EditText editCodeCard;
     private EditText editNameCard;
-    private AppCompatButton editCardButton;
-    private ImageView scanEdit;
 
     private String codeCard;
     private String nameCard;
-    private ImageView backEdit;
 
     private Context c;
     private SharedPreferences settings;
-    static final String ACTION_SCAN = "com.google.zxing.client.android.SCAN";
     private static final String APP_PREFERENCES = "mysettings";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_CARD_CODE ="cardCode";
@@ -63,9 +59,9 @@ public class EditCardActivity extends AppCompatActivity {
 
         editCodeCard= findViewById(R.id.editCodeCard);
         editNameCard= findViewById(R.id.editNameCard);
-        editCardButton= findViewById(R.id.editCardButton);
-        backEdit= findViewById(R.id.backEdit);
-        scanEdit= findViewById(R.id.scanEdit);
+        AppCompatButton editCardButton = findViewById(R.id.editCardButton);
+        ImageView backEdit = findViewById(R.id.backEdit);
+        ImageView scanEdit = findViewById(R.id.scanEdit);
 
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -193,7 +189,7 @@ public class EditCardActivity extends AppCompatActivity {
                         if (response.body() != null) {
                             jsonData = response.body().string();
                         }
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
 
                         SharedPreferences.Editor editor = settings.edit();

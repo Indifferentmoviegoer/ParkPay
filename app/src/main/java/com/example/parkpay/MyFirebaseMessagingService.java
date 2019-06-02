@@ -44,21 +44,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        notificationManager.notify(0, notificationBuilder.build());
+        Objects.requireNonNull(notificationManager).notify(0, notificationBuilder.build());
         Log.d(TAG, "4");
     }
 
-    @Override
-    public void onNewToken(String token) {
-        Log.d(TAG, "Refreshed token: " + token);
-
-        // If you want to send messages to this application instance or
-        // manage this apps subscriptions on the server side, send the
-        // Instance ID token to your app server.
-        sendRegistrationToServer(token);
-    }
-
-    private void sendRegistrationToServer(String token) {
-        // TODO: Send any registration to your app's servers.
-    }
 }

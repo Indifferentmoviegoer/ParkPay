@@ -1,9 +1,7 @@
 package com.example.parkpay;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -14,10 +12,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -47,26 +45,21 @@ public class MainActivity extends AppCompatActivity {
     private static final String APP_PREFERENCES_LOGIN ="Login";
     private static final String TAG = "myLogs";
     private SharedPreferences settings;
-    private BottomNavigationViewEx bottomNav;
 
-    Context c;
+    private Context c;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-//        TypefaceUtil
-//                .overrideFont(getApplicationContext(),
-//                        "SERIF",
-//                        "font/roboto_regular.ttf");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //FirebaseApp.initializeApp(this);
+        FirebaseApp.initializeApp(this);
 
         overridePendingTransition(0, 0);
 
         settings=getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        bottomNav = findViewById(R.id.bottom_navigation);
+        BottomNavigationViewEx bottomNav = findViewById(R.id.bottom_navigation);
 
 
 
@@ -80,7 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNav.setOnNavigationItemSelectedListener(navListener);
 
-        //I added this if statement to keep the selected fragment when rotating the device
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new CardFragment()).commit();
@@ -135,24 +127,26 @@ public class MainActivity extends AppCompatActivity {
         {
             fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)
-                    .commit();
-        }
-
-    }
-
-    public void replaceFragmentCamera(Class fragmentClass) {
-        Fragment fragment=null;
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        if(fragment!=null)
-        {
-            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
+// --Commented out by Inspection START (02.06.2019 2:13):
+//                    .commit();
+//        }
+//
+//    }
+//
+//    public void replaceFragmentCamera(Class fragmentClass) {
+//        Fragment fragment=null;
+//        try {
+//            fragment = (Fragment) fragmentClass.newInstance();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        // Insert the fragment by replacing any existing fragment
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        if(fragment!=null)
+//        {
+//            fragmentManager.beginTransaction().replace(R.id.fragment_container, fragment)
+//                    .addToBackStack(null)
+// --Commented out by Inspection STOP (02.06.2019 2:13)
                     .commit();
         }
 
@@ -179,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
 
     static boolean isOnline(Context c) {
         ConnectivityManager cm = (ConnectivityManager) c.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnected();
     }
 
@@ -226,7 +220,7 @@ public class MainActivity extends AppCompatActivity {
                             jsonData = response.body().string();
                         }
 
-                        JSONObject Jobject = new JSONObject(jsonData);
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
 
                         SharedPreferences.Editor editor = settings.edit();
                         editor.putString(APP_PREFERENCES_TOKEN,Jobject.getString("token"));
