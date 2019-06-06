@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.core.widget.ContentLoadingProgressBar;
 import androidx.fragment.app.Fragment;
 
 
@@ -60,6 +61,12 @@ import static android.app.Activity.RESULT_OK;
 public class PayFragment extends Fragment {
 
     private EditText amountPay;
+    private ContentLoadingProgressBar progressPay;
+    private AppCompatButton buttonPay;
+    private AppCompatTextView titlePay;
+    private AppCompatTextView numberPay;
+    private AppCompatTextView titleAmount;
+    private AppCompatImageView imPay;
 
     private BigDecimal sum;
 
@@ -92,11 +99,12 @@ public class PayFragment extends Fragment {
         }
 
         amountPay = view.findViewById(R.id.amountPay);
-        AppCompatButton buttonPay = view.findViewById(R.id.buttonPay);
-        AppCompatTextView titlePay = view.findViewById(R.id.titlePay);
-        AppCompatTextView numberPay = view.findViewById(R.id.numberPay);
-        AppCompatImageView imPay = view.findViewById(R.id.imPay);
-
+        buttonPay = view.findViewById(R.id.buttonPay);
+        titlePay = view.findViewById(R.id.titlePay);
+        numberPay = view.findViewById(R.id.numberPay);
+        imPay = view.findViewById(R.id.imPay);
+        progressPay = view.findViewById(R.id.progressPay);
+        titleAmount = view.findViewById(R.id.titleAmount);
 
         settings= Objects.requireNonNull(this.getActivity())
                 .getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -106,6 +114,8 @@ public class PayFragment extends Fragment {
                 .thumbnail(0.5f)
                 .dontAnimate()
                 .into(imPay);
+
+        progressPay.setVisibility(View.INVISIBLE);
 
         String name = settings.getString(APP_PREFERENCES_CARD_NAME, "") + "";
         String number = settings.getString(APP_PREFERENCES_CARD_CODE, "") + "";
@@ -153,7 +163,16 @@ public class PayFragment extends Fragment {
                         if(checkConnection) {
 
 
+                        progressPay.setVisibility(View.VISIBLE);
+                        buttonPay.setVisibility(View.INVISIBLE);
+                        titlePay.setVisibility(View.INVISIBLE);
+                        numberPay.setVisibility(View.INVISIBLE);
+                        imPay.setVisibility(View.INVISIBLE);
+                        amountPay.setVisibility(View.INVISIBLE);
+                        titleAmount.setVisibility(View.INVISIBLE);
+
                         Toast.makeText(c, "Пожалуйста, подождите!", Toast.LENGTH_LONG).show();
+
                         createPayment();
 
                         } else {
@@ -265,6 +284,14 @@ public class PayFragment extends Fragment {
                                     ConfirmActivity.class);
                             startActivity(intent);
                             Objects.requireNonNull(getActivity()).overridePendingTransition(0, 0);
+
+                            progressPay.setVisibility(View.INVISIBLE);
+                            buttonPay.setVisibility(View.VISIBLE);
+                            titlePay.setVisibility(View.VISIBLE);
+                            numberPay.setVisibility(View.VISIBLE);
+                            imPay.setVisibility(View.VISIBLE);
+                            amountPay.setVisibility(View.VISIBLE);
+                            titleAmount.setVisibility(View.VISIBLE);
 
                         } catch (IOException | JSONException e) {
 

@@ -37,7 +37,6 @@ public class SignInActivity extends AppCompatActivity {
     private Context c;
     private SharedPreferences settings;
     private static final String APP_PREFERENCES = "mysettings";
-    private static final String APP_PREFERENCES_CHECK ="CHECK_TRUE";
     private static final String APP_PREFERENCES_PASSWORD ="Password";
     private static final String APP_PREFERENCES_TOKEN ="Token";
     private static final String APP_PREFERENCES_LOGIN ="Login";
@@ -50,6 +49,9 @@ public class SignInActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         AppCompatButton signIn = findViewById(R.id.signIn);
         login = findViewById(R.id.email);
@@ -67,8 +69,7 @@ public class SignInActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+
 
 //        TypefaceUtil.overrideFont(getApplicationContext(), "serif", "font/roboto_regular.ttf");
 

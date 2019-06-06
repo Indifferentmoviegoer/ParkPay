@@ -22,6 +22,7 @@ import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
@@ -367,7 +368,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if (checkConnection) {
 
-                                signUp();
+                                checkInvite();
                             } else {
                                 Toast.makeText(getApplicationContext(),
                                         "Отсутствует интернет соединение!",
@@ -412,6 +413,89 @@ public class SignUpActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.US);
 
         dateBirthday.setText(sdf.format(myCalendar.getTime()));
+    }
+
+    private void checkInvite(){
+
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+
+        JSONObject json = new JSONObject();
+        try {
+
+            json.put("invite",inviteCodeUser);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        String jsonString = json.toString();
+        RequestBody body = RequestBody.create(JSON, jsonString);
+        OkHttpClient client = new OkHttpClient();
+
+        final Request request = new Request.Builder()
+                .post(body)
+                .url("https://api.mobile.goldinnfish.com/check_invite")
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                if(call.request().body()!=null)
+                {
+                    Log.d(TAG, Objects.requireNonNull(call.request().body()).toString());
+                }
+                runOnUiThread(() -> {
+                });
+            }
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull final Response response) {
+                runOnUiThread(() -> {
+                    try {
+
+                        String jsonData = null;
+                        if (response.body() != null) {
+                            jsonData = response.body().string();
+                        }
+                        JSONObject Jobject = new JSONObject(Objects.requireNonNull(jsonData));
+
+                        if(Jobject.getString("status").contains("1"))
+                        {
+                            signUp();
+                        }
+
+                        else if(Jobject.getString("status").contains("0"))
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(c,android.R.style.Theme_Material_Light_Dialog_NoActionBar);
+                            builder.setTitle(Html
+                                    .fromHtml("<font color='#000000'>Регистрация</font>"));
+                            builder.setMessage(Html
+                                    .fromHtml("<font color='#000000'>Введенный код приглашения не существует! Вы хотите продолжить? Баллы за приглашение не будут зачислены!</font>"));
+                            builder.setCancelable(false);
+                            builder.setPositiveButton("Да",
+                                    (dialog, id) -> {
+
+                                        signUp();
+                                    });
+                            builder.setNegativeButton("Нет",
+                                    (dialog, id) -> dialog.cancel());
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.WHITE);
+                            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setBackgroundColor(Color.parseColor("#3F51B5"));
+                            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#3F51B5"));
+                            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setBackground(null);
+                        }
+
+
+                    } catch (IOException | JSONException e) {
+
+                        Log.d(TAG,"Ошибка: "+e);
+                    }
+                });
+            }
+        });
     }
 
     private void signUp(){
@@ -475,7 +559,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "1")){
 
-                                Toast.makeText(c,"Для завершения регистрации," +
+                                Toast.makeText(getApplicationContext(),"Для завершения регистрации," +
                                         " подтвердите свою электронную почту!",
                                         Toast.LENGTH_LONG).show();
 
@@ -484,7 +568,8 @@ public class SignUpActivity extends AppCompatActivity {
                                 startActivity(intent);
                             }
                             if(Objects.equals(settings.getString(APP_PREFERENCES_STATUS, ""), "0")) {
-                                Toast.makeText(c,Jobject.getString("msg"),
+
+                                Toast.makeText(getApplicationContext(),"Пользователь с таким логином или email уже существует!",
                                         Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -493,8 +578,8 @@ public class SignUpActivity extends AppCompatActivity {
 
                         Log.d(TAG,"Ошибка: "+e);
 
-//                        Toast.makeText(c,e+"",
-//                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Пользователь с таким логином или email уже существует!",
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
             }
